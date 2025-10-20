@@ -1,0 +1,10 @@
+{
+  "common": {
+    "lang": "en",
+    "baseUrl": "/en/",
+    "inLanguage": "en-US"
+  },
+  "accessibility": {
+    "languageMenu": "Language selection menu"
+  }
+}

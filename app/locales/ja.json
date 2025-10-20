@@ -1,0 +1,10 @@
+{
+  "common": {
+    "lang": "ja",
+    "baseUrl": "/ja/",
+    "inLanguage": "ja-JP"
+  },
+  "accessibility": {
+    "languageMenu": "言語選択メニュー"
+  }
+}
