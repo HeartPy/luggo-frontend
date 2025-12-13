@@ -3,7 +3,9 @@
     <div class="bg-white px-4 py-20">
       <div class="mx-auto max-w-4xl">
         <CommonAtomsTopicPath>
-          <template #currentPath_name>プライバシーポリシー</template>
+          <template #currentPath_name>
+            プライバシーポリシー
+          </template>
         </CommonAtomsTopicPath>
         <div>
           <h1
@@ -22,7 +24,10 @@
               <p class="mb-1 font-bold">
                 {{ privacyPolicyItem.ttl }}
               </p>
-              <p class="text-sm" v-html="privacyPolicyItem.txt" />
+              <p
+                class="text-sm"
+                v-html="privacyPolicyItem.txt"
+              />
             </div>
           </ul>
         </div>

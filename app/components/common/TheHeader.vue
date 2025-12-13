@@ -34,7 +34,7 @@
             <li>
               <NuxtLink
                 class="flex items-center rounded bg-gray-800 p-2.5 text-white hover:bg-gray-900"
-                to="/account/register"
+                to="/stripe/account"
               >
                 無料登録
               </NuxtLink>

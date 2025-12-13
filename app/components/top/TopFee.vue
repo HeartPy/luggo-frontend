@@ -2,8 +2,12 @@
   <section class="bg-white px-4 py-20">
     <div class="mx-auto max-w-6xl">
       <TopAtomsSecTtl>
-        <template #secSubTtl>Fee</template>
-        <template #secMainTtl>料金</template>
+        <template #secSubTtl>
+          Fee
+        </template>
+        <template #secMainTtl>
+          料金
+        </template>
       </TopAtomsSecTtl>
       <div
         class="flex flex-col items-center justify-start gap-8 md:flex-row md:items-end md:gap-10"
@@ -17,13 +21,10 @@
             <p
               class="relative text-[5vw] font-semibold text-gray-600 after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-full after:bg-gray-600 sm:text-xl"
               v-html="feeItem.ttl"
-            ></p>
+            />
             <div class="text-[12vw] font-bold text-gray-800 sm:text-7xl">
               {{ feeItem.fee
-              }}<small class="ml-1 text-[0.5em] sm:text-[0.3em]"
-                ><span v-if="feeItem.id === 3">%</span
-                ><span v-else>円</span></small
-              >
+              }}<small class="ml-1 text-[0.5em] sm:text-[0.3em]"><span v-if="feeItem.id === 3">%</span><span v-else>円</span></small>
             </div>
           </div>
         </div>

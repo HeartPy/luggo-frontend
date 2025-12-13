@@ -1,5 +1,8 @@
 <template>
-  <footer class="bg-white" role="contentinfo">
+  <footer
+    class="bg-white"
+    role="contentinfo"
+  >
     <div class="container mx-auto px-4 py-8">
       <div class="mb-8">
         <NuxtLink
@@ -11,7 +14,7 @@
               src="/img/luggo.svg"
               alt="LugGo"
               class="h-full w-full object-contain"
-            />
+            >
           </figure>
           <span class="whitespace-nowrap text-xl font-bold text-gray-800">
             LugGo
@@ -24,9 +27,14 @@
               :key="footerItem.id"
               class="relative after:absolute after:right-0 after:top-0 after:h-full after:w-[1px] after:bg-gray-800 after:content-[''] last:after:content-none"
             >
-              <NuxtLink :to="footerItem.link" class="px-2 py-1 text-gray-800">{{
-                footerItem.label
-              }}</NuxtLink>
+              <NuxtLink
+                :to="footerItem.link"
+                class="px-2 py-1 text-gray-800"
+              >
+                {{
+                  footerItem.label
+                }}
+              </NuxtLink>
             </li>
           </ul>
         </nav>
@@ -34,8 +42,7 @@
       <small
         class="ml-auto mr-0 block w-fit text-xs text-gray-400"
         aria-label="著作権情報"
-        >&copy; 2025 LugGo</small
-      >
+      >&copy; 2025 LugGo</small>
     </div>
   </footer>
 </template>

@@ -2,8 +2,12 @@
   <section class="bg-white px-4 py-20">
     <div class="mx-auto max-w-6xl">
       <TopAtomsSecTtl>
-        <template #secSubTtl>Service</template>
-        <template #secMainTtl>LugGoのご紹介</template>
+        <template #secSubTtl>
+          Service
+        </template>
+        <template #secMainTtl>
+          LugGoのご紹介
+        </template>
       </TopAtomsSecTtl>
       <div class="grid gap-8 md:grid-cols-3">
         <div
@@ -20,13 +24,13 @@
                   class="h-full w-full object-contain"
                   :src="getImageUrl(serviceItem.img)"
                   aria-hidden="true"
-                />
+                >
               </figure>
             </div>
             <h3
               class="text-center text-xl font-semibold text-gray-800"
               v-html="serviceItem.ttl"
-            ></h3>
+            />
             <p class="font-medium leading-relaxed text-gray-700">
               {{ serviceItem.desc }}
             </p>

@@ -3,7 +3,9 @@
     <div class="bg-white px-4 py-20">
       <div class="mx-auto max-w-4xl">
         <CommonAtomsTopicPath>
-          <template #currentPath_name>特定商取引法に基づく表記</template>
+          <template #currentPath_name>
+            特定商取引法に基づく表記
+          </template>
         </CommonAtomsTopicPath>
         <div>
           <h1
@@ -19,7 +21,10 @@
               <p class="mb-1 font-bold">
                 {{ transactionLawItem.ttl }}
               </p>
-              <p class="text-sm" v-html="transactionLawItem.txt" />
+              <p
+                class="text-sm"
+                v-html="transactionLawItem.txt"
+              />
             </div>
           </ul>
         </div>

@@ -5,12 +5,10 @@
     <div class="mx-auto max-w-6xl">
       <div class="text-center">
         <p class="mx-auto mb-4 w-fit text-lg opacity-90">
-          <span class="inline-block">膨大な管理費・手間がかかっている方、</span
-          ><span class="inline-block">新たに配送事業を始めたい方</span>
+          <span class="inline-block">膨大な管理費・手間がかかっている方、</span><span class="inline-block">新たに配送事業を始めたい方</span>
         </p>
         <h2 class="mb-8 text-4xl font-bold tracking-wide">
-          <span class="inline-block">ぜひLugGoを</span
-          ><span class="inline-block">お試しください</span>
+          <span class="inline-block">ぜひLugGoを</span><span class="inline-block">お試しください</span>
         </h2>
         <TopAtomsRegisterBtn />
       </div>
