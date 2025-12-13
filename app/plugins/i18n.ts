@@ -10,7 +10,8 @@ export default defineNuxtPlugin((nuxtApp) => {
       const parts = url.split("/");
       const lang: string = parts[1] ?? "";
       return ["en"].includes(lang) ? "en" : "ja";
-    } else {
+    }
+    else {
       // クライアントサイドでの言語検出
       const path: string = window?.location?.pathname ?? "/";
       const parts = path.split("/");

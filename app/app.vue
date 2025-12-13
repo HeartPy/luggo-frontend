@@ -7,6 +7,18 @@
 </template>
 
 <script setup lang="ts">
+const route = useRoute();
+
+// ページ遷移時にスクロールトップに戻る
+watch(
+  () => route.path,
+  () => {
+    if (import.meta.client) {
+      window.scrollTo(0, 0);
+    }
+  },
+);
+
 useHead({
   htmlAttrs: {
     lang: "ja",
