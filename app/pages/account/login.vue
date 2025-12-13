@@ -64,8 +64,8 @@
             </p>
           </div>
 
-          <div v-if="errorMessage" class="text-center text-sm text-red-600">
-            {{ errorMessage }}
+          <div v-if="errMsg" class="text-center text-sm text-red-600">
+            {{ errMsg }}
           </div>
         </div>
 
@@ -80,7 +80,7 @@
 
       <div class="space-y-2 text-center">
         <NuxtLink
-          to="/account/register"
+          to="/stripe/account"
           class="block text-sm text-gray-600 transition-colors duration-200 hover:text-gray-800"
         >
           新規登録はこちら
@@ -125,7 +125,7 @@ const [email, emailProps] = defineField("email");
 const [password, passwordProps] = defineField("password");
 
 const isSubmitting = ref(false);
-const errorMessage = ref("");
+const errMsg = ref("");
 const formTouched = ref(false);
 
 const handleFormLogin = () => {
@@ -136,7 +136,7 @@ const handleFormLogin = () => {
 const handleLogin = handleSubmit(async (formValues: LoginFormData) => {
   try {
     isSubmitting.value = true;
-    errorMessage.value = "";
+    errMsg.value = "";
 
     // FormDataの作成
     const formData = new FormData();
@@ -150,7 +150,7 @@ const handleLogin = handleSubmit(async (formValues: LoginFormData) => {
     });
 
     if (error.value) {
-      errorMessage.value = "メールアドレスまたはパスワードが正しくありません。";
+      errMsg.value = "メールアドレスまたはパスワードが正しくありません。";
     } else if (data.value) {
       formTouched.value = false;
       resetForm();
@@ -158,12 +158,12 @@ const handleLogin = handleSubmit(async (formValues: LoginFormData) => {
       password.value = "";
       await navigateTo("/admin/dashboard");
     }
-  } catch (error) {
-    if (process.env.NODE_ENV === "development") {
+  } catch (error: unknown) {
+    if (import.meta.dev) {
       // eslint-disable-next-line no-console
       console.error("Form submission error:", error);
     }
-    errorMessage.value =
+    errMsg.value =
       "予期しないエラーが発生しました。しばらく時間をおいて再度お試しください。";
   } finally {
     isSubmitting.value = false;
