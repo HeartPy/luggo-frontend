@@ -2,8 +2,12 @@
   <section class="bg-white px-4 py-20">
     <div class="mx-auto max-w-6xl">
       <TopAtomsSecTtl>
-        <template #secSubTtl>Get Started</template>
-        <template #secMainTtl>ご利用までのながれ</template>
+        <template #secSubTtl>
+          Get Started
+        </template>
+        <template #secMainTtl>
+          ご利用までのながれ
+        </template>
       </TopAtomsSecTtl>
       <div class="grid gap-8 md:grid-cols-4">
         <div
