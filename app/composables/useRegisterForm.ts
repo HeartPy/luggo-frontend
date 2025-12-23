@@ -147,15 +147,17 @@ export const useRegisterForm = () => {
         rep_email: "",
         rep_phone: "",
         rep_dob: { year: 0, month: 0, day: 0 },
-        rep_address: {
-          country: "JP",
+        address_kanji: {
           postal_code: "",
           state: "",
-          state_kana: "",
           city: "",
-          city_kana: "",
           line1: "",
-          line1_kana: "",
+        },
+        address_kana: {
+          postal_code: "",
+          state: "",
+          city: "",
+          line1: "",
         },
       };
       step3Data.value = {
@@ -229,15 +231,17 @@ export const useRegisterForm = () => {
         rep_email: "",
         rep_phone: "",
         rep_dob: { year: 0, month: 0, day: 0 },
-        rep_address: {
-          country: "JP",
+        address_kanji: {
           postal_code: "",
           state: "",
-          state_kana: "",
           city: "",
-          city_kana: "",
           line1: "",
-          line1_kana: "",
+        },
+        address_kana: {
+          postal_code: "",
+          state: "",
+          city: "",
+          line1: "",
         },
       };
     }
