@@ -503,25 +503,27 @@ const step2Schema = object({
       return true;
     },
   ),
-  rep_address: object({
-    country: string().trim().required(),
+  address_kanji: object({
     postal_code: string().trim().required("郵便番号は必須です"),
     state: string().trim().required("都道府県は必須です"),
-    state_kana: string()
+    city: string().trim().required("市区町村は必須です"),
+    line1: string().trim().required("町名番地は必須です"),
+    line2: string().trim().optional().nullable(),
+  }),
+  address_kana: object({
+    postal_code: string().trim().required("郵便番号は必須です"),
+    state: string()
       .trim()
       .required("都道府県（カナ）は必須です")
       .matches(/^[ァ-ヶー\s]+$/u, "カタカナで入力してください"),
-    city: string().trim().required("市区町村は必須です"),
-    city_kana: string()
+    city: string()
       .trim()
       .required("市区町村（カナ）は必須です")
       .matches(/^[ァ-ヶー\s]+$/u, "カタカナで入力してください"),
-    line1: string().trim().required("町名番地は必須です"),
-    line1_kana: string()
+    line1: string()
       .trim()
       .required("町名番地（カナ）は必須です")
       .matches(/^[ァ-ヶー\s]+$/u, "カタカナで入力してください"),
-    line2: string().trim().optional().nullable(),
   }),
 });
 
