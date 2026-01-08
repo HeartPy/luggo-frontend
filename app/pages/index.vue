@@ -26,7 +26,7 @@ useHead({
     {
       key: "og:title",
       property: "og:title",
-      content: "LugGo | 旅行荷物の配送業者向け一括サービス",
+      content: "LugGo(ラグゴー) | 旅行荷物の配送業者向け一括サービス",
     },
     {
       key: "og:description",
@@ -37,7 +37,7 @@ useHead({
     {
       key: "twitter:title",
       name: "twitter:title",
-      content: "LugGo | 旅行荷物の配送業者向け一括サービス",
+      content: "LugGo(ラグゴー) | 旅行荷物の配送業者向け一括サービス",
     },
     {
       key: "twitter:description",

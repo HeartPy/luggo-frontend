@@ -80,7 +80,7 @@
 
       <div class="space-y-2 text-center">
         <NuxtLink
-          to="/stripe/account"
+          to="/account/register/email"
           class="block text-sm text-gray-600 transition-colors duration-200 hover:text-gray-800"
         >
           新規登録はこちら
@@ -117,7 +117,6 @@ const loginSchema = object({
 const { defineField, handleSubmit, errors, resetForm } = useForm<LoginFormData>(
   {
     validationSchema: toTypedSchema(loginSchema),
-    validateOnMount: false,
   },
 );
 
@@ -171,12 +170,26 @@ const handleLogin = handleSubmit(async (formValues: LoginFormData) => {
 });
 
 useHead({
-  title: "管理者ログイン | LugGo（ラグゴー）",
+  title: "管理者ログイン",
   meta: [
     {
       name: "description",
-      content:
-        "LugGo管理者用ログイン画面。配送事業者の管理機能にアクセスできます。",
+      content: "管理者用ログイン画面ページ。",
+    },
+    { property: "og:title", content: "管理者ログイン | LugGo(ラグゴー)" },
+    {
+      property: "og:description",
+      content: "管理者用ログイン画面ページ。",
+    },
+    {
+      key: "twitter:title",
+      name: "twitter:title",
+      content: "管理者ログイン | LugGo(ラグゴー)",
+    },
+    {
+      key: "twitter:description",
+      name: "twitter:description",
+      content: "管理者用ログイン画面ページ。",
     },
   ],
 });

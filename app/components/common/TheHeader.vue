@@ -26,7 +26,7 @@
             <li>
               <NuxtLink
                 class="flex items-center rounded border border-gray-300 p-2.5 hover:opacity-80"
-                to="/account/login"
+                to="/account/register/email"
               >
                 ログイン
               </NuxtLink>
