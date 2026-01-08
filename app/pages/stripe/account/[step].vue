@@ -160,7 +160,7 @@ const {
   errorsStep4,
   errorsStep5,
   clearAllData,
-} = useRegisterForm();
+} = useStripeAccountForm();
 
 const isSubmitting = ref(false);
 const isSubmitted = ref(false);
@@ -861,5 +861,30 @@ onMounted(async () => {
   }
 
   await checkStepAccess();
+});
+
+useHead({
+  title: "アカウント登録申請",
+  meta: [
+    {
+      name: "description",
+      content: "アカウント登録申請ページ。",
+    },
+    { property: "og:title", content: "アカウント登録申請 | LugGo(ラグゴー)" },
+    {
+      property: "og:description",
+      content: "アカウント登録申請ページ。",
+    },
+    {
+      key: "twitter:title",
+      name: "twitter:title",
+      content: "アカウント登録申請 | LugGo(ラグゴー)",
+    },
+    {
+      key: "twitter:description",
+      name: "twitter:description",
+      content: "アカウント登録申請ページ。",
+    },
+  ],
 });
 </script>

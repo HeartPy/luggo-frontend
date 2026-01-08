@@ -99,7 +99,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Step4FormData } from "~/types/account-register";
+import type { Step4FormData } from "~/types/stripe-account-register";
 
 type Props = {
   formData: Step4FormData;

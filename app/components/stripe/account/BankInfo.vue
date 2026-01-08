@@ -140,7 +140,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Step3FormData } from "~/types/account-register";
+import type { Step3FormData } from "~/types/stripe-account-register";
 import { useNumericInput } from "~/composables/useNumericInput";
 
 type Props = {

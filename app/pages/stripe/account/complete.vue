@@ -34,4 +34,32 @@ onMounted(async () => {
     sessionStorage.removeItem("stripeAccountSubmitted");
   }
 });
+
+useHead({
+  title: "アカウント登録申請完了",
+  meta: [
+    {
+      name: "description",
+      content: "アカウント登録申請完了ページ。",
+    },
+    {
+      property: "og:title",
+      content: "アカウント登録申請完了 | LugGo(ラグゴー)",
+    },
+    {
+      property: "og:description",
+      content: "アカウント登録申請完了ページ。",
+    },
+    {
+      key: "twitter:title",
+      name: "twitter:title",
+      content: "アカウント登録申請完了 | LugGo(ラグゴー)",
+    },
+    {
+      key: "twitter:description",
+      name: "twitter:description",
+      content: "アカウント登録申請完了ページ。",
+    },
+  ],
+});
 </script>
