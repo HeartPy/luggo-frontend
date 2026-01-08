@@ -2,10 +2,10 @@
   <div
     class="min-h-screen w-full bg-gradient-to-br from-gray-600 via-gray-700 via-gray-800 via-gray-900 to-black py-12"
   >
-    <div class="mx-auto w-[calc(100%-8vw)] max-w-[800px]">
+    <div class="mx-auto w-[calc(100%-8vw)] max-w-[500px]">
       <div class="rounded-xl bg-white px-4 py-8 md:p-8">
         <h1 class="mb-8 text-center text-2xl font-bold text-gray-800 md:mb-12">
-          事業者アカウント登録
+          アカウント登録
         </h1>
 
         <div v-if="emailSent" class="space-y-6">
@@ -208,12 +208,29 @@ const handleSendEmail = async () => {
 
     if (error.value) {
       const errorData = error.value.data as { error?: string };
+      const statusCode = (error.value as { statusCode?: number })?.statusCode;
+
       if (import.meta.dev && errorData?.error) {
         // eslint-disable-next-line no-console
-        console.log("Email send error:", errorData.error);
+        console.log(
+          "Email send error:",
+          errorData.error,
+          "statusCode:",
+          statusCode,
+        );
       }
-      errMsg.value =
-        "メールの送信に失敗しました。しばらく時間をおいて再度お試しください。";
+
+      // 429エラー（レート制限）の場合
+      if (statusCode === 429 && errorData?.error) {
+        errMsg.value = errorData.error;
+      } else if (errorData?.error) {
+        // その他のエラーの場合
+        errMsg.value = errorData.error;
+      } else {
+        // エラーメッセージがない場合のフォールバック
+        errMsg.value =
+          "メールの送信に失敗しました。しばらく時間をおいて再度お試しください。";
+      }
     } else if (data.value) {
       emailSent.value = true;
     }
@@ -230,12 +247,26 @@ const handleSendEmail = async () => {
 };
 
 useHead({
-  title: "アカウント登録 | LugGo（ラグゴー）",
+  title: "アカウント登録",
   meta: [
     {
       name: "description",
-      content:
-        "アカウント登録ページです。メールアドレスを入力して登録を開始できます。",
+      content: "アカウント登録ページ。",
+    },
+    { property: "og:title", content: "アカウント登録 | LugGo(ラグゴー)" },
+    {
+      property: "og:description",
+      content: "アカウント登録ページ。",
+    },
+    {
+      key: "twitter:title",
+      name: "twitter:title",
+      content: "アカウント登録 | LugGo(ラグゴー)",
+    },
+    {
+      key: "twitter:description",
+      name: "twitter:description",
+      content: "アカウント登録ページ。",
     },
   ],
 });
