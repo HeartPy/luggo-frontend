@@ -78,60 +78,6 @@ export const stripeFieldMapping: Record<
   "verification.address_kana": { step: 5, field: "address_kana" },
 };
 
-// 認証状態を確認する関数
-export const checkAuthentication = async (): Promise<boolean> => {
-  if (!import.meta.client) return false;
-
-  const { ensureCsrf, getCsrf } = useCsrf();
-
-  try {
-    const config = useRuntimeConfig();
-    const apiBase = config.public.apiBaseUrl;
-    await ensureCsrf(apiBase);
-
-    const res = await fetch(`${apiBase}/api/business/stripe/custom/account`, {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        ...(getCsrf() ? { "X-CSRFToken": getCsrf() } : {}),
-      },
-    });
-
-    return res.ok;
-  } catch {
-    return false;
-  }
-};
-
-// アカウントを確保する関数（認証状態も返す）
-export const ensureAccount = async (): Promise<boolean> => {
-  const { ensureCsrf, getCsrf } = useCsrf();
-  const config = useRuntimeConfig();
-  const apiBase = config.public.apiBaseUrl;
-  await ensureCsrf(apiBase);
-
-  // ログイン済みの場合はアカウント作成は不要（既にBusinessProfileに保存されている）
-  const isAuthenticated = await checkAuthentication();
-  if (isAuthenticated) {
-    return true;
-  }
-
-  // 未ログインの場合のみセッション用アカウントを作成
-  await fetch(
-    `${apiBase}/api/business/public/stripe/custom/create-or-get-account`,
-    {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        ...(getCsrf() ? { "X-CSRFToken": getCsrf() } : {}),
-      },
-    },
-  );
-
-  return false;
-};
-
 // 審査結果を取得する関数
 const fetchAccountRequirements = async (): Promise<{
   currently_due: string[];
@@ -145,18 +91,16 @@ const fetchAccountRequirements = async (): Promise<{
     const apiBase = config.public.apiBaseUrl;
     await ensureCsrf(apiBase);
 
-    const isAuthenticated = await checkAuthentication();
-    const endpoint = isAuthenticated
-      ? `${apiBase}/api/business/stripe/custom/requirements`
-      : `${apiBase}/api/business/public/stripe/custom/requirements`;
-
-    const res = await fetch(endpoint, {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        ...(getCsrf() ? { "X-CSRFToken": getCsrf() } : {}),
+    const res = await fetch(
+      `${apiBase}/api/business/stripe/custom/requirements`,
+      {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          ...(getCsrf() ? { "X-CSRFToken": getCsrf() } : {}),
+        },
       },
-    });
+    );
 
     if (!res.ok) {
       return null;

@@ -102,20 +102,18 @@ import type {
   Step3FormData,
   Step4FormData,
   Step5FormData,
-} from "~/types/account-register";
-import { useRegisterForm } from "~/composables/useRegisterForm";
+} from "~/types/stripe-account-register";
+import { useStripeAccountForm } from "~/composables/useStripeAccountForm";
 import { useCsrf } from "~/composables/useCsrf";
 import { useSession } from "~/composables/useSession";
 import { useBeforeUnload } from "~/composables/useBeforeUnload";
-import {
-  checkAuthentication,
-  ensureAccount,
-  analyzeAccountRequirements,
-} from "~/composables/useStripeAccount";
+import { checkAuthentication } from "~/composables/useAuth";
+import { analyzeAccountRequirements } from "~/composables/useStripeAccount";
 
 const route = useRoute();
 
 definePageMeta({
+  middleware: "auth",
   validate: (route) => {
     const n = Number(route.params.step);
     return Number.isFinite(n) && n >= 1 && n <= 5;
@@ -852,16 +850,11 @@ onMounted(async () => {
     await startSession();
   }
   try {
-    // ログイン確認だけでなく、アカウントの確保も同時に行うため、checkAuthentication()ではなくensureAccount()を使用
-    const isAuthenticated = await ensureAccount();
-
-    // ログイン済みユーザーの場合のみ審査結果を取得
-    if (isAuthenticated) {
-      const rslt = await analyzeAccountRequirements();
-      if (rslt) {
-        requiredSteps.value = rslt.steps;
-        requiredFieldsByStep.value = rslt.fieldsByStep;
-      }
+    // middlewareで認証チェック済みなので、審査結果のみ取得
+    const rslt = await analyzeAccountRequirements();
+    if (rslt) {
+      requiredSteps.value = rslt.steps;
+      requiredFieldsByStep.value = rslt.fieldsByStep;
     }
   } catch {
     // エラーを無視
