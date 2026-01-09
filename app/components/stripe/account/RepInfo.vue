@@ -414,7 +414,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Step2FormData } from "~/types/account-register";
+import type { Step2FormData } from "~/types/stripe-account-register";
 import { usePostalCodeSearch } from "~/composables/usePostalCodeSearch";
 import { useNumericInput } from "~/composables/useNumericInput";
 

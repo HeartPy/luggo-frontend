@@ -109,6 +109,10 @@ export const useBookingForm = () => {
         customer_nationality: "",
         guest_name: "",
       };
+      // エラーオブジェクトもクリア
+      errsStep1.value = {};
+      errsStep2.value = {};
+      errsStep3.value = {};
     } catch {
       // ストレージ削除失敗は無視
     }

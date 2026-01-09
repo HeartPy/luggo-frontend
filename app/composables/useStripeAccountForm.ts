@@ -4,9 +4,9 @@ import type {
   Step3FormData,
   Step4FormData,
   Step5FormData,
-} from "~/types/account-register";
+} from "~/types/stripe-account-register";
 
-export const useRegisterForm = () => {
+export const useStripeAccountForm = () => {
   const TTL_MS = 30 * 60 * 1000; // 30分に設定
 
   const loadWithExpiry = <T>(key: string, fallback: T): T => {
@@ -177,6 +177,12 @@ export const useRegisterForm = () => {
         document_back: "",
         address_kana: "",
       };
+      // エラーオブジェクトもクリア
+      errorsStep1.value = {};
+      errorsStep2.value = {};
+      errorsStep3.value = {};
+      errorsStep4.value = {};
+      errorsStep5.value = {};
     } catch {
       // ストレージ削除失敗は無視
     }

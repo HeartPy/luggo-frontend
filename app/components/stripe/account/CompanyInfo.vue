@@ -217,7 +217,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Step1FormData } from "~/types/account-register";
+import type { Step1FormData } from "~/types/stripe-account-register";
 import { usePostalCodeSearch } from "~/composables/usePostalCodeSearch";
 
 type Props = {

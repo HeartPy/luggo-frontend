@@ -102,20 +102,17 @@ import type {
   Step3FormData,
   Step4FormData,
   Step5FormData,
-} from "~/types/account-register";
-import { useRegisterForm } from "~/composables/useRegisterForm";
+} from "~/types/stripe-account-register";
+import { useStripeAccountForm } from "~/composables/useStripeAccountForm";
 import { useCsrf } from "~/composables/useCsrf";
 import { useSession } from "~/composables/useSession";
 import { useBeforeUnload } from "~/composables/useBeforeUnload";
-import {
-  checkAuthentication,
-  ensureAccount,
-  analyzeAccountRequirements,
-} from "~/composables/useStripeAccount";
+import { analyzeAccountRequirements } from "~/composables/useStripeAccount";
 
 const route = useRoute();
 
 definePageMeta({
+  middleware: "auth",
   validate: (route) => {
     const n = Number(route.params.step);
     return Number.isFinite(n) && n >= 1 && n <= 5;
@@ -162,7 +159,7 @@ const {
   errorsStep4,
   errorsStep5,
   clearAllData,
-} = useRegisterForm();
+} = useStripeAccountForm();
 
 const isSubmitting = ref(false);
 const isSubmitted = ref(false);
@@ -231,7 +228,7 @@ const handleFileUpload = async (
     let res: Response;
     try {
       res = await fetch(
-        `${apiBase}/api/business/public/stripe/custom/upload-document`,
+        `${apiBase}/api/business/stripe/custom/upload-document`,
         {
           method: "POST",
           credentials: "include",
@@ -326,11 +323,7 @@ const submit = async (): Promise<void> => {
 
     await ensureCsrf(apiBase);
 
-    // ログイン状態に応じてエンドポイントを切り替え
-    const isAuthenticated = await checkAuthentication();
-    const endpoint = isAuthenticated
-      ? `${apiBase}/api/business/stripe/custom/update-account`
-      : `${apiBase}/api/business/public/stripe/custom/update-account`;
+    const endpoint = `${apiBase}/api/business/stripe/custom/update-account`;
 
     const { data: body, error: fetchErr } = await useFetch<{
       error?: string;
@@ -852,21 +845,41 @@ onMounted(async () => {
     await startSession();
   }
   try {
-    // ログイン確認だけでなく、アカウントの確保も同時に行うため、checkAuthentication()ではなくensureAccount()を使用
-    const isAuthenticated = await ensureAccount();
-
-    // ログイン済みユーザーの場合のみ審査結果を取得
-    if (isAuthenticated) {
-      const rslt = await analyzeAccountRequirements();
-      if (rslt) {
-        requiredSteps.value = rslt.steps;
-        requiredFieldsByStep.value = rslt.fieldsByStep;
-      }
+    // middlewareで認証チェック済みなので、審査結果のみ取得
+    const rslt = await analyzeAccountRequirements();
+    if (rslt) {
+      requiredSteps.value = rslt.steps;
+      requiredFieldsByStep.value = rslt.fieldsByStep;
     }
   } catch {
     // エラーを無視
   }
 
   await checkStepAccess();
+});
+
+useHead({
+  title: "アカウント登録申請",
+  meta: [
+    {
+      name: "description",
+      content: "アカウント登録申請ページ。",
+    },
+    { property: "og:title", content: "アカウント登録申請 | LugGo(ラグゴー)" },
+    {
+      property: "og:description",
+      content: "アカウント登録申請ページ。",
+    },
+    {
+      key: "twitter:title",
+      name: "twitter:title",
+      content: "アカウント登録申請 | LugGo(ラグゴー)",
+    },
+    {
+      key: "twitter:description",
+      name: "twitter:description",
+      content: "アカウント登録申請ページ。",
+    },
+  ],
 });
 </script>
