@@ -107,7 +107,6 @@ import { useStripeAccountForm } from "~/composables/useStripeAccountForm";
 import { useCsrf } from "~/composables/useCsrf";
 import { useSession } from "~/composables/useSession";
 import { useBeforeUnload } from "~/composables/useBeforeUnload";
-import { checkAuthentication } from "~/composables/useAuth";
 import { analyzeAccountRequirements } from "~/composables/useStripeAccount";
 
 const route = useRoute();
@@ -229,7 +228,7 @@ const handleFileUpload = async (
     let res: Response;
     try {
       res = await fetch(
-        `${apiBase}/api/business/public/stripe/custom/upload-document`,
+        `${apiBase}/api/business/stripe/custom/upload-document`,
         {
           method: "POST",
           credentials: "include",
@@ -324,11 +323,7 @@ const submit = async (): Promise<void> => {
 
     await ensureCsrf(apiBase);
 
-    // ログイン状態に応じてエンドポイントを切り替え
-    const isAuthenticated = await checkAuthentication();
-    const endpoint = isAuthenticated
-      ? `${apiBase}/api/business/stripe/custom/update-account`
-      : `${apiBase}/api/business/public/stripe/custom/update-account`;
+    const endpoint = `${apiBase}/api/business/stripe/custom/update-account`;
 
     const { data: body, error: fetchErr } = await useFetch<{
       error?: string;
