@@ -22,7 +22,7 @@
         class="mb-8 space-y-4 rounded-lg border-2 border-gray-500 bg-gray-50 p-8 text-center"
       >
         <h2 class="text-lg font-semibold text-gray-800">予約ID</h2>
-  <div>
+        <div>
           <p
             class="text-2xl font-bold tracking-wider text-gray-800"
             data-testid="booking-id"
@@ -129,11 +129,26 @@ onBeforeUnmount(() => {
 });
 
 useHead({
-  title: "予約完了 | LugGo",
+  title: "予約完了",
   meta: [
     {
       name: "description",
-      content: "荷物配送サービスの予約が完了しました。",
+      content: "荷物配送サービスの予約完了ページ。",
+    },
+    { property: "og:title", content: "予約完了 | LugGo(ラグゴー)" },
+    {
+      property: "og:description",
+      content: "荷物配送サービスの予約完了ページ。",
+    },
+    {
+      key: "twitter:title",
+      name: "twitter:title",
+      content: "予約完了 | LugGo(ラグゴー)",
+    },
+    {
+      key: "twitter:description",
+      name: "twitter:description",
+      content: "荷物配送サービスの予約完了ページ。",
     },
   ],
 });

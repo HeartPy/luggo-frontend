@@ -145,7 +145,7 @@ export const createStep3Schema = () => {
       .transform((value) =>
         typeof value === "string" ? value.replace(/[\s-]/g, "") : value,
       )
-      .matches(/^\d{10,11}$/u, "有効な電話番号を入力してください"),
+      .matches(/^(\+\d{7,15}|\d{10,11})$/u, "有効な電話番号を入力してください"),
     customer_nationality: string().trim().required("国籍は必須です"),
     guest_name: string()
       .trim()

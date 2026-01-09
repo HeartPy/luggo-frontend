@@ -81,6 +81,7 @@ const route = useRoute();
 
 definePageMeta({
   layout: "customer",
+  middleware: "subdomain",
   validate: (route) => {
     const n = Number(route.params.step);
     return Number.isFinite(n) && n >= 1 && n <= 3;
@@ -420,7 +421,7 @@ const handleSubmit = async () => {
         if (import.meta.dev) {
           // eslint-disable-next-line no-console
           console.error("Navigation failed:", err);
-            }
+        }
         errMsg.value = "ページの遷移に失敗しました";
         isSubmitting.value = false;
         return;
@@ -429,7 +430,7 @@ const handleSubmit = async () => {
       if (import.meta.dev) {
         // eslint-disable-next-line no-console
         console.error("Payment intent creation error:", err);
-    }
+      }
       errMsg.value = "支払い情報の取得に失敗しました";
     } finally {
       isSubmitting.value = false;
@@ -498,14 +499,14 @@ onMounted(async () => {
 });
 
 useHead({
-  title: "荷物配送予約フォーム | LugGo",
+  title: "荷物配送予約フォーム",
   meta: [
     {
       name: "description",
       content:
         "旅行者向け荷物配送サービス「LugGo」の予約フォーム。集荷・配送の場所と日時を入力して、簡単に予約できます。",
     },
-    { property: "og:title", content: "荷物配送予約フォーム | LugGo" },
+    { property: "og:title", content: "荷物配送予約フォーム | LugGo(ラグゴー)" },
     {
       property: "og:description",
       content:
@@ -514,7 +515,7 @@ useHead({
     {
       key: "twitter:title",
       name: "twitter:title",
-      content: "荷物配送予約フォーム | LugGo",
+      content: "荷物配送予約フォーム | LugGo(ラグゴー)",
     },
     {
       key: "twitter:description",

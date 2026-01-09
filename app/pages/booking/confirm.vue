@@ -174,7 +174,7 @@
         <!-- 決済方法 -->
         <section v-if="paymentClientSecret" class="py-6">
           <h2 class="mb-4 text-sm text-gray-600">お支払い情報のご入力</h2>
-  <div>
+          <div>
             <CommonAtomsLoadingAnimation v-if="paymentLoading" size="md" />
             <div v-if="loadingErr && !paymentLoading" class="py-4 text-center">
               <p class="text-red-600">{{ loadingErr }}</p>
@@ -981,4 +981,29 @@ watch(
     }
   },
 );
+
+useHead({
+  title: "予約確認",
+  meta: [
+    {
+      name: "description",
+      content: "荷物配送サービスの予約確認ページ。",
+    },
+    { property: "og:title", content: "予約確認 | LugGo(ラグゴー)" },
+    {
+      property: "og:description",
+      content: "荷物配送サービスの予約確認ページ。",
+    },
+    {
+      key: "twitter:title",
+      name: "twitter:title",
+      content: "予約確認 | LugGo(ラグゴー)",
+    },
+    {
+      key: "twitter:description",
+      name: "twitter:description",
+      content: "荷物配送サービスの予約確認ページ。",
+    },
+  ],
+});
 </script>
