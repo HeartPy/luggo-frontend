@@ -112,7 +112,7 @@ import { analyzeAccountRequirements } from "~/composables/useStripeAccount";
 const route = useRoute();
 
 definePageMeta({
-  middleware: "auth",
+  middleware: "business-owner",
   validate: (route) => {
     const n = Number(route.params.step);
     return Number.isFinite(n) && n >= 1 && n <= 5;
