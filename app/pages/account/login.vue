@@ -5,7 +5,13 @@
         ログイン
       </h2>
 
-      <form class="mb-6" novalidate @submit.prevent="handleFormLogin">
+      <!-- ステップ1: メールアドレスとパスワード入力 -->
+      <form
+        v-if="!codeSent"
+        class="mb-6"
+        novalidate
+        @submit.prevent="handleFormLogin"
+      >
         <div class="mb-10 space-y-6">
           <div>
             <label for="email" class="mb-2 block font-semibold text-gray-800">
@@ -41,19 +47,42 @@
             >
               パスワード
             </label>
-            <input
-              id="password"
-              v-model="password"
-              v-bind="passwordProps"
-              name="password"
-              type="password"
-              required
-              class="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
-              :class="{ 'border-red-500': errors.password && formTouched }"
-              autocomplete="current-password"
-              aria-required="true"
-              aria-describedby="password-error"
-            />
+            <div class="relative">
+              <input
+                id="password"
+                v-model="password"
+                v-bind="passwordProps"
+                name="password"
+                :type="showPassword ? 'text' : 'password'"
+                required
+                class="w-full rounded-md border border-gray-300 px-3 py-2 pr-10 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
+                :class="{ 'border-red-500': errors.password && formTouched }"
+                autocomplete="current-password"
+                aria-required="true"
+                aria-describedby="password-error"
+              />
+              <button
+                type="button"
+                class="absolute right-3 top-1/2 -translate-y-1/2 focus:outline-none"
+                @click="showPassword = !showPassword"
+                :aria-label="
+                  showPassword ? 'パスワードを非表示' : 'パスワードを表示'
+                "
+              >
+                <img
+                  v-if="showPassword"
+                  class="h-6 w-6"
+                  src="/img/pass-show.svg"
+                  alt="パスワードを非表示"
+                />
+                <img
+                  v-else
+                  class="h-6 w-6"
+                  src="/img/pass-hidden.svg"
+                  alt="パスワードを表示"
+                />
+              </button>
+            </div>
             <p
               v-if="errors.password && formTouched"
               id="password-error"
@@ -74,11 +103,88 @@
           :disabled="isSubmitting"
           class="mx-auto w-full max-w-[500px] rounded-lg bg-gray-800 px-8 py-3 font-semibold text-white hover:bg-gray-900 disabled:cursor-not-allowed disabled:bg-gray-300"
         >
-          ログイン
+          <CommonAtomsLoadingAnimation v-if="isSubmitting" size="sm" />
+          <span v-else>ログイン</span>
         </button>
       </form>
 
-      <div class="space-y-2 text-center">
+      <!-- ステップ2: 認証コード入力 -->
+      <form v-else class="mb-6" novalidate @submit.prevent="handleVerifyCode">
+        <div class="mb-10 space-y-6">
+          <div>
+            <p class="mb-4 text-center text-sm text-gray-600">
+              {{ email }}宛に認証コードを送信しました。<br />
+              メールに記載されている6桁の認証コードを入力してください。
+            </p>
+            <label for="code" class="mb-2 block font-semibold text-gray-800">
+              認証コード
+            </label>
+            <input
+              id="code"
+              v-model="verificationCode"
+              name="code"
+              type="text"
+              maxlength="6"
+              required
+              class="w-full rounded-md border border-gray-300 px-3 py-2 text-center text-2xl tracking-widest focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
+              :class="{ 'border-red-500': codeErr }"
+              autocomplete="one-time-code"
+              aria-required="true"
+              aria-describedby="code-error"
+              placeholder="000000"
+              pattern="[0-9]{6}"
+              inputmode="numeric"
+              @input="handleCodeInput"
+            />
+            <p
+              v-if="codeErr"
+              id="code-error"
+              class="mt-1 text-sm text-red-600"
+              aria-live="polite"
+            >
+              {{ codeErr }}
+            </p>
+            <p class="mt-2 text-xs text-gray-500">
+              認証コードの有効期限は3分です。
+            </p>
+            <div class="mt-4 text-center">
+              <button
+                type="button"
+                :disabled="isSubmitting || isResending"
+                class="text-sm text-gray-600 underline transition-colors duration-200 hover:text-gray-800 disabled:cursor-not-allowed disabled:no-underline disabled:opacity-50"
+                @click="handleResendCode"
+              >
+                認証コードを再送信する
+              </button>
+            </div>
+          </div>
+
+          <div v-if="errMsg" class="text-center text-sm text-red-600">
+            {{ errMsg }}
+          </div>
+        </div>
+
+        <div class="space-y-3">
+          <button
+            type="submit"
+            :disabled="isSubmitting"
+            class="mx-auto w-full max-w-[500px] rounded-lg bg-gray-800 px-8 py-3 font-semibold text-white hover:bg-gray-900 disabled:cursor-not-allowed disabled:bg-gray-300"
+          >
+            <CommonAtomsLoadingAnimation v-if="isSubmitting" size="sm" />
+            <span v-else>ログイン</span>
+          </button>
+          <button
+            type="button"
+            :disabled="isSubmitting"
+            class="mx-auto w-full max-w-[500px] rounded-lg border border-gray-300 px-8 py-3 font-semibold text-gray-800 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+            @click="handleBack"
+          >
+            戻る
+          </button>
+        </div>
+      </form>
+
+      <div v-if="!codeSent" class="space-y-2 text-center">
         <NuxtLink
           to="/account/register/email"
           class="block text-sm text-gray-600 transition-colors duration-200 hover:text-gray-800"
@@ -86,7 +192,7 @@
           新規登録はこちら
         </NuxtLink>
         <NuxtLink
-          to="#"
+          to="/account/password/forgot"
           class="block text-sm text-gray-600 transition-colors duration-200 hover:text-gray-800"
         >
           パスワードを忘れた方はこちら
@@ -100,6 +206,7 @@
 import { object, string } from "yup";
 import { useForm } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/yup";
+import { useCsrf } from "~/composables/useCsrf";
 
 type LoginFormData = {
   email: string;
@@ -114,18 +221,24 @@ const loginSchema = object({
   password: string().trim().required("パスワードを入力してください"),
 });
 
-const { defineField, handleSubmit, errors, resetForm } = useForm<LoginFormData>(
-  {
-    validationSchema: toTypedSchema(loginSchema),
-  },
-);
+const { defineField, handleSubmit, errors } = useForm<LoginFormData>({
+  validationSchema: toTypedSchema(loginSchema),
+});
 
 const [email, emailProps] = defineField("email");
 const [password, passwordProps] = defineField("password");
 
 const isSubmitting = ref(false);
+const isResending = ref(false);
 const errMsg = ref("");
 const formTouched = ref(false);
+const codeSent = ref(false);
+const verificationCode = ref("");
+const codeErr = ref("");
+const savedPassword = ref("");
+const showPassword = ref(false);
+
+const { ensureCsrf, getCsrf } = useCsrf();
 
 const handleFormLogin = () => {
   formTouched.value = true;
@@ -137,26 +250,41 @@ const handleLogin = handleSubmit(async (formValues: LoginFormData) => {
     isSubmitting.value = true;
     errMsg.value = "";
 
-    // FormDataの作成
-    const formData = new FormData();
-    formData.append("email", formValues.email || "");
-    formData.append("password", formValues.password || "");
+    const config = useRuntimeConfig();
+    const apiBase = config.public.apiBaseUrl;
 
-    // フォーム送信
-    const { data, error } = await useFetch("/api/accounts/login", {
-      method: "POST",
-      body: formData,
-    });
+    await ensureCsrf(apiBase);
+
+    // 認証コード送信APIを呼び出し
+    const { error } = await useFetch(
+      `${apiBase}/api/users/auth/send-login-code`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(getCsrf() ? { "X-CSRFToken": getCsrf() } : {}),
+        },
+        body: {
+          email: formValues.email?.trim().toLowerCase() || "",
+          password: formValues.password || "",
+        },
+        credentials: "include",
+      },
+    );
 
     if (error.value) {
-      errMsg.value = "メールアドレスまたはパスワードが正しくありません。";
-    } else if (data.value) {
-      formTouched.value = false;
-      resetForm();
-      email.value = "";
-      password.value = "";
-      await navigateTo("/admin/dashboard");
+      const errData = error.value.data as { error?: string };
+      errMsg.value =
+        errData?.error || "メールアドレスまたはパスワードが正しくありません。";
+      return;
     }
+
+    codeSent.value = true;
+    errMsg.value = "";
+    // パスワードを保存（再送信時に使用）
+    savedPassword.value = formValues.password || "";
+    // フォームのパスワードをクリア（セキュリティのため）
+    password.value = "";
   } catch (error: unknown) {
     if (import.meta.dev) {
       // eslint-disable-next-line no-console
@@ -168,6 +296,134 @@ const handleLogin = handleSubmit(async (formValues: LoginFormData) => {
     isSubmitting.value = false;
   }
 });
+
+const handleVerifyCode = async () => {
+  if (!verificationCode.value || verificationCode.value.length !== 6) {
+    codeErr.value = "6桁の認証コードを入力してください。";
+    return;
+  }
+
+  try {
+    isSubmitting.value = true;
+    errMsg.value = "";
+    codeErr.value = "";
+
+    const config = useRuntimeConfig();
+    const apiBase = config.public.apiBaseUrl;
+
+    await ensureCsrf(apiBase);
+
+    // 認証コード検証APIを呼び出し
+    const { error } = await useFetch(
+      `${apiBase}/api/users/auth/verify-login-code`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(getCsrf() ? { "X-CSRFToken": getCsrf() } : {}),
+        },
+        body: {
+          email: email.value?.trim().toLowerCase() || "",
+          code: verificationCode.value.trim(),
+        },
+        credentials: "include",
+      },
+    );
+
+    if (error.value) {
+      const errData = error.value.data as { error?: string };
+      codeErr.value =
+        errData?.error || "認証コードが正しくないか、有効期限が切れています。";
+      return;
+    }
+
+    await navigateTo("/business-owner/dashboard");
+  } catch (error: unknown) {
+    if (import.meta.dev) {
+      // eslint-disable-next-line no-console
+      console.error("Code verification error:", error);
+    }
+    errMsg.value =
+      "予期しないエラーが発生しました。しばらく時間をおいて再度お試しください。";
+  } finally {
+    isSubmitting.value = false;
+  }
+};
+
+const handleResendCode = async () => {
+  if (!email.value || !savedPassword.value) {
+    errMsg.value = "入力情報が失われました。ページを再読み込みして、メールアドレスとパスワードから再度入力してください。";
+    return;
+  }
+
+  try {
+    isResending.value = true;
+    errMsg.value = "";
+    codeErr.value = "";
+    verificationCode.value = ""; // 入力済みの認証コードをクリア
+
+    const config = useRuntimeConfig();
+    const apiBase = config.public.apiBaseUrl;
+
+    await ensureCsrf(apiBase);
+
+    // 認証コード再送信APIを呼び出し
+    const { error } = await useFetch(
+      `${apiBase}/api/users/auth/send-login-code`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(getCsrf() ? { "X-CSRFToken": getCsrf() } : {}),
+        },
+        body: {
+          email: email.value.trim().toLowerCase(),
+          password: savedPassword.value,
+        },
+        credentials: "include",
+      },
+    );
+
+    if (error.value) {
+      const errData = error.value.data as { error?: string };
+      errMsg.value =
+        errData?.error ||
+        "認証コードの再送信に失敗しました。しばらく時間をおいて再度お試しください。";
+      return;
+    }
+
+    errMsg.value = "";
+    if (import.meta.dev) {
+      // eslint-disable-next-line no-console
+      console.log("認証コードを再送信しました。");
+    }
+  } catch (error: unknown) {
+    if (import.meta.dev) {
+      // eslint-disable-next-line no-console
+      console.error("Resend code error:", error);
+    }
+    errMsg.value =
+      "予期しないエラーが発生しました。しばらく時間をおいて再度お試しください。";
+  } finally {
+    isResending.value = false;
+  }
+};
+
+const handleBack = () => {
+  codeSent.value = false;
+  verificationCode.value = "";
+  codeErr.value = "";
+  errMsg.value = "";
+  savedPassword.value = "";
+  // パスワードをクリア（セキュリティのため）
+  password.value = "";
+};
+
+const handleCodeInput = (event: Event) => {
+  const target = event.target as HTMLInputElement;
+  // 数字以外の文字を削除
+  verificationCode.value = target.value.replace(/[^0-9]/g, "");
+};
 
 useHead({
   title: "管理者ログイン",
