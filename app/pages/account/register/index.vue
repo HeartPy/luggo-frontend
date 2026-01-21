@@ -244,7 +244,7 @@
                   />
                   <button
                     type="button"
-                    class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+                    class="absolute right-3 top-1/2 -translate-y-1/2 focus:outline-none"
                     @click="showPassword = !showPassword"
                     :aria-label="
                       showPassword ? 'パスワードを非表示' : 'パスワードを表示'
@@ -303,7 +303,7 @@
                   />
                   <button
                     type="button"
-                    class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+                    class="absolute right-3 top-1/2 -translate-y-1/2 focus:outline-none"
                     @click="showPassword = !showPassword"
                     :aria-label="
                       showPassword ? 'パスワードを非表示' : 'パスワードを表示'
@@ -610,8 +610,7 @@ const shouldShowForm = computed(() => {
 
 const handleRegister = async () => {
   if (!token.value) {
-    errMsg.value =
-      "有効期限が切れています。お手数おかけしますが、もう一度いちからやり直してください。";
+    errMsg.value = "リンクが正しくありません。";
     return;
   }
 
@@ -624,7 +623,7 @@ const handleRegister = async () => {
 
     await ensureCsrf(apiBase);
 
-    const { data, error } = await useFetch(
+    const { error } = await useFetch(
       `${apiBase}/api/business/account/register`,
       {
         method: "POST",
@@ -684,7 +683,7 @@ const handleRegister = async () => {
           tokenError.includes("送信されたメールアドレスと一致しません"))
       ) {
         errMsg.value =
-          "有効期限が切れています。お手数おかけしますが、もう一度いちからやり直してください。";
+          "このリンクは有効期限が切れているか、既に使用済みです。お手数おかけしますが、もう一度いちからやり直してください。";
         tokenValid.value = false;
         isSubmitting.value = false;
         return;
@@ -692,15 +691,16 @@ const handleRegister = async () => {
 
       errMsg.value =
         "登録に失敗しました。お手数おかけしますが、入力内容を確認して再度お試しいただくか、もう一度いちからやり直してください。";
-    } else if (data.value) {
-      clearAllData();
-      await navigateTo(
-        `/account/register/complete?token=${encodeURIComponent(token.value)}`,
-        {
-          replace: true,
-        },
-      );
+      return;
     }
+
+    clearAllData();
+    await navigateTo(
+      `/account/register/complete?token=${encodeURIComponent(token.value)}`,
+      {
+        replace: true,
+      },
+    );
   } catch (error: unknown) {
     if (import.meta.dev) {
       // eslint-disable-next-line no-console
@@ -780,7 +780,7 @@ onMounted(async () => {
           errorData.data.error.includes("トークンが指定されていません")
         ) {
           tokenErr.value =
-            "有効期限が切れています。お手数おかけしますが、もう一度いちからやり直してください。";
+            "このリンクは有効期限が切れているか、既に使用済みです。お手数おかけしますが、もう一度いちからやり直してください。";
         } else {
           // その他のエラー
           tokenErr.value =
