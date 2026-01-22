@@ -21,7 +21,7 @@
             <li>
               <NuxtLink
                 class="flex items-center rounded border border-gray-300 p-2.5 hover:opacity-80"
-                to="/account/register/email"
+                to="/account/login"
               >
                 ログイン
               </NuxtLink>
@@ -29,7 +29,7 @@
             <li>
               <NuxtLink
                 class="flex items-center rounded bg-gray-800 p-2.5 text-white hover:bg-gray-900"
-                to="/stripe/account"
+                to="/account/register/email"
               >
                 無料登録
               </NuxtLink>
