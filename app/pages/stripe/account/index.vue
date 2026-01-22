@@ -3,7 +3,7 @@ import { useSession } from "~/composables/useSession";
 import { determineFirstRequiredStep } from "~/composables/useStripeAccount";
 
 definePageMeta({
-  middleware: "auth",
+  middleware: "business-owner",
 });
 
 const { startSession } = useSession();
