@@ -3,6 +3,7 @@ import { useSession } from "~/composables/useSession";
 import { determineFirstRequiredStep } from "~/composables/useStripeAccount";
 
 definePageMeta({
+  layout: "stripe",
   middleware: "business-owner",
 });
 

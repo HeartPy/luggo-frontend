@@ -12,9 +12,9 @@
         </p>
         <NuxtLink
           class="mx-auto block w-fit rounded-md border-2 border-gray-300 bg-transparent px-8 py-3 font-semibold text-gray-700 hover:opacity-80"
-          to="/account/login"
+          to="/business-owner/dashboard"
         >
-          管理画面にログイン
+          管理画面へ移動
         </NuxtLink>
       </div>
     </div>
@@ -22,6 +22,10 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({
+  layout: "stripe",
+});
+
 onMounted(async () => {
   if (import.meta.client) {
     // 送信完了フラグをチェック
