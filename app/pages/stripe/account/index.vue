@@ -14,7 +14,7 @@ onMounted(async () => {
     await startSession();
 
     try {
-      // middlewareで認証チェック済みなので、審査結果から最初の必要なステップを取得
+      // middlewareで認証チェック済みなので、不足要件から最初の必要なステップを取得
       const firstRequiredStep = await determineFirstRequiredStep();
 
       await navigateTo(`/stripe/account/${firstRequiredStep}`, {

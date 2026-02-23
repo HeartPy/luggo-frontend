@@ -1,11 +1,12 @@
 <template>
-  <div class="space-y-6">
+  <div v-if="isVerifSectionRequired" class="space-y-6">
     <StripeAccountAtomsFormTtl>本人確認書類</StripeAccountAtomsFormTtl>
     <p class="mb-6 text-sm text-gray-600">
-      運転免許証、パスポート、マイナンバーカードなどの本人確認書類をアップロードしてください。
+      代表者の本人確認書類として、運転免許証、パスポート、マイナンバーカードなどをアップロードしてください。
     </p>
     <div>
       <div class="mb-3 flex flex-col gap-6">
+        <!-- 本人確認書類の表（前面） -->
         <div v-if="isFieldRequired('document_front')">
           <label class="mb-1 block text-sm font-medium"
             >本人確認書類の表（前面）<span class="ml-[0.2em] text-red-600"
@@ -32,6 +33,8 @@
             {{ errors?.document_front || localErrors.document_front }}
           </div>
         </div>
+
+        <!-- 本人確認書類の裏（背面） -->
         <div v-if="isFieldRequired('document_back')">
           <label class="mb-1 block text-sm font-medium"
             >本人確認書類の裏（背面）<span class="ml-[0.2em] text-red-600"
@@ -85,11 +88,26 @@ const props = defineProps<Props>();
 
 // フィールドが必須かどうかを判定
 const isFieldRequired = (fieldName: string): boolean => {
-  if (!props.requiredFields || props.requiredFields.length === 0) {
+  if (!props.requiredFields) {
     return true;
+  }
+  if (props.requiredFields.length === 0) {
+    return false;
   }
   return props.requiredFields.includes(fieldName);
 };
+
+const isVerifSectionRequired = computed(() => {
+  if (!props.requiredFields) {
+    return true;
+  }
+  if (props.requiredFields.length === 0) {
+    return false;
+  }
+  return props.requiredFields.some((field) =>
+    ["document_front", "document_back"].includes(field),
+  );
+});
 
 const emit = defineEmits<{
   "update:form-data": [value: Step5FormData];
