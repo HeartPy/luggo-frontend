@@ -202,7 +202,7 @@ const hasUnsavedChanges = computed(() => {
 });
 
 // ページを離れる前に警告を表示
-useBeforeUnload(hasUnsavedChanges, isSubmitting, isSubmitted);
+useBeforeUnload(isSubmitting, isSubmitted, hasUnsavedChanges);
 
 const canProceedStep1 = ref(false);
 const canProceedStep2 = ref(false);
