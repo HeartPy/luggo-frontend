@@ -5,36 +5,139 @@ export const stripeFieldMapping: Record<
   string,
   { step: number; field: string }
 > = {
-  // Step1: ビジネス情報/会社情報
-  "business_profile.name": {
-    step: 1,
-    field: "product_name",
-  },
+  // Step1: 事業者情報
+  "tos_acceptance": { step: 1, field: "accept_tos" },
+  "tos_acceptance.date": { step: 1, field: "accept_tos" },
+  "tos_acceptance.ip": { step: 1, field: "accept_tos" },
+  "tos_acceptance.user_agent": { step: 1, field: "accept_tos" },
   "business_profile.support_email": {
     step: 1,
     field: "support_email",
   },
-  "company.name": { step: 1, field: "company_name" },
+  "business_profile.name": { step: 1, field: "company_name" },
+  "business_profile.name_kana": { step: 1, field: "company_name_kana" },
+  "business_profile.address_kanji": {
+    step: 1,
+    field: "company_address_kanji",
+  },
+  "business_profile.address_kana": {
+    step: 1,
+    field: "company_address_kana",
+  },
+  "business_profile.address_kanji.postal_code": {
+    step: 1,
+    field: "company_address_kanji.postal_code",
+  },
+  "business_profile.address_kanji.state": {
+    step: 1,
+    field: "company_address_kanji.state",
+  },
+  "business_profile.address_kanji.city": {
+    step: 1,
+    field: "company_address_kanji.city",
+  },
+  "business_profile.address_kanji.line1": {
+    step: 1,
+    field: "company_address_kanji.line1",
+  },
+  "business_profile.address_kanji.line2": {
+    step: 1,
+    field: "company_address_kanji.line2",
+  },
+  "business_profile.address_kana.postal_code": {
+    step: 1,
+    field: "company_address_kana.postal_code",
+  },
+  "business_profile.address_kana.state": {
+    step: 1,
+    field: "company_address_kana.state",
+  },
+  "business_profile.address_kana.city": {
+    step: 1,
+    field: "company_address_kana.city",
+  },
+  "business_profile.address_kana.line1": {
+    step: 1,
+    field: "company_address_kana.line1",
+  },
+  "company.name": { step: 1, field: "company_name_romaji" },
+  "company.name_kanji": { step: 1, field: "company_name" },
+  "company.name_kana": { step: 1, field: "company_name_kana" },
+  "company.phone": { step: 2, field: "rep_phone" },
+  "company.tax_id": { step: 1, field: "tax_id" },
+  "company.address_kanji": { step: 1, field: "company_address_kanji" },
+  "company.address_kana": { step: 1, field: "company_address_kana" },
   "company.address.country": {
     step: 1,
-    field: "company_address.country",
+    field: "company_address_kanji.country",
   },
   "company.address.postal_code": {
     step: 1,
-    field: "company_address.postal_code",
+    field: "company_address_kanji.postal_code",
   },
   "company.address.state": {
     step: 1,
-    field: "company_address.state",
+    field: "company_address_kanji.state",
+  },
+  "company.address.city": {
+    step: 1,
+    field: "company_address_kanji.city",
   },
   "company.address.line1": {
     step: 1,
-    field: "company_address.line1",
+    field: "company_address_kanji.line1",
   },
   "company.address.line2": {
     step: 1,
-    field: "company_address.line2",
+    field: "company_address_kanji.line2",
   },
+  "company.address_kanji.postal_code": {
+    step: 1,
+    field: "company_address_kanji.postal_code",
+  },
+  "company.address_kanji.state": {
+    step: 1,
+    field: "company_address_kanji.state",
+  },
+  "company.address_kanji.city": {
+    step: 1,
+    field: "company_address_kanji.city",
+  },
+  "company.address_kanji.town": {
+    step: 1,
+    field: "company_address_kanji.town",
+  },
+  "company.address_kanji.line1": {
+    step: 1,
+    field: "company_address_kanji.line1",
+  },
+  "company.address_kanji.line2": {
+    step: 1,
+    field: "company_address_kanji.line2",
+  },
+  "company.address_kana.postal_code": {
+    step: 1,
+    field: "company_address_kana.postal_code",
+  },
+  "company.address_kana.state": {
+    step: 1,
+    field: "company_address_kana.state",
+  },
+  "company.address_kana.city": {
+    step: 1,
+    field: "company_address_kana.city",
+  },
+  "company.address_kana.town": {
+    step: 1,
+    field: "company_address_kana.town",
+  },
+  "company.address_kana.line1": {
+    step: 1,
+    field: "company_address_kana.line1",
+  },
+  "company.directors_provided": { step: 2, field: "directors" },
+  "directors": { step: 2, field: "directors" },
+
   // Step2: 代表者情報
   "individual.first_name_kanji": { step: 2, field: "first_name_kanji" },
   "individual.last_name_kanji": { step: 2, field: "last_name_kanji" },
@@ -53,6 +156,7 @@ export const stripeFieldMapping: Record<
   },
   "individual.address_kanji.state": { step: 2, field: "address_kanji.state" },
   "individual.address_kanji.city": { step: 2, field: "address_kanji.city" },
+  "individual.address_kanji.town": { step: 2, field: "address_kanji.town" },
   "individual.address_kanji.line1": { step: 2, field: "address_kanji.line1" },
   "individual.address_kanji.line2": { step: 2, field: "address_kanji.line2" },
   "individual.address_kana.postal_code": {
@@ -61,10 +165,13 @@ export const stripeFieldMapping: Record<
   },
   "individual.address_kana.state": { step: 2, field: "address_kana.state" },
   "individual.address_kana.city": { step: 2, field: "address_kana.city" },
+  "individual.address_kana.town": { step: 2, field: "address_kana.town" },
   "individual.address_kana.line1": { step: 2, field: "address_kana.line1" },
+
   // Step3: 銀行口座情報
   // prettier-ignore
   "external_account": { step: 3, field: "bank_info" },
+
   // Step4: 事業詳細
   "business_profile.url": { step: 4, field: "product_url" },
   "business_profile.product_description": {
@@ -72,13 +179,13 @@ export const stripeFieldMapping: Record<
     field: "product_description",
   },
   "business_profile.mcc": { step: 4, field: "product_mcc" },
+
   // Step5: 本人確認書類
   "verification.document.front": { step: 5, field: "document_front" },
   "verification.document.back": { step: 5, field: "document_back" },
-  "verification.address_kana": { step: 5, field: "address_kana" },
 };
 
-// 審査結果を取得する関数
+// Stripeから不足している要件を取得する関数
 const fetchAccountRequirements = async (): Promise<{
   currently_due: string[];
   eventually_due: string[];
@@ -178,7 +285,8 @@ const analyzeStripeFields = (
     }
 
     // verification.documentの特別処理
-    if (stripeField.startsWith("verification.document")) {
+    // "verification.document.*" と "individual.verification.document.*" の両方に対応
+    if (stripeField.includes("verification.document")) {
       steps.add(5);
       const stepFields = fieldsByStep[5];
       if (stepFields) {
@@ -187,6 +295,62 @@ const analyzeStripeFields = (
         }
         if (stripeField.includes("back")) {
           stepFields.add("document_back");
+        }
+      }
+    }
+
+    // directorsの特別処理
+    if (stripeField.startsWith("directors.")) {
+      steps.add(2);
+      const stepFields = fieldsByStep[2];
+      if (stepFields) {
+        stepFields.add("directors");
+      }
+    }
+
+    // person_***の特別処理（代表者/取締役の不足）
+    // Stripeは person_<動的ID>.フィールド名 の形式で要件を返すため、
+    // person_ で始まるすべての要件を Step2 に誘導する。
+    if (stripeField.startsWith("person_")) {
+      if (stripeField.includes("verification.document")) {
+        // person の本人確認書類は Step5 に誘導（取締役セクションは表示しない）
+        steps.add(5);
+        const step5Fields = fieldsByStep[5];
+        if (step5Fields) {
+          if (stripeField.includes("front")) {
+            step5Fields.add("document_front");
+          }
+          if (stripeField.includes("back")) {
+            step5Fields.add("document_back");
+          }
+        }
+      } else {
+        // 代表者・取締役どちらの不足か不明なため、取締役セクションも表示
+        steps.add(2);
+        const stepFields = fieldsByStep[2];
+        if (stepFields) {
+          stepFields.add("directors");
+
+          if (stripeField.includes("relationship")) {
+            stepFields.add("rep_title");
+            stepFields.add("directors.title");
+          } else if (stripeField.includes("first_name")) {
+            stepFields.add("first_name_kanji");
+            stepFields.add("first_name_kana");
+          } else if (stripeField.includes("last_name")) {
+            stepFields.add("last_name_kanji");
+            stepFields.add("last_name_kana");
+          } else if (stripeField.includes("phone")) {
+            stepFields.add("rep_phone");
+          } else if (stripeField.includes("email")) {
+            stepFields.add("rep_email");
+          } else if (stripeField.includes("dob")) {
+            stepFields.add("rep_dob");
+          } else if (stripeField.includes("address_kanji")) {
+            stepFields.add("address_kanji");
+          } else if (stripeField.includes("address_kana")) {
+            stepFields.add("address_kana");
+          }
         }
       }
     }

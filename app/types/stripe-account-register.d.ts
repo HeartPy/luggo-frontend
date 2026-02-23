@@ -1,24 +1,27 @@
-type Address = {
+type CompanyAddressKanji = {
   country: string;
   postal_code: string;
   state: string;
-  state_kana: string;
   city: string;
-  city_kana: string;
+  town?: string;
   line1: string;
-  line1_kana: string;
   line2?: string;
 };
 
-type CompanyAddress = Omit<
-  Address,
-  "state_kana" | "city" | "city_kana" | "line1_kana"
->;
+type CompanyAddressKana = {
+  country: string;
+  postal_code: string;
+  state: string;
+  city: string;
+  town?: string;
+  line1: string;
+};
 
 type AddressKanji = {
   postal_code: string;
   state: string;
   city: string;
+  town?: string;
   line1: string;
   line2?: string;
 };
@@ -27,6 +30,7 @@ type AddressKana = {
   postal_code: string;
   state: string;
   city: string;
+  town?: string;
   line1: string;
 };
 
@@ -36,12 +40,31 @@ type DateOfBirth = {
   day: number;
 };
 
+export type DirectorInfo = {
+  title: string;
+  first_name_kanji: string;
+  last_name_kanji: string;
+  first_name_kana: string;
+  last_name_kana: string;
+  email: string;
+  phone: string;
+  dob: DateOfBirth;
+  address_kanji: AddressKanji;
+  address_kana: AddressKana;
+};
+
 export type Step1FormData = {
   accept_tos: boolean;
-  product_name: string;
   support_email: string;
   company_name: string;
-  company_address: CompanyAddress;
+  company_name_kana: string;
+  company_name_romaji: string;
+  statement_descriptor: string;
+  statement_descriptor_kana: string;
+  statement_descriptor_romaji: string;
+  tax_id: string;
+  company_address_kanji: CompanyAddressKanji;
+  company_address_kana: CompanyAddressKana;
 };
 
 export type Step2FormData = {
@@ -49,11 +72,13 @@ export type Step2FormData = {
   last_name_kanji: string;
   first_name_kana: string;
   last_name_kana: string;
+  rep_title: string;
   rep_email: string;
   rep_phone: string;
   rep_dob: DateOfBirth;
   address_kanji: AddressKanji;
   address_kana: AddressKana;
+  directors: DirectorInfo[];
 };
 
 export type Step3FormData = {
@@ -73,5 +98,4 @@ export type Step4FormData = {
 export type Step5FormData = {
   document_front: string;
   document_back: string;
-  address_kana: string;
 };

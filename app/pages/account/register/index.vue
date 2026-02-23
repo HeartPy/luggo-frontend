@@ -67,11 +67,49 @@
           <form class="mb-6" novalidate @submit.prevent="handleFormRegister">
             <div class="mb-10 space-y-6">
               <div class="mx-auto max-w-sm">
+                <label class="mb-2 block font-semibold text-gray-800">
+                  事業形態<span class="ml-1 text-red-600">*</span>
+                </label>
+                <div class="space-y-2">
+                  <label class="flex items-center gap-2">
+                    <input
+                      v-model="formData.business_type"
+                      type="radio"
+                      name="business_type"
+                      value="individual"
+                      class="h-4 w-4 text-blue-600 focus:ring-blue-500"
+                      required
+                    />
+                    <span class="text-sm text-gray-700">個人事業主</span>
+                  </label>
+                  <label class="flex items-center gap-2">
+                    <input
+                      v-model="formData.business_type"
+                      type="radio"
+                      name="business_type"
+                      value="company"
+                      class="h-4 w-4 text-blue-600 focus:ring-blue-500"
+                      required
+                    />
+                    <span class="text-sm text-gray-700">法人</span>
+                  </label>
+                </div>
+                <p
+                  v-if="errors.business_type"
+                  id="business_type-error"
+                  class="mt-1 text-sm text-red-600"
+                  aria-live="polite"
+                >
+                  {{ errors.business_type }}
+                </p>
+              </div>
+
+              <div class="mx-auto max-w-sm">
                 <label
                   for="company_name"
                   class="mb-2 block font-semibold text-gray-800"
                 >
-                  企業名または屋号<span class="ml-1 text-red-600">*</span>
+                  法人名または屋号<span class="ml-1 text-red-600">*</span>
                 </label>
                 <input
                   id="company_name"
@@ -100,33 +138,121 @@
               </div>
 
               <div class="mx-auto max-w-sm">
-                <label
-                  for="rep_name"
-                  class="mb-2 block font-semibold text-gray-800"
-                >
+                <label class="mb-2 block font-semibold text-gray-800">
                   代表者のお名前<span class="ml-1 text-red-600">*</span>
                 </label>
-                <input
-                  id="rep_name"
-                  v-model="formData.rep_name"
-                  name="rep_name"
-                  type="text"
-                  required
-                  class="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  :class="{
-                    'border-red-500': errors.rep_name,
-                  }"
-                  aria-required="true"
-                  aria-describedby="rep_name-error"
-                />
-                <p
-                  v-if="errors.rep_name"
-                  id="rep_name-error"
-                  class="mt-1 text-sm text-red-600"
-                  aria-live="polite"
-                >
-                  {{ errors.rep_name }}
-                </p>
+                <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-3">
+                  <div class="max-w-sm sm:max-w-full">
+                    <label for="rep_last_name" class="mb-1 block text-sm">
+                      姓
+                    </label>
+                    <input
+                      id="rep_last_name"
+                      v-model="formData.rep_last_name"
+                      name="rep_last_name"
+                      type="text"
+                      required
+                      class="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      :class="{
+                        'border-red-500': errors.rep_last_name,
+                      }"
+                      aria-required="true"
+                      aria-describedby="rep_last_name-error"
+                    />
+                    <p
+                      v-if="errors.rep_last_name"
+                      id="rep_last_name-error"
+                      class="mt-1 text-sm text-red-600"
+                      aria-live="polite"
+                    >
+                      {{ errors.rep_last_name }}
+                    </p>
+                  </div>
+                  <div class="max-w-sm sm:max-w-full">
+                    <label for="rep_first_name" class="mb-1 block text-sm">
+                      名
+                    </label>
+                    <input
+                      id="rep_first_name"
+                      v-model="formData.rep_first_name"
+                      name="rep_first_name"
+                      type="text"
+                      required
+                      class="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      :class="{
+                        'border-red-500': errors.rep_first_name,
+                      }"
+                      aria-required="true"
+                      aria-describedby="rep_first_name-error"
+                    />
+                    <p
+                      v-if="errors.rep_first_name"
+                      id="rep_first_name-error"
+                      class="mt-1 text-sm text-red-600"
+                      aria-live="polite"
+                    >
+                      {{ errors.rep_first_name }}
+                    </p>
+                  </div>
+                  <div class="max-w-sm sm:max-w-full">
+                    <label
+                      for="rep_last_name_kana"
+                      class="mb-1 block text-sm font-medium"
+                    >
+                      姓（カナ）<span class="ml-[0.2em] text-red-600">*</span>
+                    </label>
+                    <input
+                      id="rep_last_name_kana"
+                      v-model="formData.rep_last_name_kana"
+                      name="rep_last_name_kana"
+                      type="text"
+                      required
+                      class="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      :class="{
+                        'border-red-500': errors.rep_last_name_kana,
+                      }"
+                      aria-required="true"
+                      aria-describedby="rep_last_name_kana-error"
+                    />
+                    <p
+                      v-if="errors.rep_last_name_kana"
+                      id="rep_last_name_kana-error"
+                      class="mt-1 text-sm text-red-600"
+                      aria-live="polite"
+                    >
+                      {{ errors.rep_last_name_kana }}
+                    </p>
+                  </div>
+                  <div class="max-w-sm sm:max-w-full">
+                    <label
+                      for="rep_first_name_kana"
+                      class="mb-1 block text-sm font-medium"
+                    >
+                      名（カナ）<span class="ml-[0.2em] text-red-600">*</span>
+                    </label>
+                    <input
+                      id="rep_first_name_kana"
+                      v-model="formData.rep_first_name_kana"
+                      name="rep_first_name_kana"
+                      type="text"
+                      required
+                      class="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      :class="{
+                        'border-red-500': errors.rep_first_name_kana,
+                      }"
+                      aria-required="true"
+                      aria-describedby="rep_first_name_kana-error"
+                    />
+                    <p
+                      v-if="errors.rep_first_name_kana"
+                      id="rep_first_name_kana-error"
+                      class="mt-1 text-sm text-red-600"
+                      aria-live="polite"
+                    >
+                      {{ errors.rep_first_name_kana }}
+                    </p>
+                  </div>
+                </div>
               </div>
 
               <div class="mx-auto max-w-sm">
@@ -363,14 +489,31 @@ import { useRegistrationForm } from "~/composables/useRegistrationForm";
 import type { RegisterFormData } from "~/types/account-register";
 
 const registerSchema = object({
+  business_type: string()
+    .required("事業形態を選択してください")
+    .oneOf(["company", "individual"], "有効な事業形態を選択してください"),
   company_name: string()
     .trim()
-    .required("企業名または屋号を入力してください")
-    .max(100, "企業名または屋号は100文字以内で入力してください"),
-  rep_name: string()
+    .required("法人名または屋号を入力してください")
+    .max(100, "法人名または屋号は100文字以内で入力してください"),
+  rep_last_name: string()
     .trim()
-    .required("代表者のお名前を入力してください")
-    .max(50, "代表者のお名前は50文字以内で入力してください"),
+    .required("姓を入力してください")
+    .max(50, "姓は50文字以内で入力してください"),
+  rep_first_name: string()
+    .trim()
+    .required("名を入力してください")
+    .max(50, "名は50文字以内で入力してください"),
+  rep_last_name_kana: string()
+    .trim()
+    .required("姓（カナ）を入力してください")
+    .max(50, "姓（カナ）は50文字以内で入力してください")
+    .matches(/^[ァ-ヶー\s]+$/u, "姓（カナ）はカタカナで入力してください"),
+  rep_first_name_kana: string()
+    .trim()
+    .required("名（カナ）を入力してください")
+    .max(50, "名（カナ）は50文字以内で入力してください")
+    .matches(/^[ァ-ヶー\s]+$/u, "名（カナ）はカタカナで入力してください"),
   email: string()
     .trim()
     .required("メールアドレスを入力してください")
@@ -633,8 +776,12 @@ const handleRegister = async () => {
         },
         body: {
           token: token.value,
+          business_type: formData.value.business_type,
           company_name: formData.value.company_name,
-          rep_name: formData.value.rep_name,
+          rep_last_name: formData.value.rep_last_name,
+          rep_first_name: formData.value.rep_first_name,
+          rep_last_name_kana: formData.value.rep_last_name_kana,
+          rep_first_name_kana: formData.value.rep_first_name_kana,
           email: formData.value.email,
           phone: formData.value.phone,
           subdomain: formData.value.subdomain.toLowerCase(),

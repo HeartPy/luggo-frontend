@@ -33,8 +33,12 @@ export const useRegistrationForm = () => {
 
   const formData = useState<RegisterFormData>("registrationFormData", () => ({
     ...loadWithExpiry<RegisterFormData>("businessAccountRegistration.form", {
+      business_type: "individual",
       company_name: "",
-      rep_name: "",
+      rep_last_name: "",
+      rep_first_name: "",
+      rep_last_name_kana: "",
+      rep_first_name_kana: "",
       email: "",
       phone: "",
       subdomain: "",
@@ -67,8 +71,12 @@ export const useRegistrationForm = () => {
       localStorage.removeItem("businessAccountRegistration.form");
       // 状態も初期値にリセット
       formData.value = {
+        business_type: "individual",
         company_name: "",
-        rep_name: "",
+        rep_last_name: "",
+        rep_first_name: "",
+        rep_last_name_kana: "",
+        rep_first_name_kana: "",
         email: "",
         phone: "",
         subdomain: "",
@@ -102,8 +110,12 @@ export const useRegistrationForm = () => {
     // フォームデータのチェック
     if (checkExpired("businessAccountRegistration.form")) {
       formData.value = {
+        business_type: "individual",
         company_name: "",
-        rep_name: "",
+        rep_last_name: "",
+        rep_first_name: "",
+        rep_last_name_kana: "",
+        rep_first_name_kana: "",
         email: "",
         phone: "",
         subdomain: "",

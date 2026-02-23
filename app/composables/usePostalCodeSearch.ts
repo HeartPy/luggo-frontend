@@ -203,23 +203,20 @@ const convertHalfWidthKanaToFullWidth = (text: string): string => {
 
     // 濁点・半濁点の組み合わせをチェック（例: ｶﾞ, ﾊﾟ）
     if (
-      nextChar
-      && (nextChar === "ﾞ" || nextChar === "ﾟ")
-      && halfToFullMap[char + nextChar]
+      nextChar &&
+      (nextChar === "ﾞ" || nextChar === "ﾟ") &&
+      halfToFullMap[char + nextChar]
     ) {
       result += halfToFullMap[char + nextChar];
       i += 2;
-    }
-    else if (char && halfToFullMap[char]) {
+    } else if (char && halfToFullMap[char]) {
       result += halfToFullMap[char];
       i += 1;
-    }
-    else {
+    } else {
       result += char;
       i += 1;
     }
   }
-
   return result;
 };
 
@@ -244,8 +241,8 @@ type AddressSearchResult = {
   state_kana?: string;
   city: string;
   city_kana?: string;
-  line1: string;
-  line1_kana?: string;
+  town: string;
+  town_kana?: string;
 };
 
 export const usePostalCodeSearch = () => {
@@ -267,38 +264,37 @@ export const usePostalCodeSearch = () => {
         if (!result) {
           return null;
         }
-        // address1: 都道府県, address2: 市区町村, address3: 町域
+        // address1: 都道府県, address2: 市区町村, address3: 町域（町名・丁目）
         // kana1: 都道府県カナ, kana2: 市区町村カナ, kana3: 町域カナ
         const prefecture = result.prefcode
           ? getPrefectureName(result.prefcode)
           : result.address1 || "";
         const city = result.address2 || "";
-        const area = result.address3 || "";
+        const town = result.address3 || "";
 
         const searchResult: AddressSearchResult = {
           postal_code: postalCode,
           state: prefecture,
           city: city,
-          line1: area,
+          town: town,
         };
 
         if (includeKana) {
           const prefectureKana = result.prefcode
             ? getPrefectureNameKana(result.prefcode)
-            : result.kana1 || "";
+            : convertHalfWidthKanaToFullWidth(result.kana1 || "");
           const cityKana = convertHalfWidthKanaToFullWidth(result.kana2 || "");
-          const areaKana = convertHalfWidthKanaToFullWidth(result.kana3 || "");
+          const townKana = convertHalfWidthKanaToFullWidth(result.kana3 || "");
 
           searchResult.state_kana = prefectureKana;
           searchResult.city_kana = cityKana;
-          searchResult.line1_kana = areaKana;
+          searchResult.town_kana = townKana;
         }
 
         return searchResult;
       }
       return null;
-    }
-    catch (error: unknown) {
+    } catch (error: unknown) {
       // エラーは静かに処理（ユーザーには表示しない）
       if (error instanceof Error) {
         // 開発時のみエラーをログ出力

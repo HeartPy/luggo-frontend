@@ -6,10 +6,15 @@ import { useCsrf } from "~/composables/useCsrf";
 export const useBusinessProfile = () => {
   const businessProfile = useState<{
     id: string;
+    business_type: "company" | "individual";
     company_name: string;
     company_email: string;
     subdomain: string;
     tax_id: string;
+    rep_last_name_kanji: string;
+    rep_first_name_kanji: string;
+    rep_last_name_kana: string;
+    rep_first_name_kana: string;
     service_areas: string[];
     max_luggage_capacity: number;
     operating_hours_start: string | null;

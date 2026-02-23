@@ -8,7 +8,15 @@ import type {
 
 export const useStripeAccountForm = () => {
   const TTL_MS = 30 * 60 * 1000; // 30分に設定
+  // 現在のユーザーIDを保存するキー
+  const USER_ID_KEY = "stripeAccountForm.userId";
+  // 保存データが30分経過でリセットされたときに表示する通知用フラグ
+  const expiredNotice = useState<boolean>(
+    "stripeAccountForm.expiredNotice",
+    () => false,
+  );
 
+  // 有効期限内の保存データを返す。無い・期限切れ・不正のときはfallback（初期値）を返す。
   const loadWithExpiry = <T>(key: string, fallback: T): T => {
     if (!import.meta.client) return fallback;
     try {
@@ -19,6 +27,7 @@ export const useStripeAccountForm = () => {
       const isExpired = Date.now() - parsed.savedAt > TTL_MS;
       if (isExpired) {
         localStorage.removeItem(key);
+        localStorage.removeItem(USER_ID_KEY);
         return fallback;
       }
       return parsed.value;
@@ -27,6 +36,23 @@ export const useStripeAccountForm = () => {
     }
   };
 
+  // 現在のユーザーIDと保存されているユーザーIDを比較し、異なる場合はデータをクリア
+  const checkAndClearIfDifferentUser = (currentUserId: string | null): void => {
+    if (!import.meta.client || !currentUserId) return;
+    try {
+      const savedUserId = localStorage.getItem(USER_ID_KEY);
+      if (savedUserId && savedUserId !== currentUserId) {
+        // 別のユーザーのデータが保存されている場合はクリア
+        clearAllData();
+      }
+      // 現在のユーザーIDを保存
+      localStorage.setItem(USER_ID_KEY, currentUserId);
+    } catch {
+      // エラー時は無視
+    }
+  };
+
+  // フォームデータと保存時刻をセットでlocalStorageに保存
   const saveWithExpiry = <T>(key: string, value: T) => {
     if (!import.meta.client) return;
     try {
@@ -39,13 +65,28 @@ export const useStripeAccountForm = () => {
   const step1Data = useState<Step1FormData>("step1Data", () => ({
     ...loadWithExpiry<Step1FormData>("register.step1", {
       accept_tos: false,
-      product_name: "",
       support_email: "",
       company_name: "",
-      company_address: {
+      company_name_kana: "",
+      company_name_romaji: "",
+      statement_descriptor: "",
+      statement_descriptor_kana: "",
+      statement_descriptor_romaji: "",
+      tax_id: "",
+      company_address_kanji: {
         country: "JP",
         postal_code: "",
         state: "",
+        city: "",
+        town: "",
+        line1: "",
+      },
+      company_address_kana: {
+        country: "JP",
+        postal_code: "",
+        state: "",
+        city: "",
+        town: "",
         line1: "",
       },
     }),
@@ -56,6 +97,7 @@ export const useStripeAccountForm = () => {
       last_name_kanji: "",
       first_name_kana: "",
       last_name_kana: "",
+      rep_title: "代表取締役",
       rep_email: "",
       rep_phone: "",
       rep_dob: { year: 0, month: 0, day: 0 },
@@ -63,14 +105,17 @@ export const useStripeAccountForm = () => {
         postal_code: "",
         state: "",
         city: "",
+        town: "",
         line1: "",
       },
       address_kana: {
         postal_code: "",
         state: "",
         city: "",
+        town: "",
         line1: "",
       },
+      directors: [],
     }),
   }));
   const step3Data = useState<Step3FormData>("step3Data", () => ({
@@ -93,7 +138,6 @@ export const useStripeAccountForm = () => {
     ...loadWithExpiry<Step5FormData>("register.step5", {
       document_front: "",
       document_back: "",
-      address_kana: "",
     }),
   }));
 
@@ -129,13 +173,28 @@ export const useStripeAccountForm = () => {
       // 状態も初期値にリセット
       step1Data.value = {
         accept_tos: false,
-        product_name: "",
         support_email: "",
         company_name: "",
-        company_address: {
+        company_name_kana: "",
+        company_name_romaji: "",
+        statement_descriptor: "",
+        statement_descriptor_kana: "",
+        statement_descriptor_romaji: "",
+        tax_id: "",
+        company_address_kanji: {
           country: "JP",
           postal_code: "",
           state: "",
+          city: "",
+          town: "",
+          line1: "",
+        },
+        company_address_kana: {
+          country: "JP",
+          postal_code: "",
+          state: "",
+          city: "",
+          town: "",
           line1: "",
         },
       };
@@ -144,6 +203,7 @@ export const useStripeAccountForm = () => {
         last_name_kanji: "",
         first_name_kana: "",
         last_name_kana: "",
+        rep_title: "代表取締役",
         rep_email: "",
         rep_phone: "",
         rep_dob: { year: 0, month: 0, day: 0 },
@@ -151,14 +211,17 @@ export const useStripeAccountForm = () => {
           postal_code: "",
           state: "",
           city: "",
+          town: "",
           line1: "",
         },
         address_kana: {
           postal_code: "",
           state: "",
           city: "",
+          town: "",
           line1: "",
         },
+        directors: [],
       };
       step3Data.value = {
         bank_code: "",
@@ -175,7 +238,6 @@ export const useStripeAccountForm = () => {
       step5Data.value = {
         document_front: "",
         document_back: "",
-        address_kana: "",
       };
       // エラーオブジェクトもクリア
       errorsStep1.value = {};
@@ -183,6 +245,7 @@ export const useStripeAccountForm = () => {
       errorsStep3.value = {};
       errorsStep4.value = {};
       errorsStep5.value = {};
+      expiredNotice.value = false;
     } catch {
       // ストレージ削除失敗は無視
     }
@@ -191,6 +254,7 @@ export const useStripeAccountForm = () => {
   // 有効期限切れをチェックして状態をリセットする関数
   const checkAndResetExpiredData = () => {
     if (!import.meta.client) return;
+    let hasExpired = false;
 
     // localStorageから直接チェックして、有効期限切れかどうかを判定
     const checkExpired = (key: string): boolean => {
@@ -206,22 +270,35 @@ export const useStripeAccountForm = () => {
     };
 
     // Step1のチェック
-    if (
-      checkExpired("register.step1") &&
-      (step1Data.value.product_name || step1Data.value.company_name)
-    ) {
+    if (checkExpired("register.step1") && step1Data.value.company_name) {
       step1Data.value = {
         accept_tos: false,
-        product_name: "",
         support_email: "",
         company_name: "",
-        company_address: {
+        company_name_kana: "",
+        company_name_romaji: "",
+        statement_descriptor: "",
+        statement_descriptor_kana: "",
+        statement_descriptor_romaji: "",
+        tax_id: "",
+        company_address_kanji: {
           country: "JP",
           postal_code: "",
           state: "",
+          city: "",
+          town: "",
+          line1: "",
+        },
+        company_address_kana: {
+          country: "JP",
+          postal_code: "",
+          state: "",
+          city: "",
+          town: "",
           line1: "",
         },
       };
+      hasExpired = true;
     }
 
     // Step2のチェック
@@ -234,6 +311,7 @@ export const useStripeAccountForm = () => {
         last_name_kanji: "",
         first_name_kana: "",
         last_name_kana: "",
+        rep_title: "代表取締役",
         rep_email: "",
         rep_phone: "",
         rep_dob: { year: 0, month: 0, day: 0 },
@@ -241,15 +319,19 @@ export const useStripeAccountForm = () => {
           postal_code: "",
           state: "",
           city: "",
+          town: "",
           line1: "",
         },
         address_kana: {
           postal_code: "",
           state: "",
           city: "",
+          town: "",
           line1: "",
         },
+        directors: [],
       };
+      hasExpired = true;
     }
 
     // Step3のチェック
@@ -264,6 +346,7 @@ export const useStripeAccountForm = () => {
         account_number: "",
         account_holder_name: "",
       };
+      hasExpired = true;
     }
 
     // Step4のチェック
@@ -276,20 +359,22 @@ export const useStripeAccountForm = () => {
         product_description: "",
         product_mcc: "",
       };
+      hasExpired = true;
     }
 
     // Step5のチェック（アップロード済みファイルIDも含む）
     if (
       checkExpired("register.step5") &&
-      (step5Data.value.document_front ||
-        step5Data.value.document_back ||
-        step5Data.value.address_kana)
+      (step5Data.value.document_front || step5Data.value.document_back)
     ) {
       step5Data.value = {
         document_front: "",
         document_back: "",
-        address_kana: "",
       };
+      hasExpired = true;
+    }
+    if (hasExpired) {
+      expiredNotice.value = true;
     }
   };
 
@@ -360,5 +445,7 @@ export const useStripeAccountForm = () => {
     errorsStep4,
     errorsStep5,
     clearAllData,
+    checkAndClearIfDifferentUser,
+    expiredNotice,
   };
 };

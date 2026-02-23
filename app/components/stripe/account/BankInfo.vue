@@ -1,7 +1,8 @@
 <template>
-  <div class="space-y-6">
+  <div v-if="isBankSectionRequired" class="space-y-6">
     <StripeAccountAtomsFormTtl>銀行口座情報</StripeAccountAtomsFormTtl>
     <div class="grid max-w-sm grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-3">
+      <!-- 銀行コード -->
       <div v-if="isFieldRequired('bank_code')" class="max-w-60 sm:max-w-full">
         <label class="mb-1 block text-sm font-medium"
           >銀行コード<span class="ml-[0.2em] text-red-600">*</span></label
@@ -28,6 +29,8 @@
           {{ errors.bank_code }}
         </div>
       </div>
+
+      <!-- 支店コード -->
       <div v-if="isFieldRequired('branch_code')" class="max-w-60 sm:max-w-full">
         <label class="mb-1 block text-sm font-medium"
           >支店コード<span class="ml-[0.2em] text-red-600">*</span></label
@@ -55,7 +58,9 @@
         </div>
       </div>
     </div>
+
     <div class="grid max-w-sm grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-3">
+      <!-- 口座種別 -->
       <div
         v-if="isFieldRequired('account_type')"
         class="max-w-60 sm:max-w-full"
@@ -84,6 +89,8 @@
           {{ errors.account_type }}
         </div>
       </div>
+
+      <!-- 口座番号 -->
       <div
         v-if="isFieldRequired('account_number')"
         class="max-w-60 sm:max-w-full"
@@ -114,6 +121,8 @@
         </div>
       </div>
     </div>
+
+    <!-- 口座名義（カナ） -->
     <div v-if="isFieldRequired('account_holder_name')" class="max-w-sm">
       <label class="mb-1 block text-sm font-medium"
         >口座名義（カナ）<span class="ml-[0.2em] text-red-600">*</span></label
@@ -153,15 +162,40 @@ const props = defineProps<Props>();
 
 // フィールドが必須かどうかを判定
 const isFieldRequired = (fieldName: string): boolean => {
-  if (!props.requiredFields || props.requiredFields.length === 0) {
+  if (!props.requiredFields) {
     return true;
   }
-  // bank_infoが含まれている場合は全フィールドを表示
+  if (props.requiredFields.length === 0) {
+    return false;
+  }
+  // bank_info が含まれている場合は全フィールドを表示（現状は常にこちらを通る）
   if (props.requiredFields.includes("bank_info")) {
     return true;
   }
   return props.requiredFields.includes(fieldName);
 };
+
+const isBankSectionRequired = computed(() => {
+  if (!props.requiredFields) {
+    return true;
+  }
+  if (props.requiredFields.length === 0) {
+    return false;
+  }
+  if (props.requiredFields.includes("bank_info")) {
+    return true;
+  }
+  // 個別項目が要件として返ってきた場合のフォールバック（現状Stripeからは bank_info のみ返るため、ここには到達しない）
+  return props.requiredFields.some((field) =>
+    [
+      "bank_code",
+      "branch_code",
+      "account_type",
+      "account_number",
+      "account_holder_name",
+    ].includes(field),
+  );
+});
 
 type Emits = {
   "update:form-data": [formData: Step3FormData];
