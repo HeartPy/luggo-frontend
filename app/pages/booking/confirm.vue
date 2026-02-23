@@ -314,7 +314,7 @@ const hasIncompleteBooking = computed(() => {
 });
 
 // ページを離れる前に警告を表示
-useBeforeUnload(hasIncompleteBooking, isSubmitting, isSubmitted);
+useBeforeUnload(isSubmitting, isSubmitted, hasIncompleteBooking);
 
 // Payment Elementの初期化
 const initializePaymentElement = async (clientSecret: string) => {
