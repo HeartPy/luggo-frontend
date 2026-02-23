@@ -4,6 +4,7 @@
       <CommonBusinessOwnerDashboardSideBar />
       <div>
         <CommonBusinessOwnerDashboardTheHeader />
+        <CommonBusinessOwnerDashboardAtomsStripeBar />
         <CommonBusinessOwnerDashboardAtomsDashBoardTtl>
           <slot name="ttl" />
         </CommonBusinessOwnerDashboardAtomsDashBoardTtl>
