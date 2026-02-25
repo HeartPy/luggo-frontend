@@ -10,7 +10,7 @@
       </div>
       <div
         v-show="isDropdownOpen"
-        class="absolute right-8 top-14 bg-white p-2 shadow-md"
+        class="absolute right-8 top-14 z-10 bg-white p-2 shadow-md"
       >
         <ul>
           <li
