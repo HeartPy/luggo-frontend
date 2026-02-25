@@ -1,3 +1,5 @@
+import { useCsrf } from "~/composables/useCsrf";
+
 export const useSession = () => {
   const sessionCheckInterval = ref<NodeJS.Timeout | null>(null);
 
@@ -7,6 +9,9 @@ export const useSession = () => {
     try {
       const config = useRuntimeConfig();
       const apiBase = config.public.apiBaseUrl;
+      const { ensureCsrf, getCsrf } = useCsrf();
+
+      await ensureCsrf(apiBase);
 
       const { data, error } = await useFetch<{
         sessionStarted: boolean;
@@ -14,6 +19,9 @@ export const useSession = () => {
       }>(`${apiBase}/api/common/session/start`, {
         method: "POST",
         credentials: "include",
+        headers: {
+          ...(getCsrf() ? { "X-CSRFToken": getCsrf()! } : {}),
+        },
       });
 
       if (error.value) {
