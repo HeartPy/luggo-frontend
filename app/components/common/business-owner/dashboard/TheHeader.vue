@@ -20,11 +20,18 @@
         </span>
       </div>
       <div class="relative w-40">
-        <div class="ml-auto h-10 w-10 cursor-pointer" @click="toggleDropdown">
+        <div
+          class="ml-auto h-10 w-10 cursor-pointer"
+          @click="toggleDropdown"
+        >
           <figure
             class="flex h-full w-full items-center justify-center rounded-full bg-white"
           >
-            <img src="/img/user.svg" alt="" class="h-8 w-8 object-contain" />
+            <img
+              src="/img/user.svg"
+              alt=""
+              class="h-8 w-8 object-contain"
+            >
           </figure>
         </div>
         <div
@@ -40,7 +47,7 @@
                 src="/img/logout.svg"
                 alt="ログアウト"
                 class="h-4 w-4 shrink-0 object-contain"
-              />
+              >
               <span>ログアウト</span>
             </li>
           </ul>
@@ -106,7 +113,8 @@ const checkStripeVerification = async () => {
 
     const data = await res.json();
     isStripeVerified.value = data.account?.charges_enabled === true;
-  } catch {
+  }
+  catch {
     isStripeVerified.value = false;
   }
 };
@@ -129,7 +137,8 @@ const handleLogout = async () => {
     if (success) {
       await navigateTo("/account/login", { replace: true });
     }
-  } finally {
+  }
+  finally {
     isLoggingOut.value = false;
     isDropdownOpen.value = false;
   }

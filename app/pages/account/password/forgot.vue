@@ -8,7 +8,10 @@
           パスワード再設定
         </h1>
 
-        <div v-if="!emailSent" class="mx-auto max-w-sm">
+        <div
+          v-if="!emailSent"
+          class="mx-auto max-w-sm"
+        >
           <form
             class="w-full"
             novalidate
@@ -32,7 +35,7 @@
                   autocomplete="email"
                   aria-required="true"
                   aria-describedby="email-error"
-                />
+                >
                 <p
                   v-if="emailErr"
                   id="email-error"
@@ -43,7 +46,10 @@
                 </p>
               </div>
 
-              <div v-if="errMsg" class="text-sm text-red-600">
+              <div
+                v-if="errMsg"
+                class="text-sm text-red-600"
+              >
                 {{ errMsg }}
               </div>
             </div>
@@ -53,28 +59,34 @@
               :disabled="isSubmitting"
               class="mx-auto block w-full max-w-[500px] rounded-lg bg-gray-800 px-8 py-3 font-semibold text-white hover:bg-gray-900 disabled:cursor-not-allowed disabled:bg-gray-300"
             >
-              <CommonAtomsLoadingAnimation v-if="isSubmitting" size="sm" />
+              <CommonAtomsLoadingAnimation
+                v-if="isSubmitting"
+                size="sm"
+              />
               <span v-else>再設定メールを送信</span>
             </button>
           </form>
         </div>
 
-        <div v-else class="space-y-6">
+        <div
+          v-else
+          class="space-y-6"
+        >
           <div class="flex flex-col items-center justify-center gap-2">
             <figure class="mx-auto w-20">
               <img
                 src="/img/mail.svg"
                 alt=""
                 class="h-full w-full object-contain"
-              />
+              >
             </figure>
             <p class="block text-center text-lg font-semibold text-gray-800">
               メールを送信しました
             </p>
           </div>
           <p class="mx-auto w-fit">
-            {{ email }}宛にパスワード再設定用メールを送信しました。<br />
-            メール内のリンクからパスワードの再設定を行なってください。<br />
+            {{ email }}宛にパスワード再設定用メールを送信しました。<br>
+            メール内のリンクからパスワードの再設定を行なってください。<br>
             リンクは30分間のみ有効です。
           </p>
         </div>
@@ -157,21 +169,23 @@ const handleFormSubmit = async () => {
 
     if (error.value) {
       const errorData = error.value.data as { error?: string };
-      errMsg.value =
-        errorData?.error ||
-        "メールの送信に失敗しました。しばらく時間をおいて再度お試しください。";
+      errMsg.value
+        = errorData?.error
+          || "メールの送信に失敗しました。しばらく時間をおいて再度お試しください。";
       return;
     }
 
     emailSent.value = true;
-  } catch (error: unknown) {
+  }
+  catch (error: unknown) {
     if (import.meta.dev) {
       // eslint-disable-next-line no-console
       console.error("Form submission error:", error);
     }
-    errMsg.value =
-      "予期しないエラーが発生しました。しばらく時間をおいて再度お試しください。";
-  } finally {
+    errMsg.value
+      = "予期しないエラーが発生しました。しばらく時間をおいて再度お試しください。";
+  }
+  finally {
     isSubmitting.value = false;
   }
 };

@@ -61,14 +61,16 @@ export const useBusinessProfile = () => {
       );
 
       businessProfile.value = data;
-    } catch (err: unknown) {
+    }
+    catch (err: unknown) {
       error.value = "データの取得に失敗しました。";
 
       if (import.meta.dev) {
         // eslint-disable-next-line no-console
         console.error("Failed to fetch business profile:", err);
       }
-    } finally {
+    }
+    finally {
       isLoading.value = false;
     }
   };

@@ -2,7 +2,10 @@
   <div class="space-y-6">
     <!-- お名前 -->
     <div>
-      <label for="customerName" class="mb-2 block font-semibold text-gray-800">
+      <label
+        for="customerName"
+        class="mb-2 block font-semibold text-gray-800"
+      >
         お名前<span class="ml-[0.2em] text-red-600">*</span>
       </label>
       <input
@@ -17,7 +20,7 @@
         aria-required="true"
         aria-describedby="customer_name-error"
         @input="handleInput('customer_name', $event)"
-      />
+      >
       <div
         v-if="errors.customer_name"
         id="customer_name-error"
@@ -30,7 +33,10 @@
 
     <!-- メールアドレス -->
     <div>
-      <label for="customerEmail" class="mb-2 block font-semibold text-gray-800">
+      <label
+        for="customerEmail"
+        class="mb-2 block font-semibold text-gray-800"
+      >
         メールアドレス<span class="ml-[0.2em] text-red-600">*</span>
       </label>
       <input
@@ -45,7 +51,7 @@
         aria-required="true"
         aria-describedby="customer_email-error"
         @input="handleInput('customer_email', $event)"
-      />
+      >
       <div
         v-if="errors.customer_email"
         id="customer_email-error"
@@ -77,8 +83,10 @@
         placeholder="例) 00000000000"
         @input="handleInput('customer_phone_number', $event)"
         @blur="handlePhoneBlur($event)"
-      />
-      <p class="mt-1 text-xs text-gray-500">半角数字で入力してください</p>
+      >
+      <p class="mt-1 text-xs text-gray-500">
+        半角数字で入力してください
+      </p>
       <div
         v-if="errors.customer_phone_number"
         id="customer_phone_number-error"
@@ -109,7 +117,12 @@
           aria-describedby="customer_nationality-error"
           @change="handleInput('customer_nationality', $event)"
         >
-          <option value="" disabled>国籍を選択してください</option>
+          <option
+            value=""
+            disabled
+          >
+            国籍を選択してください
+          </option>
           <option
             v-for="nationalityItem in nationalityItems"
             :key="nationalityItem.value"
@@ -122,7 +135,7 @@
           class="pointer-events-none absolute right-5 top-1/2 h-3 w-3 -translate-y-1/2"
           src="/img/down-arrow.svg"
           alt=""
-        />
+        >
       </div>
       <div
         v-if="errors.customer_nationality"
@@ -136,7 +149,10 @@
 
     <!-- 宿泊予約者名 -->
     <div>
-      <label for="guestName" class="mb-2 block font-semibold text-gray-800">
+      <label
+        for="guestName"
+        class="mb-2 block font-semibold text-gray-800"
+      >
         宿泊予約者名（ローマ字）<span class="ml-[0.2em] text-red-600">*</span>
       </label>
       <input
@@ -151,7 +167,7 @@
         aria-required="true"
         aria-describedby="guest_name-error"
         @input="handleInput('guest_name', $event)"
-      />
+      >
       <div
         v-if="errors.guest_name"
         id="guest_name-error"

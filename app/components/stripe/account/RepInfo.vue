@@ -1,6 +1,9 @@
 <template>
   <div class="space-y-10">
-    <div v-if="isRepSectionRequired" class="space-y-6">
+    <div
+      v-if="isRepSectionRequired"
+      class="space-y-6"
+    >
       <StripeAccountAtomsFormTtl>代表者情報</StripeAccountAtomsFormTtl>
       <!-- 姓名 -->
       <div class="grid max-w-xl grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-3">
@@ -8,9 +11,7 @@
           v-if="isFieldRequired('last_name_kanji')"
           class="max-w-sm sm:max-w-full"
         >
-          <label class="mb-1 block text-sm font-medium"
-            >姓<span class="ml-[0.2em] text-red-600">*</span></label
-          >
+          <label class="mb-1 block text-sm font-medium">姓<span class="ml-[0.2em] text-red-600">*</span></label>
           <input
             :value="formData.last_name_kanji"
             type="text"
@@ -24,7 +25,7 @@
             required
             aria-describedby="last_name_kanji-error"
             @input="updateFormData('last_name_kanji', $event)"
-          />
+          >
           <div
             v-if="errors?.last_name_kanji"
             id="last_name_kanji-error"
@@ -38,9 +39,7 @@
           v-if="isFieldRequired('first_name_kanji')"
           class="max-w-sm sm:max-w-full"
         >
-          <label class="mb-1 block text-sm font-medium"
-            >名<span class="ml-[0.2em] text-red-600">*</span></label
-          >
+          <label class="mb-1 block text-sm font-medium">名<span class="ml-[0.2em] text-red-600">*</span></label>
           <input
             :value="formData.first_name_kanji"
             type="text"
@@ -54,7 +53,7 @@
             required
             aria-describedby="first_name_kanji-error"
             @input="updateFormData('first_name_kanji', $event)"
-          />
+          >
           <div
             v-if="errors?.first_name_kanji"
             id="first_name_kanji-error"
@@ -70,7 +69,7 @@
       <div
         v-if="
           isFieldRequired('first_name_kana') ||
-          isFieldRequired('last_name_kana')
+            isFieldRequired('last_name_kana')
         "
         class="grid max-w-xl grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-3"
       >
@@ -78,9 +77,7 @@
           v-if="isFieldRequired('last_name_kana')"
           class="max-w-sm sm:max-w-full"
         >
-          <label class="mb-1 block text-sm font-medium"
-            >姓（カナ）<span class="ml-[0.2em] text-red-600">*</span></label
-          >
+          <label class="mb-1 block text-sm font-medium">姓（カナ）<span class="ml-[0.2em] text-red-600">*</span></label>
           <input
             :value="formData.last_name_kana"
             type="text"
@@ -94,7 +91,7 @@
             required
             aria-describedby="last_name_kana-error"
             @input="updateFormData('last_name_kana', $event)"
-          />
+          >
           <div
             v-if="errors?.last_name_kana"
             id="last_name_kana-error"
@@ -108,9 +105,7 @@
           v-if="isFieldRequired('first_name_kana')"
           class="max-w-sm sm:max-w-full"
         >
-          <label class="mb-1 block text-sm font-medium"
-            >名（カナ）<span class="ml-[0.2em] text-red-600">*</span></label
-          >
+          <label class="mb-1 block text-sm font-medium">名（カナ）<span class="ml-[0.2em] text-red-600">*</span></label>
           <input
             :value="formData.first_name_kana"
             type="text"
@@ -124,7 +119,7 @@
             required
             aria-describedby="first_name_kana-error"
             @input="updateFormData('first_name_kana', $event)"
-          />
+          >
           <div
             v-if="errors?.first_name_kana"
             id="first_name_kana-error"
@@ -141,9 +136,7 @@
         v-if="isBusinessTypeCompany && isFieldRequired('rep_title')"
         class="max-w-sm"
       >
-        <label class="mb-1 block text-sm font-medium"
-          >役職<span class="ml-[0.2em] text-red-600">*</span></label
-        >
+        <label class="mb-1 block text-sm font-medium">役職<span class="ml-[0.2em] text-red-600">*</span></label>
         <input
           :value="formData.rep_title"
           type="text"
@@ -153,7 +146,7 @@
           aria-describedby="rep_title-error"
           placeholder="例）代表取締役"
           @input="updateFormData('rep_title', $event)"
-        />
+        >
         <div
           v-if="errors?.rep_title"
           id="rep_title-error"
@@ -165,10 +158,11 @@
       </div>
 
       <!-- 生年月日 -->
-      <div v-if="isFieldRequired('rep_dob')" class="max-w-60">
-        <label class="mb-1 block text-sm font-medium"
-          >生年月日<span class="ml-[0.2em] text-red-600">*</span></label
-        >
+      <div
+        v-if="isFieldRequired('rep_dob')"
+        class="max-w-60"
+      >
+        <label class="mb-1 block text-sm font-medium">生年月日<span class="ml-[0.2em] text-red-600">*</span></label>
         <div
           class="flex w-full justify-center rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
           :class="{
@@ -191,7 +185,7 @@
               required
               aria-describedby="rep_dob-year-error"
               @input="handleYearInput($event)"
-            />
+            >
           </div>
           <span class="text-sm">/</span>
           <div>
@@ -206,7 +200,7 @@
               required
               aria-describedby="rep_dob-month-error"
               @input="handleMonthInput($event)"
-            />
+            >
           </div>
           <span class="text-sm">/</span>
           <div>
@@ -221,35 +215,38 @@
               required
               aria-describedby="rep_dob-day-error"
               @input="handleDayInput($event)"
-            />
+            >
           </div>
         </div>
-        <p class="mt-1 text-xs text-gray-500">半角数字で入力してください</p>
+        <p class="mt-1 text-xs text-gray-500">
+          半角数字で入力してください
+        </p>
         <div
           v-if="
             errors?.rep_dob ||
-            errors?.['rep_dob.year'] ||
-            errors?.['rep_dob.month'] ||
-            errors?.['rep_dob.day']
+              errors?.['rep_dob.year'] ||
+              errors?.['rep_dob.month'] ||
+              errors?.['rep_dob.day']
           "
           class="mt-1 text-sm text-red-500"
           aria-live="polite"
         >
           {{
             errors?.["rep_dob.year"] ||
-            errors?.["rep_dob.month"] ||
-            errors?.["rep_dob.day"] ||
-            errors?.rep_dob ||
-            "生年月日を正しく入力してください"
+              errors?.["rep_dob.month"] ||
+              errors?.["rep_dob.day"] ||
+              errors?.rep_dob ||
+              "生年月日を正しく入力してください"
           }}
         </div>
       </div>
 
       <!-- 電話番号 -->
-      <div v-if="isFieldRequired('rep_phone')" class="max-w-60">
-        <label class="mb-1 block text-sm font-medium"
-          >電話番号<span class="ml-[0.2em] text-red-600">*</span></label
-        >
+      <div
+        v-if="isFieldRequired('rep_phone')"
+        class="max-w-60"
+      >
+        <label class="mb-1 block text-sm font-medium">電話番号<span class="ml-[0.2em] text-red-600">*</span></label>
         <input
           :value="formData.rep_phone"
           type="tel"
@@ -260,8 +257,10 @@
           aria-describedby="rep_phone-error"
           @input="updateFormData('rep_phone', $event)"
           @blur="handlePhoneBlur($event)"
-        />
-        <p class="mt-1 text-xs text-gray-500">半角数字で入力してください</p>
+        >
+        <p class="mt-1 text-xs text-gray-500">
+          半角数字で入力してください
+        </p>
         <div
           v-if="errors?.rep_phone"
           id="rep_phone-error"
@@ -273,10 +272,11 @@
       </div>
 
       <!-- メールアドレス -->
-      <div v-if="isFieldRequired('rep_email')" class="max-w-sm">
-        <label class="mb-1 block text-sm font-medium"
-          >メールアドレス<span class="ml-[0.2em] text-red-600">*</span></label
-        >
+      <div
+        v-if="isFieldRequired('rep_email')"
+        class="max-w-sm"
+      >
+        <label class="mb-1 block text-sm font-medium">メールアドレス<span class="ml-[0.2em] text-red-600">*</span></label>
         <input
           :value="formData.rep_email"
           type="email"
@@ -285,7 +285,7 @@
           required
           aria-describedby="rep_email-error"
           @input="updateFormData('rep_email', $event)"
-        />
+        >
         <div
           v-if="errors?.rep_email"
           id="rep_email-error"
@@ -297,12 +297,16 @@
       </div>
 
       <!-- 住所 -->
-      <div v-if="isAddressRequired()" class="space-y-6">
+      <div
+        v-if="isAddressRequired()"
+        class="space-y-6"
+      >
         <!-- 郵便番号 -->
-        <div v-if="isAddressFieldRequired('postal_code')" class="max-w-60">
-          <label class="mb-1 block text-sm font-medium"
-            >郵便番号<span class="ml-[0.2em] text-red-600">*</span></label
-          >
+        <div
+          v-if="isAddressFieldRequired('postal_code')"
+          class="max-w-60"
+        >
+          <label class="mb-1 block text-sm font-medium">郵便番号<span class="ml-[0.2em] text-red-600">*</span></label>
           <input
             :value="formData.address_kanji.postal_code"
             type="text"
@@ -311,8 +315,10 @@
             placeholder="例) 1234567"
             aria-describedby="address_kanji.postal_code-error"
             @input="handlePostalCodeInput($event)"
-          />
-          <p class="mt-1 text-xs text-gray-500">半角数字で入力してください</p>
+          >
+          <p class="mt-1 text-xs text-gray-500">
+            半角数字で入力してください
+          </p>
           <div
             v-if="errors?.['address_kanji.postal_code']"
             id="address_kanji.postal_code-error"
@@ -329,9 +335,7 @@
             v-if="isKanjiAddressFieldRequired('state')"
             class="max-w-sm sm:max-w-full"
           >
-            <label class="mb-1 block text-sm font-medium"
-              >都道府県<span class="ml-[0.2em] text-red-600">*</span></label
-            >
+            <label class="mb-1 block text-sm font-medium">都道府県<span class="ml-[0.2em] text-red-600">*</span></label>
             <input
               :value="formData.address_kanji.state"
               type="text"
@@ -339,7 +343,7 @@
               :class="{ 'border-red-500': errors?.['address_kanji.state'] }"
               aria-describedby="address_kanji.state-error"
               @input="updateAddressKanjiFormData('state', $event)"
-            />
+            >
             <div
               v-if="errors?.['address_kanji.state']"
               id="address_kanji.state-error"
@@ -354,11 +358,7 @@
             v-if="isKanaAddressFieldRequired('state')"
             class="max-w-sm sm:max-w-full"
           >
-            <label class="mb-1 block text-sm font-medium"
-              >都道府県（カナ）<span class="ml-[0.2em] text-red-600"
-                >*</span
-              ></label
-            >
+            <label class="mb-1 block text-sm font-medium">都道府県（カナ）<span class="ml-[0.2em] text-red-600">*</span></label>
             <input
               :value="formData.address_kana.state"
               type="text"
@@ -366,7 +366,7 @@
               :class="{ 'border-red-500': errors?.['address_kana.state'] }"
               aria-describedby="address_kana.state-error"
               @input="updateAddressKanaFormData('state', $event)"
-            />
+            >
             <div
               v-if="errors?.['address_kana.state']"
               id="address_kana.state-error"
@@ -384,9 +384,7 @@
             v-if="isKanjiAddressFieldRequired('city')"
             class="max-w-sm sm:max-w-full"
           >
-            <label class="mb-1 block text-sm font-medium"
-              >市区町村<span class="ml-[0.2em] text-red-600">*</span></label
-            >
+            <label class="mb-1 block text-sm font-medium">市区町村<span class="ml-[0.2em] text-red-600">*</span></label>
             <input
               :value="formData.address_kanji.city"
               type="text"
@@ -394,7 +392,7 @@
               :class="{ 'border-red-500': errors?.['address_kanji.city'] }"
               aria-describedby="address_kanji.city-error"
               @input="updateAddressKanjiFormData('city', $event)"
-            />
+            >
             <div
               v-if="errors?.['address_kanji.city']"
               id="address_kanji.city-error"
@@ -409,11 +407,7 @@
             v-if="isKanaAddressFieldRequired('city')"
             class="max-w-sm sm:max-w-full"
           >
-            <label class="mb-1 block text-sm font-medium"
-              >市区町村（カナ）<span class="ml-[0.2em] text-red-600"
-                >*</span
-              ></label
-            >
+            <label class="mb-1 block text-sm font-medium">市区町村（カナ）<span class="ml-[0.2em] text-red-600">*</span></label>
             <input
               :value="formData.address_kana.city"
               type="text"
@@ -421,7 +415,7 @@
               :class="{ 'border-red-500': errors?.['address_kana.city'] }"
               aria-describedby="address_kana.city-error"
               @input="updateAddressKanaFormData('city', $event)"
-            />
+            >
             <div
               v-if="errors?.['address_kana.city']"
               id="address_kana.city-error"
@@ -437,7 +431,7 @@
         <div
           v-if="
             isKanjiAddressFieldRequired('town') ||
-            isKanjiAddressFieldRequired('line1')
+              isKanjiAddressFieldRequired('line1')
           "
           class="max-w-xl"
         >
@@ -450,7 +444,7 @@
             aria-describedby="address_kanji.town-error"
             placeholder="例) 千代田１丁目"
             @input="updateAddressKanjiFormData('town', $event)"
-          />
+          >
           <p class="mt-1 text-xs text-gray-500">
             町名・丁目がある場合は入力。番地のみの場合は空欄で可。
           </p>
@@ -465,10 +459,11 @@
         </div>
 
         <!-- 番地 -->
-        <div v-if="isKanjiAddressFieldRequired('line1')" class="max-w-xl">
-          <label class="mb-1 block text-sm font-medium"
-            >番地<span class="ml-[0.2em] text-red-600">*</span></label
-          >
+        <div
+          v-if="isKanjiAddressFieldRequired('line1')"
+          class="max-w-xl"
+        >
+          <label class="mb-1 block text-sm font-medium">番地<span class="ml-[0.2em] text-red-600">*</span></label>
           <input
             :value="formData.address_kanji.line1"
             type="text"
@@ -477,7 +472,7 @@
             aria-describedby="address_kanji.line1-error"
             placeholder="例) １－１"
             @input="updateAddressKanjiFormData('line1', $event)"
-          />
+          >
           <div
             v-if="errors?.['address_kanji.line1']"
             id="address_kanji.line1-error"
@@ -492,13 +487,11 @@
         <div
           v-if="
             isKanaAddressFieldRequired('town') ||
-            isKanaAddressFieldRequired('line1')
+              isKanaAddressFieldRequired('line1')
           "
           class="max-w-xl"
         >
-          <label class="mb-1 block text-sm font-medium"
-            >町名・丁目（カナ）</label
-          >
+          <label class="mb-1 block text-sm font-medium">町名・丁目（カナ）</label>
           <input
             :value="formData.address_kana.town"
             type="text"
@@ -507,7 +500,7 @@
             aria-describedby="address_kana.town-error"
             placeholder="例) チヨダ１チョウメ"
             @input="updateAddressKanaFormData('town', $event)"
-          />
+          >
           <div
             v-if="errors?.['address_kana.town']"
             id="address_kana.town-error"
@@ -519,10 +512,11 @@
         </div>
 
         <!-- 番地（カナ） -->
-        <div v-if="isKanaAddressFieldRequired('line1')" class="max-w-xl">
-          <label class="mb-1 block text-sm font-medium"
-            >番地（カナ）<span class="ml-[0.2em] text-red-600">*</span></label
-          >
+        <div
+          v-if="isKanaAddressFieldRequired('line1')"
+          class="max-w-xl"
+        >
+          <label class="mb-1 block text-sm font-medium">番地（カナ）<span class="ml-[0.2em] text-red-600">*</span></label>
           <input
             :value="formData.address_kana.line1"
             type="text"
@@ -531,7 +525,7 @@
             aria-describedby="address_kana.line1-error"
             placeholder="例) １－１"
             @input="updateAddressKanaFormData('line1', $event)"
-          />
+          >
           <div
             v-if="errors?.['address_kana.line1']"
             id="address_kana.line1-error"
@@ -543,14 +537,17 @@
         </div>
 
         <!-- 建物名・部屋番号 -->
-        <div v-if="isKanjiAddressFieldRequired('line2')" class="max-w-xl">
+        <div
+          v-if="isKanjiAddressFieldRequired('line2')"
+          class="max-w-xl"
+        >
           <label class="mb-1 block text-sm font-medium">建物名・部屋番号</label>
           <input
             :value="formData.address_kanji.line2"
             type="text"
             class="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
             @input="updateAddressKanjiFormData('line2', $event)"
-          />
+          >
         </div>
       </div>
     </div>
@@ -586,9 +583,7 @@
         <!-- 姓名 -->
         <div class="grid max-w-xl grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-3">
           <div class="max-w-sm sm:max-w-full">
-            <label class="mb-1 block text-sm font-medium"
-              >姓<span class="ml-[0.2em] text-red-600">*</span></label
-            >
+            <label class="mb-1 block text-sm font-medium">姓<span class="ml-[0.2em] text-red-600">*</span></label>
             <input
               :value="director.last_name_kanji"
               type="text"
@@ -599,7 +594,7 @@
               }"
               required
               @input="updateDirectorField(index, 'last_name_kanji', $event)"
-            />
+            >
             <div
               v-if="errors?.[`directors.${index}.last_name_kanji`]"
               class="mt-1 text-sm text-red-600"
@@ -608,9 +603,7 @@
             </div>
           </div>
           <div class="max-w-sm sm:max-w-full">
-            <label class="mb-1 block text-sm font-medium"
-              >名<span class="ml-[0.2em] text-red-600">*</span></label
-            >
+            <label class="mb-1 block text-sm font-medium">名<span class="ml-[0.2em] text-red-600">*</span></label>
             <input
               :value="director.first_name_kanji"
               type="text"
@@ -621,7 +614,7 @@
               }"
               required
               @input="updateDirectorField(index, 'first_name_kanji', $event)"
-            />
+            >
             <div
               v-if="errors?.[`directors.${index}.first_name_kanji`]"
               class="mt-1 text-sm text-red-600"
@@ -634,9 +627,7 @@
         <!-- 姓名（カナ） -->
         <div class="grid max-w-xl grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-3">
           <div class="max-w-sm sm:max-w-full">
-            <label class="mb-1 block text-sm font-medium"
-              >姓（カナ）<span class="ml-[0.2em] text-red-600">*</span></label
-            >
+            <label class="mb-1 block text-sm font-medium">姓（カナ）<span class="ml-[0.2em] text-red-600">*</span></label>
             <input
               :value="director.last_name_kana"
               type="text"
@@ -646,7 +637,7 @@
               }"
               required
               @input="updateDirectorField(index, 'last_name_kana', $event)"
-            />
+            >
             <div
               v-if="errors?.[`directors.${index}.last_name_kana`]"
               class="mt-1 text-sm text-red-600"
@@ -655,9 +646,7 @@
             </div>
           </div>
           <div class="max-w-sm sm:max-w-full">
-            <label class="mb-1 block text-sm font-medium"
-              >名（カナ）<span class="ml-[0.2em] text-red-600">*</span></label
-            >
+            <label class="mb-1 block text-sm font-medium">名（カナ）<span class="ml-[0.2em] text-red-600">*</span></label>
             <input
               :value="director.first_name_kana"
               type="text"
@@ -668,7 +657,7 @@
               }"
               required
               @input="updateDirectorField(index, 'first_name_kana', $event)"
-            />
+            >
             <div
               v-if="errors?.[`directors.${index}.first_name_kana`]"
               class="mt-1 text-sm text-red-600"
@@ -680,9 +669,7 @@
 
         <!-- 役職 -->
         <div class="max-w-sm">
-          <label class="mb-1 block text-sm font-medium"
-            >役職<span class="ml-[0.2em] text-red-600">*</span></label
-          >
+          <label class="mb-1 block text-sm font-medium">役職<span class="ml-[0.2em] text-red-600">*</span></label>
           <input
             :value="director.title"
             type="text"
@@ -690,7 +677,7 @@
             :class="{ 'border-red-500': errors?.[`directors.${index}.title`] }"
             required
             @input="updateDirectorField(index, 'title', $event)"
-          />
+          >
           <div
             v-if="errors?.[`directors.${index}.title`]"
             class="mt-1 text-sm text-red-600"
@@ -701,9 +688,7 @@
 
         <!-- メールアドレス -->
         <div class="max-w-sm">
-          <label class="mb-1 block text-sm font-medium"
-            >メールアドレス<span class="ml-[0.2em] text-red-600">*</span></label
-          >
+          <label class="mb-1 block text-sm font-medium">メールアドレス<span class="ml-[0.2em] text-red-600">*</span></label>
           <input
             :value="director.email"
             type="email"
@@ -711,7 +696,7 @@
             :class="{ 'border-red-500': errors?.[`directors.${index}.email`] }"
             required
             @input="updateDirectorField(index, 'email', $event)"
-          />
+          >
           <div
             v-if="errors?.[`directors.${index}.email`]"
             class="mt-1 text-sm text-red-600"
@@ -722,9 +707,7 @@
 
         <!-- 電話番号 -->
         <div class="max-w-60">
-          <label class="mb-1 block text-sm font-medium"
-            >電話番号<span class="ml-[0.2em] text-red-600">*</span></label
-          >
+          <label class="mb-1 block text-sm font-medium">電話番号<span class="ml-[0.2em] text-red-600">*</span></label>
           <input
             :value="director.phone"
             type="tel"
@@ -734,8 +717,10 @@
             required
             @input="updateDirectorField(index, 'phone', $event)"
             @blur="handleDirectorPhoneBlur(index, $event)"
-          />
-          <p class="mt-1 text-xs text-gray-500">半角数字で入力してください</p>
+          >
+          <p class="mt-1 text-xs text-gray-500">
+            半角数字で入力してください
+          </p>
           <div
             v-if="errors?.[`directors.${index}.phone`]"
             class="mt-1 text-sm text-red-600"
@@ -746,9 +731,7 @@
 
         <!-- 生年月日 -->
         <div class="max-w-60">
-          <label class="mb-1 block text-sm font-medium"
-            >生年月日<span class="ml-[0.2em] text-red-600">*</span></label
-          >
+          <label class="mb-1 block text-sm font-medium">生年月日<span class="ml-[0.2em] text-red-600">*</span></label>
           <div
             class="flex w-full justify-center rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
             :class="{
@@ -770,7 +753,7 @@
                 :max="new Date().getFullYear()"
                 required
                 @input="handleDirectorYearInput(index, $event)"
-              />
+              >
             </div>
             <span class="text-sm">/</span>
             <div>
@@ -784,7 +767,7 @@
                 max="12"
                 required
                 @input="handleDirectorMonthInput(index, $event)"
-              />
+              >
             </div>
             <span class="text-sm">/</span>
             <div>
@@ -798,26 +781,28 @@
                 max="31"
                 required
                 @input="handleDirectorDayInput(index, $event)"
-              />
+              >
             </div>
           </div>
-          <p class="mt-1 text-xs text-gray-500">半角数字で入力してください</p>
+          <p class="mt-1 text-xs text-gray-500">
+            半角数字で入力してください
+          </p>
           <div
             v-if="
               errors?.[`directors.${index}.dob`] ||
-              errors?.[`directors.${index}.dob.year`] ||
-              errors?.[`directors.${index}.dob.month`] ||
-              errors?.[`directors.${index}.dob.day`]
+                errors?.[`directors.${index}.dob.year`] ||
+                errors?.[`directors.${index}.dob.month`] ||
+                errors?.[`directors.${index}.dob.day`]
             "
             class="mt-1 text-sm text-red-500"
             aria-live="polite"
           >
             {{
               errors?.[`directors.${index}.dob.year`] ||
-              errors?.[`directors.${index}.dob.month`] ||
-              errors?.[`directors.${index}.dob.day`] ||
-              errors?.[`directors.${index}.dob`] ||
-              "生年月日を正しく入力してください"
+                errors?.[`directors.${index}.dob.month`] ||
+                errors?.[`directors.${index}.dob.day`] ||
+                errors?.[`directors.${index}.dob`] ||
+                "生年月日を正しく入力してください"
             }}
           </div>
         </div>
@@ -826,9 +811,7 @@
         <div class="space-y-4">
           <!-- 郵便番号 -->
           <div class="max-w-60">
-            <label class="mb-1 block text-sm font-medium"
-              >郵便番号<span class="ml-[0.2em] text-red-600">*</span></label
-            >
+            <label class="mb-1 block text-sm font-medium">郵便番号<span class="ml-[0.2em] text-red-600">*</span></label>
             <input
               :value="director.address_kanji.postal_code"
               type="text"
@@ -841,7 +824,7 @@
               }"
               @input="updateDirectorAddressKanji(index, 'postal_code', $event)"
               @blur="handleDirectorPostalCode(index, $event)"
-            />
+            >
             <div
               v-if="errors?.[`directors.${index}.address_kanji.postal_code`]"
               class="mt-1 text-sm text-red-600"
@@ -853,9 +836,7 @@
           <div class="grid max-w-xl grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-3">
             <!-- 都道府県 -->
             <div class="max-w-sm sm:max-w-full">
-              <label class="mb-1 block text-sm font-medium"
-                >都道府県<span class="ml-[0.2em] text-red-600">*</span></label
-              >
+              <label class="mb-1 block text-sm font-medium">都道府県<span class="ml-[0.2em] text-red-600">*</span></label>
               <input
                 :value="director.address_kanji.state"
                 type="text"
@@ -865,7 +846,7 @@
                     errors?.[`directors.${index}.address_kanji.state`],
                 }"
                 @input="updateDirectorAddressKanji(index, 'state', $event)"
-              />
+              >
               <div
                 v-if="errors?.[`directors.${index}.address_kanji.state`]"
                 class="mt-1 text-sm text-red-600"
@@ -875,11 +856,7 @@
             </div>
             <!-- 都道府県（カナ） -->
             <div class="max-w-sm sm:max-w-full">
-              <label class="mb-1 block text-sm font-medium"
-                >都道府県（カナ）<span class="ml-[0.2em] text-red-600"
-                  >*</span
-                ></label
-              >
+              <label class="mb-1 block text-sm font-medium">都道府県（カナ）<span class="ml-[0.2em] text-red-600">*</span></label>
               <input
                 :value="director.address_kana.state"
                 type="text"
@@ -889,7 +866,7 @@
                     errors?.[`directors.${index}.address_kana.state`],
                 }"
                 @input="updateDirectorAddressKana(index, 'state', $event)"
-              />
+              >
               <div
                 v-if="errors?.[`directors.${index}.address_kana.state`]"
                 class="mt-1 text-sm text-red-600"
@@ -902,9 +879,7 @@
           <div class="grid max-w-xl grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-3">
             <!-- 市区町村 -->
             <div class="max-w-sm sm:max-w-full">
-              <label class="mb-1 block text-sm font-medium"
-                >市区町村<span class="ml-[0.2em] text-red-600">*</span></label
-              >
+              <label class="mb-1 block text-sm font-medium">市区町村<span class="ml-[0.2em] text-red-600">*</span></label>
               <input
                 :value="director.address_kanji.city"
                 type="text"
@@ -914,7 +889,7 @@
                     errors?.[`directors.${index}.address_kanji.city`],
                 }"
                 @input="updateDirectorAddressKanji(index, 'city', $event)"
-              />
+              >
               <div
                 v-if="errors?.[`directors.${index}.address_kanji.city`]"
                 class="mt-1 text-sm text-red-600"
@@ -924,11 +899,7 @@
             </div>
             <!-- 市区町村（カナ） -->
             <div class="max-w-sm sm:max-w-full">
-              <label class="mb-1 block text-sm font-medium"
-                >市区町村（カナ）<span class="ml-[0.2em] text-red-600"
-                  >*</span
-                ></label
-              >
+              <label class="mb-1 block text-sm font-medium">市区町村（カナ）<span class="ml-[0.2em] text-red-600">*</span></label>
               <input
                 :value="director.address_kana.city"
                 type="text"
@@ -938,7 +909,7 @@
                     errors?.[`directors.${index}.address_kana.city`],
                 }"
                 @input="updateDirectorAddressKana(index, 'city', $event)"
-              />
+              >
               <div
                 v-if="errors?.[`directors.${index}.address_kana.city`]"
                 class="mt-1 text-sm text-red-600"
@@ -960,7 +931,7 @@
               }"
               placeholder="例) 千代田１丁目"
               @input="updateDirectorAddressKanji(index, 'town', $event)"
-            />
+            >
             <p class="mt-1 text-xs text-gray-500">
               町名・丁目がある場合は入力。番地のみの場合は空欄で可。
             </p>
@@ -973,9 +944,7 @@
           </div>
           <!-- 番地 -->
           <div class="max-w-xl">
-            <label class="mb-1 block text-sm font-medium"
-              >番地<span class="ml-[0.2em] text-red-600">*</span></label
-            >
+            <label class="mb-1 block text-sm font-medium">番地<span class="ml-[0.2em] text-red-600">*</span></label>
             <input
               :value="director.address_kanji.line1"
               type="text"
@@ -986,7 +955,7 @@
               }"
               placeholder="例) １－１"
               @input="updateDirectorAddressKanji(index, 'line1', $event)"
-            />
+            >
             <div
               v-if="errors?.[`directors.${index}.address_kanji.line1`]"
               class="mt-1 text-sm text-red-600"
@@ -996,9 +965,7 @@
           </div>
           <!-- 町名・丁目（カナ） -->
           <div class="max-w-xl">
-            <label class="mb-1 block text-sm font-medium"
-              >町名・丁目（カナ）</label
-            >
+            <label class="mb-1 block text-sm font-medium">町名・丁目（カナ）</label>
             <input
               :value="director.address_kana.town"
               type="text"
@@ -1009,7 +976,7 @@
               }"
               placeholder="例) チヨダ１チョウメ"
               @input="updateDirectorAddressKana(index, 'town', $event)"
-            />
+            >
             <div
               v-if="errors?.[`directors.${index}.address_kana.town`]"
               class="mt-1 text-sm text-red-600"
@@ -1019,9 +986,7 @@
           </div>
           <!-- 番地（カナ） -->
           <div class="max-w-xl">
-            <label class="mb-1 block text-sm font-medium"
-              >番地（カナ）<span class="ml-[0.2em] text-red-600">*</span></label
-            >
+            <label class="mb-1 block text-sm font-medium">番地（カナ）<span class="ml-[0.2em] text-red-600">*</span></label>
             <input
               :value="director.address_kana.line1"
               type="text"
@@ -1032,7 +997,7 @@
               }"
               placeholder="例) １－１"
               @input="updateDirectorAddressKana(index, 'line1', $event)"
-            />
+            >
             <div
               v-if="errors?.[`directors.${index}.address_kana.line1`]"
               class="mt-1 text-sm text-red-600"
@@ -1042,15 +1007,13 @@
           </div>
           <!-- 建物名・部屋番号-->
           <div class="max-w-xl">
-            <label class="mb-1 block text-sm font-medium"
-              >建物名・部屋番号</label
-            >
+            <label class="mb-1 block text-sm font-medium">建物名・部屋番号</label>
             <input
               :value="director.address_kanji.line2"
               type="text"
               class="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
               @input="updateDirectorAddressKanji(index, 'line2', $event)"
-            />
+            >
           </div>
         </div>
       </div>
@@ -1105,7 +1068,7 @@ const isAddressRequired = (): boolean => {
     return false;
   }
   return props.requiredFields.some(
-    (field) =>
+    field =>
       field.startsWith("address_kanji.") || field.startsWith("address_kana."),
   );
 };
@@ -1118,8 +1081,8 @@ const isAddressFieldRequired = (fieldName: string): boolean => {
     return false;
   }
   return (
-    props.requiredFields.includes(`address_kanji.${fieldName}`) ||
-    props.requiredFields.includes(`address_kana.${fieldName}`)
+    props.requiredFields.includes(`address_kanji.${fieldName}`)
+    || props.requiredFields.includes(`address_kana.${fieldName}`)
   );
 };
 
@@ -1183,17 +1146,17 @@ const isRepSectionRequired = computed(() => {
     return false;
   }
   return props.requiredFields.some(
-    (field) =>
-      field === "last_name_kanji" ||
-      field === "first_name_kanji" ||
-      field === "last_name_kana" ||
-      field === "first_name_kana" ||
-      field === "rep_title" ||
-      field === "rep_dob" ||
-      field === "rep_phone" ||
-      field === "rep_email" ||
-      field.startsWith("address_kanji.") ||
-      field.startsWith("address_kana."),
+    field =>
+      field === "last_name_kanji"
+      || field === "first_name_kanji"
+      || field === "last_name_kana"
+      || field === "first_name_kana"
+      || field === "rep_title"
+      || field === "rep_dob"
+      || field === "rep_phone"
+      || field === "rep_email"
+      || field.startsWith("address_kanji.")
+      || field.startsWith("address_kana."),
   );
 });
 
@@ -1205,7 +1168,7 @@ const isDirectorSectionRequired = computed(() => {
     return false;
   }
   return props.requiredFields.some(
-    (field) => field === "directors" || field.startsWith("directors."),
+    field => field === "directors" || field.startsWith("directors."),
   );
 });
 
@@ -1266,8 +1229,8 @@ const handleMonthInput = (event: Event) => {
   // 3-9を入力した時点で確定するので即座に切り替え
   // または、2桁入力され、かつ有効な月の値（1-12）の場合に切り替え
   if (
-    (value.length === 1 && month >= 3 && month <= 9) ||
-    (value.length === 2 && month >= 1 && month <= 12)
+    (value.length === 1 && month >= 3 && month <= 9)
+    || (value.length === 2 && month >= 1 && month <= 12)
   ) {
     if (dayInputRef.value) {
       dayInputRef.value.focus();
@@ -1528,8 +1491,8 @@ const handleDirectorMonthInput = (index: number, event: Event) => {
   // 3-9を入力した時点で確定するので即座に切り替え
   // または、2桁入力され、かつ有効な月の値（1-12）の場合に切り替え
   if (
-    (value.length === 1 && month >= 3 && month <= 9) ||
-    (value.length === 2 && month >= 1 && month <= 12)
+    (value.length === 1 && month >= 3 && month <= 9)
+    || (value.length === 2 && month >= 1 && month <= 12)
   ) {
     if (directorDayInputRefs.value.get(index)) {
       directorDayInputRefs.value.get(index)?.focus();
@@ -1733,15 +1696,15 @@ onMounted(() => {
 
   // ビジネスプロフィールから姓名（漢字）を自動入力
   if (
-    businessProfile.value?.rep_last_name_kanji &&
-    !props.formData.last_name_kanji
+    businessProfile.value?.rep_last_name_kanji
+    && !props.formData.last_name_kanji
   ) {
     updatedData.last_name_kanji = businessProfile.value.rep_last_name_kanji;
     hasUpdates = true;
   }
   if (
-    businessProfile.value?.rep_first_name_kanji &&
-    !props.formData.first_name_kanji
+    businessProfile.value?.rep_first_name_kanji
+    && !props.formData.first_name_kanji
   ) {
     updatedData.first_name_kanji = businessProfile.value.rep_first_name_kanji;
     hasUpdates = true;
@@ -1749,15 +1712,15 @@ onMounted(() => {
 
   // ビジネスプロフィールから姓名（カナ）を自動入力
   if (
-    businessProfile.value?.rep_last_name_kana &&
-    !props.formData.last_name_kana
+    businessProfile.value?.rep_last_name_kana
+    && !props.formData.last_name_kana
   ) {
     updatedData.last_name_kana = businessProfile.value.rep_last_name_kana;
     hasUpdates = true;
   }
   if (
-    businessProfile.value?.rep_first_name_kana &&
-    !props.formData.first_name_kana
+    businessProfile.value?.rep_first_name_kana
+    && !props.formData.first_name_kana
   ) {
     updatedData.first_name_kana = businessProfile.value.rep_first_name_kana;
     hasUpdates = true;

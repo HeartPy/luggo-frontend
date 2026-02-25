@@ -62,11 +62,11 @@ const handleClose = () => {
 const focusFirstButton = () => {
   nextTick(() => {
     const dialog = document.querySelector(
-      '[role="alertdialog"]',
+      "[role=\"alertdialog\"]",
     ) as HTMLElement;
     if (dialog) {
       const firstFocusable = dialog.querySelector(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+        "button, [href], input, select, textarea, [tabindex]:not([tabindex=\"-1\"])",
       ) as HTMLElement;
       if (firstFocusable) {
         firstFocusable.focus();
@@ -82,7 +82,8 @@ watch(
     if (isOpen) {
       document.body.style.overflow = "hidden";
       focusFirstButton();
-    } else {
+    }
+    else {
       document.body.style.overflow = "";
     }
   },

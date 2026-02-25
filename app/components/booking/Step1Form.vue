@@ -23,7 +23,7 @@
           @input="handleSearchInput($event, 'pickup')"
           @focus="showSuggestions.pickup = true"
           @blur="handleBlur('pickup')"
-        />
+        >
 
         <!-- サジェストドロップダウン -->
         <div
@@ -45,7 +45,10 @@
                   {{ suggestion.address }}
                 </div>
                 <div class="mt-1 flex items-center space-x-2">
-                  <span v-if="suggestion.rating" class="text-xs text-gray-500">
+                  <span
+                    v-if="suggestion.rating"
+                    class="text-xs text-gray-500"
+                  >
                     ⭐ {{ suggestion.rating }} ({{
                       suggestion.user_ratings_total
                     }}件)
@@ -105,10 +108,16 @@
 
     <!-- 集荷日 -->
     <div>
-      <label for="pickupDate" class="mb-2 block font-semibold text-gray-800">
+      <label
+        for="pickupDate"
+        class="mb-2 block font-semibold text-gray-800"
+      >
         集荷日<span class="ml-[0.2em] text-red-600">*</span>
       </label>
-      <div class="relative" @click="openNativeDatePicker(pickupDateInput)">
+      <div
+        class="relative"
+        @click="openNativeDatePicker(pickupDateInput)"
+      >
         <input
           id="pickupDate"
           ref="pickupDateInput"
@@ -122,12 +131,12 @@
           aria-describedby="pickup_date-error"
           :min="today"
           @input="handleInput('pickup_date', $event)"
-        />
+        >
         <img
           class="pointer-events-none absolute right-5 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400 transition-colors hover:text-gray-600"
           src="/img/calendar.svg"
           alt=""
-        />
+        >
       </div>
       <div
         v-if="errors.pickup_date"
@@ -162,7 +171,7 @@
           @input="handleSearchInput($event, 'delivery')"
           @focus="showSuggestions.delivery = true"
           @blur="handleBlur('delivery')"
-        />
+        >
 
         <!-- サジェストドロップダウン -->
         <div
@@ -184,7 +193,10 @@
                   {{ suggestion.address }}
                 </div>
                 <div class="mt-1 flex items-center space-x-2">
-                  <span v-if="suggestion.rating" class="text-xs text-gray-500">
+                  <span
+                    v-if="suggestion.rating"
+                    class="text-xs text-gray-500"
+                  >
                     ⭐ {{ suggestion.rating }} ({{
                       suggestion.user_ratings_total
                     }}件)
@@ -244,10 +256,16 @@
 
     <!-- 配送日 -->
     <div>
-      <label for="deliveryDate" class="mb-2 block font-semibold text-gray-800">
+      <label
+        for="deliveryDate"
+        class="mb-2 block font-semibold text-gray-800"
+      >
         配送日<span class="ml-[0.2em] text-red-600">*</span>
       </label>
-      <div class="relative" @click="openNativeDatePicker(deliveryDateInput)">
+      <div
+        class="relative"
+        @click="openNativeDatePicker(deliveryDateInput)"
+      >
         <input
           id="deliveryDate"
           ref="deliveryDateInput"
@@ -261,11 +279,11 @@
           aria-describedby="delivery_date-error"
           :min="minDeliveryDate"
           @input="handleInput('delivery_date', $event)"
-        />
+        >
         <img
           class="pointer-events-none absolute right-5 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400 transition-colors hover:text-gray-600"
           src="/img/calendar.svg"
-        />
+        >
       </div>
       <div
         v-if="errors.delivery_date"
@@ -279,7 +297,10 @@
 
     <!-- 備考 -->
     <div>
-      <label for="notes" class="mb-2 block font-semibold text-gray-800">
+      <label
+        for="notes"
+        class="mb-2 block font-semibold text-gray-800"
+      >
         備考
       </label>
       <textarea
@@ -332,7 +353,8 @@ const openNativeDatePicker = (el: HTMLInputElement | undefined) => {
   if (typeof el.showPicker === "function") {
     try {
       el.showPicker();
-    } catch {
+    }
+    catch {
       // 意図的に無視（フォーカスのみにフォールバック）
     }
   }
@@ -403,8 +425,8 @@ const handleSearchInput = async (event: Event, type: "pickup" | "delivery") => {
   const query = target.value;
 
   // 入力ハンドラーを呼び出し
-  const fieldName =
-    type === "pickup" ? "pickup_location_name" : "delivery_location_name";
+  const fieldName
+    = type === "pickup" ? "pickup_location_name" : "delivery_location_name";
   handleInput(fieldName, event);
 
   // デバウンス処理
@@ -416,7 +438,8 @@ const handleSearchInput = async (event: Event, type: "pickup" | "delivery") => {
     searchTimeout.value = setTimeout(async () => {
       await fetchSuggestions(query, type);
     }, 300);
-  } else {
+  }
+  else {
     suggestions.value[type] = [];
   }
 };
@@ -441,7 +464,8 @@ const fetchSuggestions = async (query: string, type: "pickup" | "delivery") => {
     if (data.value) {
       suggestions.value[type] = data.value.suggestions || [];
     }
-  } catch {
+  }
+  catch {
     // Error fetching location suggestions
   }
 };
@@ -454,10 +478,10 @@ const selectSuggestion = (
   searchQueries.value[type] = suggestion.name;
 
   // フォームデータを更新
-  const fieldName =
-    type === "pickup" ? "pickup_location_name" : "delivery_location_name";
-  const addressFieldName =
-    type === "pickup" ? "pickup_location_address" : "delivery_location_address";
+  const fieldName
+    = type === "pickup" ? "pickup_location_name" : "delivery_location_name";
+  const addressFieldName
+    = type === "pickup" ? "pickup_location_address" : "delivery_location_address";
 
   const updatedData = {
     ...props.formData,

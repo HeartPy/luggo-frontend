@@ -9,7 +9,7 @@
             src="/img/luggo.svg"
             alt="LugGo"
             class="h-full w-full object-contain"
-          />
+          >
         </figure>
         <span class="whitespace-nowrap text-xl font-bold text-gray-800">
           LugGo
@@ -18,7 +18,10 @@
       <div class="overflow-y-auto">
         <nav>
           <ul class="flex flex-col items-center">
-            <li v-for="navItem in navItems" :key="navItem.id">
+            <li
+              v-for="navItem in navItems"
+              :key="navItem.id"
+            >
               <NuxtLink
                 class="flex w-full items-center py-4 font-semibold hover:opacity-80"
                 to="#"
@@ -28,7 +31,7 @@
                   :src="navItem.icon"
                   alt=""
                   class="mr-2 h-4 w-4 object-contain"
-                />
+                >
                 <span>{{ navItem.label }}</span>
               </NuxtLink>
             </li>

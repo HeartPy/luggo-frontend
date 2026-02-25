@@ -9,28 +9,23 @@
           class="h-4 w-4"
           aria-describedby="accept_tos-error"
           @change="updateAcceptTos($event)"
-        />
-        <span class="text-sm text-gray-700"
-          ><a
-            class="text-[#0f83fd]"
-            href="https://stripe.com/jp/legal/ssa"
-            target="_blank"
-            rel="nofollow noopener noreferrer"
-            >Stripeの利用規約</a
-          >、<a
-            class="text-[#0f83fd]"
-            href="https://stripe.com/jp/legal/connect-account"
-            target="_blank"
-            rel="nofollow noopener noreferrer"
-            >Stripe Connectアカウント契約</a
-          >、<a
-            class="text-[#0f83fd]"
-            href="https://stripe.com/jp/legal/privacy-center"
-            target="_blank"
-            rel="nofollow noopener noreferrer"
-            >Stripeのプライバシーポリシー</a
-          >に同意します</span
         >
+        <span class="text-sm text-gray-700"><a
+          class="text-[#0f83fd]"
+          href="https://stripe.com/jp/legal/ssa"
+          target="_blank"
+          rel="nofollow noopener noreferrer"
+        >Stripeの利用規約</a>、<a
+          class="text-[#0f83fd]"
+          href="https://stripe.com/jp/legal/connect-account"
+          target="_blank"
+          rel="nofollow noopener noreferrer"
+        >Stripe Connectアカウント契約</a>、<a
+          class="text-[#0f83fd]"
+          href="https://stripe.com/jp/legal/privacy-center"
+          target="_blank"
+          rel="nofollow noopener noreferrer"
+        >Stripeのプライバシーポリシー</a>に同意します</span>
       </label>
       <div
         v-if="errors?.accept_tos"
@@ -43,18 +38,20 @@
     </div>
 
     <!-- 事業者情報 -->
-    <div v-if="isCompanySectionRequired" class="space-y-6">
+    <div
+      v-if="isCompanySectionRequired"
+      class="space-y-6"
+    >
       <StripeAccountAtomsFormTtl>
         事業者情報（公開されます）
       </StripeAccountAtomsFormTtl>
 
       <!-- お問い合わせメールアドレス -->
-      <div v-if="isFieldRequired('support_email')" class="max-w-sm">
-        <label class="mb-1 block text-sm font-medium"
-          >お問い合わせメールアドレス<span class="ml-[0.2em] text-red-600"
-            >*</span
-          ></label
-        >
+      <div
+        v-if="isFieldRequired('support_email')"
+        class="max-w-sm"
+      >
+        <label class="mb-1 block text-sm font-medium">お問い合わせメールアドレス<span class="ml-[0.2em] text-red-600">*</span></label>
         <input
           :value="formData.support_email"
           type="email"
@@ -62,7 +59,7 @@
           :class="{ 'border-red-500': errors?.support_email }"
           aria-describedby="support_email-error"
           @input="updateFormData('support_email', $event)"
-        />
+        >
         <div
           v-if="errors?.support_email"
           id="support_email-error"
@@ -74,12 +71,11 @@
       </div>
 
       <!-- 法人名または屋号（登記名・商号） -->
-      <div v-if="isFieldRequired('company_name')" class="max-w-sm">
-        <label class="mb-1 block text-sm font-medium"
-          >法人名または屋号（登記名・商号）<span class="ml-[0.2em] text-red-600"
-            >*</span
-          ></label
-        >
+      <div
+        v-if="isFieldRequired('company_name')"
+        class="max-w-sm"
+      >
+        <label class="mb-1 block text-sm font-medium">法人名または屋号（登記名・商号）<span class="ml-[0.2em] text-red-600">*</span></label>
         <input
           :value="formData.company_name"
           type="text"
@@ -93,7 +89,7 @@
           required
           aria-describedby="company_name-error"
           @input="updateFormData('company_name', $event)"
-        />
+        >
         <p class="mt-1 text-xs text-gray-500">
           法人の方は登記簿上の正式名称を入力してください。個人事業主の方で屋号がない場合は、代表者名(姓＋名)を入力してください。
         </p>
@@ -108,12 +104,11 @@
       </div>
 
       <!-- 法人名または屋号（カナ） -->
-      <div v-if="isFieldRequired('company_name_kana')" class="max-w-sm">
-        <label class="mb-1 block text-sm font-medium"
-          >法人名または屋号（カナ）<span class="ml-[0.2em] text-red-600"
-            >*</span
-          ></label
-        >
+      <div
+        v-if="isFieldRequired('company_name_kana')"
+        class="max-w-sm"
+      >
+        <label class="mb-1 block text-sm font-medium">法人名または屋号（カナ）<span class="ml-[0.2em] text-red-600">*</span></label>
         <input
           :value="formData.company_name_kana"
           type="text"
@@ -122,7 +117,7 @@
           required
           aria-describedby="company_name_kana-error"
           @input="updateFormData('company_name_kana', $event)"
-        />
+        >
         <div
           v-if="errors?.company_name_kana"
           id="company_name_kana-error"
@@ -134,13 +129,13 @@
       </div>
 
       <!-- 法人名または屋号（ローマ字/英字） -->
-      <div v-if="isFieldRequired('company_name_romaji')" class="max-w-sm">
-        <label class="mb-1 block text-sm font-medium"
-          >法人名または屋号（ローマ字/英字）<span
-            class="ml-[0.2em] text-red-600"
-            >*</span
-          ></label
-        >
+      <div
+        v-if="isFieldRequired('company_name_romaji')"
+        class="max-w-sm"
+      >
+        <label class="mb-1 block text-sm font-medium">法人名または屋号（ローマ字/英字）<span
+          class="ml-[0.2em] text-red-600"
+        >*</span></label>
         <input
           :value="formData.company_name_romaji"
           type="text"
@@ -150,8 +145,10 @@
           aria-describedby="company_name_romaji-error"
           placeholder="例) Sample Inc."
           @input="updateFormData('company_name_romaji', $event)"
-        />
-        <p class="mt-1 text-xs text-gray-500">半角英数字で入力してください。</p>
+        >
+        <p class="mt-1 text-xs text-gray-500">
+          半角英数字で入力してください。
+        </p>
         <div
           v-if="errors?.company_name_romaji"
           id="company_name_romaji-error"
@@ -167,9 +164,7 @@
         v-if="isCompanyBusinessType && isFieldRequired('tax_id')"
         class="max-w-sm"
       >
-        <label class="mb-1 block text-sm font-medium"
-          >法人番号<span class="ml-[0.2em] text-red-600">*</span></label
-        >
+        <label class="mb-1 block text-sm font-medium">法人番号<span class="ml-[0.2em] text-red-600">*</span></label>
         <input
           :value="formData.tax_id"
           type="text"
@@ -181,7 +176,7 @@
           maxlength="13"
           @input="updateFormData('tax_id', $event)"
           @blur="handleTaxIdBlur($event)"
-        />
+        >
         <p class="mt-1 text-xs text-gray-500">
           13桁の法人番号を半角数字で入力してください。個人事業主の方は空欄のままで構いません。
         </p>
@@ -196,12 +191,16 @@
       </div>
 
       <!-- 事業者住所（法人のみ） -->
-      <div v-if="isCompanyAddressRequired" class="space-y-6">
+      <div
+        v-if="isCompanyAddressRequired"
+        class="space-y-6"
+      >
         <!-- 郵便番号 -->
-        <div v-if="isCompanyPostalCodeRequired" class="max-w-60">
-          <label class="mb-1 block text-sm font-medium"
-            >郵便番号<span class="ml-[0.2em] text-red-600">*</span></label
-          >
+        <div
+          v-if="isCompanyPostalCodeRequired"
+          class="max-w-60"
+        >
+          <label class="mb-1 block text-sm font-medium">郵便番号<span class="ml-[0.2em] text-red-600">*</span></label>
           <input
             :value="formData.company_address_kanji.postal_code"
             type="text"
@@ -214,12 +213,14 @@
             placeholder="例) 1234567"
             aria-describedby="company_address_postal_code-error"
             @input="handlePostalCodeInput($event)"
-          />
-          <p class="mt-1 text-xs text-gray-500">半角数字で入力してください</p>
+          >
+          <p class="mt-1 text-xs text-gray-500">
+            半角数字で入力してください
+          </p>
           <div
             v-if="
               errors?.['company_address_kanji.postal_code'] ||
-              errors?.['company_address_kana.postal_code']
+                errors?.['company_address_kana.postal_code']
             "
             id="company_address_postal_code-error"
             class="mt-1 text-sm text-red-600"
@@ -227,7 +228,7 @@
           >
             {{
               errors?.["company_address_kanji.postal_code"] ||
-              errors?.["company_address_kana.postal_code"]
+                errors?.["company_address_kana.postal_code"]
             }}
           </div>
         </div>
@@ -238,9 +239,7 @@
             v-if="isFieldRequired('company_address_kanji.state')"
             class="max-w-sm sm:max-w-full"
           >
-            <label class="mb-1 block text-sm font-medium"
-              >都道府県<span class="ml-[0.2em] text-red-600">*</span></label
-            >
+            <label class="mb-1 block text-sm font-medium">都道府県<span class="ml-[0.2em] text-red-600">*</span></label>
             <input
               :value="formData.company_address_kanji.state"
               type="text"
@@ -250,7 +249,7 @@
               }"
               aria-describedby="company_address_kanji.state-error"
               @input="updateCompanyAddressKanjiFormData('state', $event)"
-            />
+            >
             <div
               v-if="errors?.['company_address_kanji.state']"
               id="company_address_kanji.state-error"
@@ -265,11 +264,7 @@
             v-if="isFieldRequired('company_address_kana.state')"
             class="max-w-sm sm:max-w-full"
           >
-            <label class="mb-1 block text-sm font-medium"
-              >都道府県（カナ）<span class="ml-[0.2em] text-red-600"
-                >*</span
-              ></label
-            >
+            <label class="mb-1 block text-sm font-medium">都道府県（カナ）<span class="ml-[0.2em] text-red-600">*</span></label>
             <input
               :value="formData.company_address_kana.state"
               type="text"
@@ -279,7 +274,7 @@
               }"
               aria-describedby="company_address_kana.state-error"
               @input="updateCompanyAddressKanaFormData('state', $event)"
-            />
+            >
             <div
               v-if="errors?.['company_address_kana.state']"
               id="company_address_kana.state-error"
@@ -297,9 +292,7 @@
             v-if="isFieldRequired('company_address_kanji.city')"
             class="max-w-sm sm:max-w-full"
           >
-            <label class="mb-1 block text-sm font-medium"
-              >市区町村<span class="ml-[0.2em] text-red-600">*</span></label
-            >
+            <label class="mb-1 block text-sm font-medium">市区町村<span class="ml-[0.2em] text-red-600">*</span></label>
             <input
               :value="formData.company_address_kanji.city"
               type="text"
@@ -309,7 +302,7 @@
               }"
               aria-describedby="company_address_kanji.city-error"
               @input="updateCompanyAddressKanjiFormData('city', $event)"
-            />
+            >
             <div
               v-if="errors?.['company_address_kanji.city']"
               id="company_address_kanji.city-error"
@@ -324,11 +317,7 @@
             v-if="isFieldRequired('company_address_kana.city')"
             class="max-w-sm sm:max-w-full"
           >
-            <label class="mb-1 block text-sm font-medium"
-              >市区町村（カナ）<span class="ml-[0.2em] text-red-600"
-                >*</span
-              ></label
-            >
+            <label class="mb-1 block text-sm font-medium">市区町村（カナ）<span class="ml-[0.2em] text-red-600">*</span></label>
             <input
               :value="formData.company_address_kana.city"
               type="text"
@@ -338,7 +327,7 @@
               }"
               aria-describedby="company_address_kana.city-error"
               @input="updateCompanyAddressKanaFormData('city', $event)"
-            />
+            >
             <div
               v-if="errors?.['company_address_kana.city']"
               id="company_address_kana.city-error"
@@ -354,7 +343,7 @@
         <div
           v-if="
             isFieldRequired('company_address_kanji.town') ||
-            isFieldRequired('company_address_kanji.line1')
+              isFieldRequired('company_address_kanji.line1')
           "
           class="max-w-xl"
         >
@@ -369,7 +358,7 @@
             aria-describedby="company_address_kanji.town-error"
             placeholder="例) 千代田１丁目"
             @input="updateCompanyAddressKanjiFormData('town', $event)"
-          />
+          >
           <p class="mt-1 text-xs text-gray-500">
             町名・丁目がある場合は入力。番地のみの場合は空欄で可。
           </p>
@@ -388,9 +377,7 @@
           v-if="isFieldRequired('company_address_kanji.line1')"
           class="max-w-xl"
         >
-          <label class="mb-1 block text-sm font-medium"
-            >番地<span class="ml-[0.2em] text-red-600">*</span></label
-          >
+          <label class="mb-1 block text-sm font-medium">番地<span class="ml-[0.2em] text-red-600">*</span></label>
           <input
             :value="formData.company_address_kanji.line1"
             type="text"
@@ -401,7 +388,7 @@
             aria-describedby="company_address_kanji.line1-error"
             placeholder="例) １－１"
             @input="updateCompanyAddressKanjiFormData('line1', $event)"
-          />
+          >
           <div
             v-if="errors?.['company_address_kanji.line1']"
             id="company_address_kanji.line1-error"
@@ -416,13 +403,11 @@
         <div
           v-if="
             isFieldRequired('company_address_kana.town') ||
-            isFieldRequired('company_address_kana.line1')
+              isFieldRequired('company_address_kana.line1')
           "
           class="max-w-xl"
         >
-          <label class="mb-1 block text-sm font-medium"
-            >町名・丁目（カナ）</label
-          >
+          <label class="mb-1 block text-sm font-medium">町名・丁目（カナ）</label>
           <input
             :value="formData.company_address_kana.town"
             type="text"
@@ -433,7 +418,7 @@
             aria-describedby="company_address_kana.town-error"
             placeholder="例) チヨダ１チョウメ"
             @input="updateCompanyAddressKanaFormData('town', $event)"
-          />
+          >
           <div
             v-if="errors?.['company_address_kana.town']"
             id="company_address_kana.town-error"
@@ -449,9 +434,7 @@
           v-if="isFieldRequired('company_address_kana.line1')"
           class="max-w-xl"
         >
-          <label class="mb-1 block text-sm font-medium"
-            >番地（カナ）<span class="ml-[0.2em] text-red-600">*</span></label
-          >
+          <label class="mb-1 block text-sm font-medium">番地（カナ）<span class="ml-[0.2em] text-red-600">*</span></label>
           <input
             :value="formData.company_address_kana.line1"
             type="text"
@@ -462,7 +445,7 @@
             aria-describedby="company_address_kana.line1-error"
             placeholder="例) １－１"
             @input="updateCompanyAddressKanaFormData('line1', $event)"
-          />
+          >
           <div
             v-if="errors?.['company_address_kana.line1']"
             id="company_address_kana.line1-error"
@@ -484,13 +467,16 @@
             type="text"
             class="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
             @input="updateCompanyAddressKanjiFormData('line2', $event)"
-          />
+          >
         </div>
       </div>
     </div>
 
     <!-- 明細書表記 -->
-    <div v-if="isStatementDescriptorSectionRequired" class="space-y-6">
+    <div
+      v-if="isStatementDescriptorSectionRequired"
+      class="space-y-6"
+    >
       <StripeAccountAtomsFormTtl>明細書表記</StripeAccountAtomsFormTtl>
       <p class="text-xs text-gray-500">
         お客様のカード利用明細に表示される名称です。未入力の場合は法人名・屋号等が使われる場合があります。
@@ -510,7 +496,7 @@
             placeholder="例) 田中配送"
             maxlength="17"
             @input="updateFormData('statement_descriptor', $event)"
-          />
+          >
           <p class="mt-1 text-xs text-gray-500">
             最大17文字。使用できる記号はハイフン・ドットのみです。
           </p>
@@ -526,9 +512,7 @@
 
         <!-- 明細書表記（カナ） -->
         <div class="max-w-sm">
-          <label class="mb-1 block text-sm font-medium"
-            >明細書表記（カナ）</label
-          >
+          <label class="mb-1 block text-sm font-medium">明細書表記（カナ）</label>
           <input
             :value="formData.statement_descriptor_kana"
             type="text"
@@ -540,7 +524,7 @@
             placeholder="例) タナカハイソウ"
             maxlength="22"
             @input="updateFormData('statement_descriptor_kana', $event)"
-          />
+          >
           <p class="mt-1 text-xs text-gray-500">
             最大22文字。使用できる記号はハイフン・ドットのみです。
           </p>
@@ -556,9 +540,7 @@
 
         <!-- 明細書表記（ローマ字/英字） -->
         <div class="max-w-sm">
-          <label class="mb-1 block text-sm font-medium"
-            >明細書表記（ローマ字/英字）</label
-          >
+          <label class="mb-1 block text-sm font-medium">明細書表記（ローマ字/英字）</label>
           <input
             :value="formData.statement_descriptor_romaji"
             type="text"
@@ -569,7 +551,7 @@
             maxlength="22"
             @input="updateFormData('statement_descriptor_romaji', $event)"
             @blur="onStatementDescriptorRomajiBlur"
-          />
+          >
           <p class="mt-1 text-xs text-gray-500">
             5〜22文字・大文字の半角英数字。使用できる記号はハイフン・ドットのみです。
           </p>
@@ -616,9 +598,9 @@ const isFieldRequired = (fieldName: string): boolean => {
 
 const shouldShowAcceptTos = computed((): boolean => {
   return (
-    !!props.needsTos ||
-    isFieldRequired("accept_tos") ||
-    isFieldRequired("tax_id")
+    !!props.needsTos
+    || isFieldRequired("accept_tos")
+    || isFieldRequired("tax_id")
   );
 });
 
@@ -650,7 +632,7 @@ const isCompanySectionRequired = computed((): boolean => {
     "company_address_kana.town",
     "company_address_kana.line1",
   ];
-  return companyFields.some((field) => props.requiredFields?.includes(field));
+  return companyFields.some(field => props.requiredFields?.includes(field));
 });
 
 // 明細書表記セクションが必要かどうかを判定
@@ -666,7 +648,7 @@ const isStatementDescriptorSectionRequired = computed((): boolean => {
     "statement_descriptor_kana",
     "statement_descriptor_romaji",
   ];
-  return statementDescriptorFields.some((field) =>
+  return statementDescriptorFields.some(field =>
     props.requiredFields?.includes(field),
   );
 });
@@ -698,13 +680,13 @@ const isCompanyAddressRequired = computed((): boolean => {
     "company_address_kana.town",
     "company_address_kana.line1",
   ];
-  return addressFields.some((field) => props.requiredFields?.includes(field));
+  return addressFields.some(field => props.requiredFields?.includes(field));
 });
 
 const isCompanyPostalCodeRequired = computed((): boolean => {
   return (
-    isFieldRequired("company_address_kanji.postal_code") ||
-    isFieldRequired("company_address_kana.postal_code")
+    isFieldRequired("company_address_kanji.postal_code")
+    || isFieldRequired("company_address_kana.postal_code")
   );
 });
 

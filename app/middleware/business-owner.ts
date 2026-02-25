@@ -15,7 +15,8 @@ export default defineNuxtRouteMiddleware(async (_to) => {
     if (authInfo.user_type !== "business_owner") {
       return navigateTo("/account/login");
     }
-  } catch (error) {
+  }
+  catch (error) {
     if (import.meta.dev) {
       // eslint-disable-next-line no-console
       console.error("Business owner middleware error:", error);

@@ -7,9 +7,15 @@
         お支払い情報のご入力
       </h1>
 
-      <CommonAtomsErrDialog v-model="showErrDialog" :msg="errMsg" />
+      <CommonAtomsErrDialog
+        v-model="showErrDialog"
+        :msg="errMsg"
+      />
 
-      <CommonAtomsLoadingAnimation v-if="loading" size="md" />
+      <CommonAtomsLoadingAnimation
+        v-if="loading"
+        size="md"
+      />
 
       <div v-show="!loading">
         <div
@@ -17,22 +23,30 @@
         >
           <!-- 集荷情報 -->
           <section class="py-6">
-            <h2 class="mb-4 text-xl font-semibold text-gray-800">集荷情報</h2>
+            <h2 class="mb-4 text-xl font-semibold text-gray-800">
+              集荷情報
+            </h2>
             <dl class="space-y-2">
               <div>
-                <dt class="text-sm font-medium text-gray-600">集荷場所</dt>
+                <dt class="text-sm font-medium text-gray-600">
+                  集荷場所
+                </dt>
                 <dd class="text-gray-900">
                   {{ step1Data.pickup_location_name }}
                 </dd>
               </div>
               <div>
-                <dt class="text-sm font-medium text-gray-600">集荷住所</dt>
+                <dt class="text-sm font-medium text-gray-600">
+                  集荷住所
+                </dt>
                 <dd class="text-gray-900">
                   {{ step1Data.pickup_location_address }}
                 </dd>
               </div>
               <div>
-                <dt class="text-sm font-medium text-gray-600">集荷日</dt>
+                <dt class="text-sm font-medium text-gray-600">
+                  集荷日
+                </dt>
                 <dd class="text-gray-900">
                   {{ formatDate(step1Data.pickup_date) }}
                 </dd>
@@ -42,28 +56,38 @@
 
           <!-- 配送情報 -->
           <section class="py-6">
-            <h2 class="mb-4 text-xl font-semibold text-gray-800">配送情報</h2>
+            <h2 class="mb-4 text-xl font-semibold text-gray-800">
+              配送情報
+            </h2>
             <dl class="space-y-2">
               <div>
-                <dt class="text-sm font-medium text-gray-600">配送場所</dt>
+                <dt class="text-sm font-medium text-gray-600">
+                  配送場所
+                </dt>
                 <dd class="text-gray-900">
                   {{ step1Data.delivery_location_name }}
                 </dd>
               </div>
               <div>
-                <dt class="text-sm font-medium text-gray-600">配送住所</dt>
+                <dt class="text-sm font-medium text-gray-600">
+                  配送住所
+                </dt>
                 <dd class="text-gray-900">
                   {{ step1Data.delivery_location_address }}
                 </dd>
               </div>
               <div>
-                <dt class="text-sm font-medium text-gray-600">配送日</dt>
+                <dt class="text-sm font-medium text-gray-600">
+                  配送日
+                </dt>
                 <dd class="text-gray-900">
                   {{ formatDate(step1Data.delivery_date) }}
                 </dd>
               </div>
               <div v-if="step1Data.notes">
-                <dt class="text-sm font-medium text-gray-600">備考</dt>
+                <dt class="text-sm font-medium text-gray-600">
+                  備考
+                </dt>
                 <dd class="whitespace-pre-wrap text-gray-900">
                   {{ step1Data.notes }}
                 </dd>
@@ -73,11 +97,19 @@
 
           <!-- 荷物情報 -->
           <section class="py-6">
-            <h2 class="mb-4 text-xl font-semibold text-gray-800">荷物情報</h2>
-            <div v-if="luggageItems.length === 0" class="text-gray-600">
+            <h2 class="mb-4 text-xl font-semibold text-gray-800">
+              荷物情報
+            </h2>
+            <div
+              v-if="luggageItems.length === 0"
+              class="text-gray-600"
+            >
               荷物が選択されていません
             </div>
-            <div v-else class="space-y-3">
+            <div
+              v-else
+              class="space-y-3"
+            >
               <div
                 v-for="item in luggageItems"
                 :key="item.key"
@@ -88,16 +120,20 @@
                     :src="getImageUrl(item.image_src)"
                     :alt="item.name"
                     class="h-12 w-12 object-contain"
-                  />
+                  >
                   <div>
-                    <p class="font-medium text-gray-900">{{ item.name }}</p>
+                    <p class="font-medium text-gray-900">
+                      {{ item.name }}
+                    </p>
                     <p class="text-sm text-gray-600">
                       ¥{{ item.price.toLocaleString() }} / 個
                     </p>
                   </div>
                 </div>
                 <div class="text-right">
-                  <p class="font-semibold text-gray-900">{{ item.count }} 個</p>
+                  <p class="font-semibold text-gray-900">
+                    {{ item.count }} 個
+                  </p>
                   <p class="text-sm text-gray-600">
                     ¥{{ (item.price * item.count).toLocaleString() }}
                   </p>
@@ -108,14 +144,22 @@
 
           <!-- 顧客情報 -->
           <section class="py-6">
-            <h2 class="mb-4 text-xl font-semibold text-gray-800">お客様情報</h2>
+            <h2 class="mb-4 text-xl font-semibold text-gray-800">
+              お客様情報
+            </h2>
             <dl class="space-y-2">
               <div>
-                <dt class="text-sm font-medium text-gray-600">お名前</dt>
-                <dd class="text-gray-900">{{ step3Data.customer_name }}</dd>
+                <dt class="text-sm font-medium text-gray-600">
+                  お名前
+                </dt>
+                <dd class="text-gray-900">
+                  {{ step3Data.customer_name }}
+                </dd>
               </div>
               <div>
-                <dt class="text-sm font-medium text-gray-600">電話番号</dt>
+                <dt class="text-sm font-medium text-gray-600">
+                  電話番号
+                </dt>
                 <dd class="text-gray-900">
                   {{ step3Data.customer_phone_number }}
                 </dd>
@@ -124,17 +168,25 @@
                 <dt class="text-sm font-medium text-gray-600">
                   メールアドレス
                 </dt>
-                <dd class="text-gray-900">{{ step3Data.customer_email }}</dd>
+                <dd class="text-gray-900">
+                  {{ step3Data.customer_email }}
+                </dd>
               </div>
               <div>
-                <dt class="text-sm font-medium text-gray-600">国籍</dt>
+                <dt class="text-sm font-medium text-gray-600">
+                  国籍
+                </dt>
                 <dd class="text-gray-900">
                   {{ nationalityLabel }}
                 </dd>
               </div>
               <div>
-                <dt class="text-sm font-medium text-gray-600">宿泊者名</dt>
-                <dd class="text-gray-900">{{ step3Data.guest_name }}</dd>
+                <dt class="text-sm font-medium text-gray-600">
+                  宿泊者名
+                </dt>
+                <dd class="text-gray-900">
+                  {{ step3Data.guest_name }}
+                </dd>
               </div>
             </dl>
           </section>
@@ -161,9 +213,7 @@
               </div>
             </div>
             <div class="flex items-center justify-between">
-              <span class="text-lg font-semibold text-gray-800"
-                >合計金額（税込）</span
-              >
+              <span class="text-lg font-semibold text-gray-800">合計金額（税込）</span>
               <span class="text-2xl font-bold text-gray-900">
                 ¥{{ totalAmount.toLocaleString() }}
               </span>
@@ -172,12 +222,25 @@
         </section>
 
         <!-- 決済方法 -->
-        <section v-if="paymentClientSecret" class="py-6">
-          <h2 class="mb-4 text-sm text-gray-600">お支払い情報のご入力</h2>
+        <section
+          v-if="paymentClientSecret"
+          class="py-6"
+        >
+          <h2 class="mb-4 text-sm text-gray-600">
+            お支払い情報のご入力
+          </h2>
           <div>
-            <CommonAtomsLoadingAnimation v-if="paymentLoading" size="md" />
-            <div v-if="loadingErr && !paymentLoading" class="py-4 text-center">
-              <p class="text-red-600">{{ loadingErr }}</p>
+            <CommonAtomsLoadingAnimation
+              v-if="paymentLoading"
+              size="md"
+            />
+            <div
+              v-if="loadingErr && !paymentLoading"
+              class="py-4 text-center"
+            >
+              <p class="text-red-600">
+                {{ loadingErr }}
+              </p>
             </div>
             <!-- Payment Elementは常にDOMに存在するようにする -->
             <div v-show="!paymentLoading && !loadingErr">
@@ -187,7 +250,9 @@
               v-if="paymentErr && !paymentLoading && !loadingErr"
               class="mt-4 text-center"
             >
-              <p class="text-red-600">{{ paymentErr }}</p>
+              <p class="text-red-600">
+                {{ paymentErr }}
+              </p>
             </div>
           </div>
         </section>
@@ -199,7 +264,10 @@
             :disabled="isSubmitting"
             @click="handleConfirm"
           >
-            <CommonAtomsLoadingAnimation v-if="isSubmitting" size="sm" />
+            <CommonAtomsLoadingAnimation
+              v-if="isSubmitting"
+              size="sm"
+            />
             <span v-else>予約を確定する</span>
           </button>
           <button
@@ -235,8 +303,8 @@ import {
 } from "~/composables/useBookingValid";
 import type { LuggageItemData, ApiErrRes, BookingData } from "~/types/booking";
 
-const { step1Data, step2Data, step3Data, completeFormData, clearAllData } =
-  useBookingForm();
+const { step1Data, step2Data, step3Data, completeFormData, clearAllData }
+  = useBookingForm();
 
 const { ensureCsrf, getCsrf } = useCsrf();
 const { checkSessionValidity } = useSession();
@@ -295,11 +363,11 @@ const luggageItems = computed<LuggageItem[]>(() => {
   }
 
   return luggageItemsData.value
-    .map((item) => ({
+    .map(item => ({
       ...item,
       count: step2Data.value[item.key] ?? 0,
     }))
-    .filter((item) => item.count > 0);
+    .filter(item => item.count > 0);
 });
 
 const totalAmount = computed(() => {
@@ -353,7 +421,7 @@ const initializePaymentElement = async (clientSecret: string) => {
           colorBackground: "#f3f4f6",
           colorText: "#1f2937",
           colorDanger: "#dc2626",
-          fontFamily: '"Noto Sans JP", system-ui, sans-serif',
+          fontFamily: "\"Noto Sans JP\", system-ui, sans-serif",
           spacingUnit: "4px",
           borderRadius: "6px",
         },
@@ -423,7 +491,8 @@ const initializePaymentElement = async (clientSecret: string) => {
     });
 
     paymentLoading.value = false;
-  } catch (err: unknown) {
+  }
+  catch (err: unknown) {
     if (import.meta.dev) {
       // eslint-disable-next-line no-console
       console.error("Stripe initialization error:", err);
@@ -476,8 +545,8 @@ const confirmPayment = async (): Promise<{
         // eslint-disable-next-line no-console
         console.error("Payment element submit error:", submitError);
       }
-      paymentErr.value =
-        "支払い情報の確認に失敗しました。カード情報をご確認の上、再度お試しください。";
+      paymentErr.value
+        = "支払い情報の確認に失敗しました。カード情報をご確認の上、再度お試しください。";
       return {
         success: false,
       };
@@ -489,8 +558,8 @@ const confirmPayment = async (): Promise<{
         // eslint-disable-next-line no-console
         console.error("Customer email is required");
       }
-      paymentErr.value =
-        "メールアドレスが入力されていません。顧客情報入力画面で入力してください。";
+      paymentErr.value
+        = "メールアドレスが入力されていません。顧客情報入力画面で入力してください。";
       return {
         success: false,
       };
@@ -501,8 +570,8 @@ const confirmPayment = async (): Promise<{
         // eslint-disable-next-line no-console
         console.error("Customer name is required");
       }
-      paymentErr.value =
-        "お名前が入力されていません。顧客情報入力画面で入力してください。";
+      paymentErr.value
+        = "お名前が入力されていません。顧客情報入力画面で入力してください。";
       return {
         success: false,
       };
@@ -532,8 +601,8 @@ const confirmPayment = async (): Promise<{
       },
     };
 
-    const { error: confirmErr, paymentIntent } =
-      await stripe.value.confirmPayment({
+    const { error: confirmErr, paymentIntent }
+      = await stripe.value.confirmPayment({
         elements: elements.value,
         clientSecret: paymentClientSecret.value,
         confirmParams,
@@ -543,8 +612,8 @@ const confirmPayment = async (): Promise<{
     if (confirmErr) {
       // Payment Intent が既に成功している場合のエラーを特別に処理
       if (
-        confirmErr.code === "payment_intent_unexpected_state" &&
-        confirmErr.payment_intent?.status === "succeeded"
+        confirmErr.code === "payment_intent_unexpected_state"
+        && confirmErr.payment_intent?.status === "succeeded"
       ) {
         if (import.meta.dev) {
           // eslint-disable-next-line no-console
@@ -563,17 +632,19 @@ const confirmPayment = async (): Promise<{
         // eslint-disable-next-line no-console
         console.error("Payment confirmation error:", confirmErr);
       }
-      paymentErr.value =
-        "支払い情報の確認に失敗しました。カード情報をご確認の上、再度お試しください。";
+      paymentErr.value
+        = "支払い情報の確認に失敗しました。カード情報をご確認の上、再度お試しください。";
       return {
         success: false,
       };
-    } else if (paymentIntent && paymentIntent.status === "succeeded") {
+    }
+    else if (paymentIntent && paymentIntent.status === "succeeded") {
       return {
         success: true,
         paymentIntentId: paymentIntent.id,
       };
-    } else {
+    }
+    else {
       if (import.meta.dev) {
         // eslint-disable-next-line no-console
         console.error("Payment not completed:", {
@@ -590,7 +661,8 @@ const confirmPayment = async (): Promise<{
         success: false,
       };
     }
-  } catch (err: unknown) {
+  }
+  catch (err: unknown) {
     if (import.meta.dev) {
       // eslint-disable-next-line no-console
       console.error("Payment processing error:", err);
@@ -599,7 +671,8 @@ const confirmPayment = async (): Promise<{
     return {
       success: false,
     };
-  } finally {
+  }
+  finally {
     isConfirmingPayment.value = false;
   }
 };
@@ -618,8 +691,8 @@ const handleConfirm = async () => {
     // セッション有効性をチェック
     const sessionValid = await checkSessionValidity();
     if (!sessionValid) {
-      errMsg.value =
-        "セッションの有効期限が切れています。お手数おかけしますが、最初から入力し直してください。";
+      errMsg.value
+        = "セッションの有効期限が切れています。お手数おかけしますが、最初から入力し直してください。";
       isSubmitting.value = false;
       clearAllData();
       await router.push("/booking/1");
@@ -627,8 +700,8 @@ const handleConfirm = async () => {
     }
 
     if (!paymentClientSecret.value) {
-      errMsg.value =
-        "情報の取得に失敗しました。お手数をおかけしますが、最初から入力し直してください。";
+      errMsg.value
+        = "情報の取得に失敗しました。お手数をおかけしますが、最初から入力し直してください。";
       isSubmitting.value = false;
       clearAllData();
       await router.push("/booking/1");
@@ -645,8 +718,8 @@ const handleConfirm = async () => {
     const rslt = await confirmPayment();
 
     if (!rslt.success || !rslt.paymentIntentId) {
-      errMsg.value =
-        "支払いの処理に失敗しました。支払い情報をご確認してください。";
+      errMsg.value
+        = "支払いの処理に失敗しました。支払い情報をご確認してください。";
       isSubmitting.value = false;
       return;
     }
@@ -691,17 +764,17 @@ const handleConfirm = async () => {
 
       // 決済が完了していない場合やバリデーションエラーはリトライしない
       if (
-        apiErr.data.payment_status ||
-        apiErr.data.valid_errs ||
-        (fetchErr?.value as { statusCode?: number })?.statusCode === 400
+        apiErr.data.payment_status
+        || apiErr.data.valid_errs
+        || (fetchErr?.value as { statusCode?: number })?.statusCode === 400
       ) {
         break;
       }
 
       // リトライ可能なエラーの場合（500エラーなど）
       if (
-        (fetchErr?.value as { statusCode?: number })?.statusCode === 500 &&
-        apiErr.data.retry_recommended
+        (fetchErr?.value as { statusCode?: number })?.statusCode === 500
+        && apiErr.data.retry_recommended
       ) {
         retryCount++;
         if (retryCount <= maxRetries) {
@@ -713,7 +786,7 @@ const handleConfirm = async () => {
               `予約送信をリトライします (${retryCount}/${maxRetries}): ${delay}ms後に再試行`,
             );
           }
-          await new Promise((resolve) => setTimeout(resolve, delay));
+          await new Promise(resolve => setTimeout(resolve, delay));
           continue;
         }
       }
@@ -728,11 +801,12 @@ const handleConfirm = async () => {
 
       // 決済が完了していない場合
       if (apiErr.data.payment_status) {
-        errMsg.value =
-          "決済処理が完了していません。お支払い情報に問題がないかご確認いただき、再度予約手続きを行ってください。";
+        errMsg.value
+          = "決済処理が完了していません。お支払い情報に問題がないかご確認いただき、再度予約手続きを行ってください。";
         isSubmitting.value = false;
         return;
-      } else if (apiErr.data.valid_errs) {
+      }
+      else if (apiErr.data.valid_errs) {
         // バリデーションエラーが発生している場合
         const validErrs = apiErr.data.valid_errs;
         const errMsgs: string[] = [];
@@ -747,15 +821,17 @@ const handleConfirm = async () => {
         errMsg.value = `入力内容に誤りがあります。以下の項目をご確認ください。\n${errMsgs.join(", ")}`;
         isSubmitting.value = false;
         return;
-      } else {
+      }
+      else {
         // 500エラーでリトライを試みたが失敗した場合
         if (retryCount >= maxRetries) {
-          errMsg.value =
-            "決済は正常に完了していますが、予約情報の保存に失敗しました。お手数をおかけしますが、運営にご連絡ください。";
-        } else {
+          errMsg.value
+            = "決済は正常に完了していますが、予約情報の保存に失敗しました。お手数をおかけしますが、運営にご連絡ください。";
+        }
+        else {
           // その他のエラーの場合（決済は完了しているが、エラーの種類が不明）
-          errMsg.value =
-            "予約の送信に失敗しました。しばらく時間をおいて再度お試しください。";
+          errMsg.value
+            = "予約の送信に失敗しました。しばらく時間をおいて再度お試しください。";
         }
         isSubmitting.value = false;
         return;
@@ -764,8 +840,8 @@ const handleConfirm = async () => {
 
     // bookingData が存在しない場合
     if (!bookingData?.value) {
-      errMsg.value =
-        "決済は完了していますが、予約情報の取得に失敗しました。お手数をおかけしますが、運営にご連絡ください。";
+      errMsg.value
+        = "決済は完了していますが、予約情報の取得に失敗しました。お手数をおかけしますが、運営にご連絡ください。";
       isSubmitting.value = false;
       return;
     }
@@ -784,14 +860,16 @@ const handleConfirm = async () => {
     }
 
     await router.push("/booking/complete");
-  } catch (err: unknown) {
+  }
+  catch (err: unknown) {
     if (import.meta.dev) {
       // eslint-disable-next-line no-console
       console.error("Booking confirmation error:", err);
     }
-    errMsg.value =
-      "予約の送信に失敗しました。しばらく時間をおいて再度お試しください。";
-  } finally {
+    errMsg.value
+      = "予約の送信に失敗しました。しばらく時間をおいて再度お試しください。";
+  }
+  finally {
     isSubmitting.value = false;
   }
 };
@@ -799,7 +877,8 @@ const handleConfirm = async () => {
 watch(errMsg, (newValue) => {
   if (newValue) {
     showErrDialog.value = true;
-  } else {
+  }
+  else {
     showErrDialog.value = false; // エラーメッセージがクリアされたらダイアログも閉じる
   }
 });
@@ -822,7 +901,8 @@ onMounted(async () => {
       }
 
       luggageItemsData.value = data.value.items;
-    } catch (err: unknown) {
+    }
+    catch (err: unknown) {
       if (import.meta.dev) {
         // eslint-disable-next-line no-console
         console.error("Error fetching luggage items:", err);
@@ -835,8 +915,8 @@ onMounted(async () => {
     // Step1が完了しているかチェック
     const isStep1Valid = await createStep1Schema().isValid(step1Data.value);
     if (!isStep1Valid) {
-      errMsg.value =
-        "入力内容が完了していません。お手数をおかけしますが、入力内容をご確認ください。";
+      errMsg.value
+        = "入力内容が完了していません。お手数をおかけしますが、入力内容をご確認ください。";
       loading.value = false;
       await router.push("/booking/1");
       return;
@@ -847,8 +927,8 @@ onMounted(async () => {
       luggageItemsData.value,
     ).isValid(step2Data.value);
     if (!isStep2Valid) {
-      errMsg.value =
-        "入力内容が完了していません。お手数をおかけしますが、入力内容をご確認ください。";
+      errMsg.value
+        = "入力内容が完了していません。お手数をおかけしますが、入力内容をご確認ください。";
       loading.value = false;
       await router.push("/booking/2");
       return;
@@ -857,8 +937,8 @@ onMounted(async () => {
     // Step3が完了しているかチェック
     const isStep3Valid = await createStep3Schema().isValid(step3Data.value);
     if (!isStep3Valid) {
-      errMsg.value =
-        "入力内容が完了していません。お手数をおかけしますが、入力内容をご確認ください。";
+      errMsg.value
+        = "入力内容が完了していません。お手数をおかけしますが、入力内容をご確認ください。";
       loading.value = false;
       await router.push("/booking/3");
       return;
@@ -868,10 +948,11 @@ onMounted(async () => {
     const storedSecret = sessionStorage.getItem("paymentClientSecret");
     if (storedSecret) {
       paymentClientSecret.value = storedSecret;
-    } else {
+    }
+    else {
       // paymentClientSecret が存在しない場合は Step1 に戻る
-      errMsg.value =
-        "情報の取得に失敗しました。お手数をおかけしますが、最初から入力し直してください。";
+      errMsg.value
+        = "情報の取得に失敗しました。お手数をおかけしますが、最初から入力し直してください。";
       loading.value = false;
       clearAllData();
       await router.push("/booking/1");
@@ -889,7 +970,7 @@ onMounted(async () => {
       paymentLoading.value = false;
 
       await nextTick();
-      await new Promise((resolve) => setTimeout(resolve, 50));
+      await new Promise(resolve => setTimeout(resolve, 50));
 
       // #payment-element が存在するまで待つ（最大30回、100ms間隔）
       let retries = 0;
@@ -899,7 +980,7 @@ onMounted(async () => {
         if (element) {
           break;
         }
-        await new Promise((resolve) => setTimeout(resolve, 100));
+        await new Promise(resolve => setTimeout(resolve, 100));
         await nextTick();
         retries++;
       }
@@ -918,7 +999,8 @@ onMounted(async () => {
 
       // Payment Element を初期化
       await initializePaymentElement(paymentClientSecret.value);
-    } else {
+    }
+    else {
       loading.value = false;
     }
 
@@ -959,7 +1041,7 @@ watch(
         if (element) {
           break;
         }
-        await new Promise((resolve) => setTimeout(resolve, 50));
+        await new Promise(resolve => setTimeout(resolve, 50));
         await nextTick();
         retries++;
       }

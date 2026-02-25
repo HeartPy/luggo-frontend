@@ -31,7 +31,8 @@ export const useStripeAccountForm = () => {
         return fallback;
       }
       return parsed.value;
-    } catch {
+    }
+    catch {
       return fallback;
     }
   };
@@ -47,7 +48,8 @@ export const useStripeAccountForm = () => {
       }
       // 現在のユーザーIDを保存
       localStorage.setItem(USER_ID_KEY, currentUserId);
-    } catch {
+    }
+    catch {
       // エラー時は無視
     }
   };
@@ -57,7 +59,8 @@ export const useStripeAccountForm = () => {
     if (!import.meta.client) return;
     try {
       localStorage.setItem(key, JSON.stringify({ value, savedAt: Date.now() }));
-    } catch {
+    }
+    catch {
       // ストレージ保存失敗は無視
     }
   };
@@ -246,7 +249,8 @@ export const useStripeAccountForm = () => {
       errorsStep4.value = {};
       errorsStep5.value = {};
       expiredNotice.value = false;
-    } catch {
+    }
+    catch {
       // ストレージ削除失敗は無視
     }
   };
@@ -264,7 +268,8 @@ export const useStripeAccountForm = () => {
         const parsed = JSON.parse(raw) as { value: unknown; savedAt: number };
         if (!parsed || typeof parsed.savedAt !== "number") return true;
         return Date.now() - parsed.savedAt > TTL_MS;
-      } catch {
+      }
+      catch {
         return true;
       }
     };
@@ -303,8 +308,8 @@ export const useStripeAccountForm = () => {
 
     // Step2のチェック
     if (
-      checkExpired("register.step2") &&
-      (step2Data.value.first_name_kanji || step2Data.value.rep_email)
+      checkExpired("register.step2")
+      && (step2Data.value.first_name_kanji || step2Data.value.rep_email)
     ) {
       step2Data.value = {
         first_name_kanji: "",
@@ -336,8 +341,8 @@ export const useStripeAccountForm = () => {
 
     // Step3のチェック
     if (
-      checkExpired("register.step3") &&
-      (step3Data.value.bank_code || step3Data.value.account_number)
+      checkExpired("register.step3")
+      && (step3Data.value.bank_code || step3Data.value.account_number)
     ) {
       step3Data.value = {
         bank_code: "",
@@ -351,8 +356,8 @@ export const useStripeAccountForm = () => {
 
     // Step4のチェック
     if (
-      checkExpired("register.step4") &&
-      (step4Data.value.product_url || step4Data.value.product_description)
+      checkExpired("register.step4")
+      && (step4Data.value.product_url || step4Data.value.product_description)
     ) {
       step4Data.value = {
         product_url: "",
@@ -364,8 +369,8 @@ export const useStripeAccountForm = () => {
 
     // Step5のチェック（アップロード済みファイルIDも含む）
     if (
-      checkExpired("register.step5") &&
-      (step5Data.value.document_front || step5Data.value.document_back)
+      checkExpired("register.step5")
+      && (step5Data.value.document_front || step5Data.value.document_back)
     ) {
       step5Data.value = {
         document_front: "",
@@ -398,35 +403,35 @@ export const useStripeAccountForm = () => {
 
     watch(
       step1Data,
-      (v) => saveWithExpiry<Step1FormData>("register.step1", v),
+      v => saveWithExpiry<Step1FormData>("register.step1", v),
       {
         deep: true,
       },
     );
     watch(
       step2Data,
-      (v) => saveWithExpiry<Step2FormData>("register.step2", v),
+      v => saveWithExpiry<Step2FormData>("register.step2", v),
       {
         deep: true,
       },
     );
     watch(
       step3Data,
-      (v) => saveWithExpiry<Step3FormData>("register.step3", v),
+      v => saveWithExpiry<Step3FormData>("register.step3", v),
       {
         deep: true,
       },
     );
     watch(
       step4Data,
-      (v) => saveWithExpiry<Step4FormData>("register.step4", v),
+      v => saveWithExpiry<Step4FormData>("register.step4", v),
       {
         deep: true,
       },
     );
     watch(
       step5Data,
-      (v) => saveWithExpiry<Step5FormData>("register.step5", v),
+      v => saveWithExpiry<Step5FormData>("register.step5", v),
       {
         deep: true,
       },

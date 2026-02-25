@@ -1,5 +1,8 @@
 <template>
-  <div v-if="isVerifSectionRequired" class="space-y-6">
+  <div
+    v-if="isVerifSectionRequired"
+    class="space-y-6"
+  >
     <StripeAccountAtomsFormTtl>本人確認書類</StripeAccountAtomsFormTtl>
     <p class="mb-6 text-sm text-gray-600">
       代表者の本人確認書類として、運転免許証、パスポート、マイナンバーカードなどをアップロードしてください。
@@ -8,11 +11,7 @@
       <div class="mb-3 flex flex-col gap-6">
         <!-- 本人確認書類の表（前面） -->
         <div v-if="isFieldRequired('document_front')">
-          <label class="mb-1 block text-sm font-medium"
-            >本人確認書類の表（前面）<span class="ml-[0.2em] text-red-600"
-              >*</span
-            ></label
-          >
+          <label class="mb-1 block text-sm font-medium">本人確認書類の表（前面）<span class="ml-[0.2em] text-red-600">*</span></label>
           <input
             ref="frontInputRef"
             type="file"
@@ -20,8 +19,11 @@
             class="w-full py-2"
             aria-describedby="document_front-error"
             @change="handleFileChange('front', $event)"
-          />
-          <p v-if="formData.document_front" class="mt-1 text-sm text-green-600">
+          >
+          <p
+            v-if="formData.document_front"
+            class="mt-1 text-sm text-green-600"
+          >
             ✓ アップロード済み
           </p>
           <div
@@ -36,11 +38,7 @@
 
         <!-- 本人確認書類の裏（背面） -->
         <div v-if="isFieldRequired('document_back')">
-          <label class="mb-1 block text-sm font-medium"
-            >本人確認書類の裏（背面）<span class="ml-[0.2em] text-red-600"
-              >*</span
-            ></label
-          >
+          <label class="mb-1 block text-sm font-medium">本人確認書類の裏（背面）<span class="ml-[0.2em] text-red-600">*</span></label>
           <input
             ref="backInputRef"
             type="file"
@@ -48,8 +46,11 @@
             class="w-full py-2"
             aria-describedby="document_back-error"
             @change="handleFileChange('back', $event)"
-          />
-          <p v-if="formData.document_back" class="mt-1 text-sm text-green-600">
+          >
+          <p
+            v-if="formData.document_back"
+            class="mt-1 text-sm text-green-600"
+          >
             ✓ アップロード済み
           </p>
           <div
@@ -104,7 +105,7 @@ const isVerifSectionRequired = computed(() => {
   if (props.requiredFields.length === 0) {
     return false;
   }
-  return props.requiredFields.some((field) =>
+  return props.requiredFields.some(field =>
     ["document_front", "document_back"].includes(field),
   );
 });
@@ -141,11 +142,11 @@ const handleFileChange = (side: "front" | "back", event: Event) => {
     .substring(file.name.lastIndexOf("."));
 
   if (
-    !allowedTypes.includes(file.type) &&
-    !allowedExtensions.includes(fileExtension)
+    !allowedTypes.includes(file.type)
+    && !allowedExtensions.includes(fileExtension)
   ) {
-    localErrors.value[errorKey] =
-      "対応していないファイル形式です。JPEGまたはPNGファイルを選択してください。";
+    localErrors.value[errorKey]
+      = "対応していないファイル形式です。JPEGまたはPNGファイルを選択してください。";
     // inputの値をクリア
     if (inputRef) {
       inputRef.value = "";
@@ -163,8 +164,8 @@ const handleFileChange = (side: "front" | "back", event: Event) => {
   // ファイルサイズの検証
   const maxSize = 10 * 1024 * 1024; // 10MB
   if (file.size > maxSize) {
-    localErrors.value[errorKey] =
-      "ファイルサイズが大きすぎます。10MB以下のファイルを選択してください。";
+    localErrors.value[errorKey]
+      = "ファイルサイズが大きすぎます。10MB以下のファイルを選択してください。";
     if (inputRef) {
       inputRef.value = "";
     }
@@ -179,8 +180,8 @@ const handleFileChange = (side: "front" | "back", event: Event) => {
 
   // 空ファイルの検証
   if (file.size === 0) {
-    localErrors.value[errorKey] =
-      "空のファイルはアップロードできません。有効なファイルを選択してください。";
+    localErrors.value[errorKey]
+      = "空のファイルはアップロードできません。有効なファイルを選択してください。";
     if (inputRef) {
       inputRef.value = "";
     }

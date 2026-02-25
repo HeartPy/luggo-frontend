@@ -10,7 +10,7 @@
             src="/img/luggo.svg"
             alt="LugGo"
             class="h-full w-full object-contain"
-          />
+          >
         </figure>
         <span class="whitespace-nowrap text-xl font-bold text-gray-800">
           LugGo

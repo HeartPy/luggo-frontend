@@ -4,7 +4,10 @@
   >
     <div class="mx-auto w-[calc(100%-8vw)] max-w-[800px]">
       <div class="rounded-xl bg-white px-4 py-8 md:p-8">
-        <CommonAtomsLoadingAnimation v-if="isPageLoading" size="md" />
+        <CommonAtomsLoadingAnimation
+          v-if="isPageLoading"
+          size="md"
+        />
         <div v-else>
           <h1
             class="mb-8 text-center text-2xl font-bold text-gray-800 md:mb-12"
@@ -30,9 +33,15 @@
             :current-step="currentStep"
           />
 
-          <CommonAtomsErrDialog v-model="showErrDialog" :msg="errMsg" />
+          <CommonAtomsErrDialog
+            v-model="showErrDialog"
+            :msg="errMsg"
+          />
 
-          <form novalidate @submit.prevent="handleNext">
+          <form
+            novalidate
+            @submit.prevent="handleNext"
+          >
             <StripeAccountCompanyInfo
               v-if="currentStep === 1 && requiredSteps.has(1)"
               :form-data="step1Data"
@@ -81,11 +90,14 @@
                 class="flex items-center justify-center rounded-md bg-gray-800 px-8 py-3 font-semibold text-white hover:bg-gray-900 disabled:cursor-not-allowed disabled:bg-gray-300"
                 :disabled="isSubmitting"
               >
-                <CommonAtomsLoadingAnimation v-if="isSubmitting" size="sm" />
+                <CommonAtomsLoadingAnimation
+                  v-if="isSubmitting"
+                  size="sm"
+                />
                 <span v-else>
                   {{
                     currentStep ===
-                    filteredSteps[filteredSteps.length - 1]?.number
+                      filteredSteps[filteredSteps.length - 1]?.number
                       ? "Stripeアカウント登録の申請"
                       : "次へ"
                   }}
@@ -151,7 +163,7 @@ const filteredSteps = computed(() => {
   if (requiredSteps.value.size === 0) {
     return allSteps;
   }
-  return allSteps.filter((step) => requiredSteps.value.has(step.number));
+  return allSteps.filter(step => requiredSteps.value.has(step.number));
 });
 
 const currentStep = computed(() => {
@@ -221,9 +233,9 @@ const getPathValue = (obj: unknown, path: string): unknown => {
   if (!obj) return undefined;
   return path.split(".").reduce<unknown>((acc, key) => {
     if (
-      acc &&
-      typeof acc === "object" &&
-      key in (acc as Record<string, unknown>)
+      acc
+      && typeof acc === "object"
+      && key in (acc as Record<string, unknown>)
     ) {
       return (acc as Record<string, unknown>)[key];
     }
@@ -276,8 +288,8 @@ const pruneEmpty = (value: unknown): unknown => {
 
   if (Array.isArray(value)) {
     const prunedArray = value
-      .map((item) => pruneEmpty(item))
-      .filter((item) => item !== undefined);
+      .map(item => pruneEmpty(item))
+      .filter(item => item !== undefined);
     return prunedArray.length > 0 ? prunedArray : undefined;
   }
 
@@ -301,8 +313,8 @@ const buildStepPayload = (
   data: Record<string, unknown>,
   requiredSet: Set<string> | undefined,
 ): Record<string, unknown> | null => {
-  const base =
-    !requiredSet || requiredSet.size === 0
+  const base
+    = !requiredSet || requiredSet.size === 0
       ? data
       : (() => {
           const picked: Record<string, unknown> = {};
@@ -370,7 +382,8 @@ const isStepDataValid = async (
   try {
     await schema.validate(value, { abortEarly: false });
     return true;
-  } catch (err) {
+  }
+  catch (err) {
     const filteredErrors = filterErrorsForStep(getYupErrors(err), requiredSet);
     return Object.keys(filteredErrors).length === 0;
   }
@@ -465,14 +478,15 @@ const handleFileUpload = async (
           body: formData,
         },
       );
-    } catch {
+    }
+    catch {
       throw new Error(
         "ネットワークエラーが発生しました。インターネット接続を確認して、もう一度お試しください。",
       );
     }
 
-    const body: { file_id?: string; error?: string; restart?: boolean } =
-      await res.json().catch(() => {
+    const body: { file_id?: string; error?: string; restart?: boolean }
+      = await res.json().catch(() => {
         // JSON解析に失敗した場合
         throw new Error(
           "サーバーからの応答の処理に失敗しました。お手数おかけしますが、しばらく時間をおいて再度お試しください。",
@@ -488,17 +502,21 @@ const handleFileUpload = async (
         throw new Error(
           "ファイルの形式が正しくないか、ファイルサイズが大きすぎます。",
         );
-      } else if (res.status === 401) {
+      }
+      else if (res.status === 401) {
         throw new Error("認証に失敗しました。ページを再読み込みしてください。");
-      } else if (res.status === 413) {
+      }
+      else if (res.status === 413) {
         throw new Error(
           "ファイルサイズが大きすぎます。10MB以下のファイルを選択してください。",
         );
-      } else if (res.status >= 500) {
+      }
+      else if (res.status >= 500) {
         throw new Error(
           "サーバーエラーが発生しました。お手数おかけしますが、しばらく時間をおいて再度お試しください。",
         );
-      } else {
+      }
+      else {
         throw new Error(
           "ファイルのアップロードに失敗しました。もう一度お試しください。",
         );
@@ -508,23 +526,28 @@ const handleFileUpload = async (
     if (body.file_id) {
       if (side === "front") {
         step5Data.value.document_front = body.file_id;
-      } else {
+      }
+      else {
         step5Data.value.document_back = body.file_id;
       }
       errMsg.value = "";
-    } else {
+    }
+    else {
       throw new Error(
         "ファイルIDの取得に失敗しました。もう一度お試しください。",
       );
     }
-  } catch (err: unknown) {
+  }
+  catch (err: unknown) {
     if (err instanceof Error) {
       errMsg.value = err.message;
-    } else if (typeof err === "string") {
+    }
+    else if (typeof err === "string") {
       errMsg.value = err;
-    } else {
-      errMsg.value =
-        "ファイルのアップロード中にエラーが発生しました。ネットワーク接続を確認して、もう一度お試しください。";
+    }
+    else {
+      errMsg.value
+        = "ファイルのアップロード中にエラーが発生しました。ネットワーク接続を確認して、もう一度お試しください。";
     }
   }
 };
@@ -537,8 +560,8 @@ const submit = async (): Promise<void> => {
   const sessionValid = await checkSessionValidity();
   if (!sessionValid) {
     clearAllData();
-    errMsg.value =
-      "セッションの有効期限が切れています。お手数おかけしますが、最初から入力し直してください。";
+    errMsg.value
+      = "セッションの有効期限が切れています。お手数おかけしますが、最初から入力し直してください。";
     const firstRequiredStep = filteredSteps.value[0]?.number || 1;
     await navigateTo(`/stripe/account/${firstRequiredStep}`);
     return;
@@ -587,16 +610,16 @@ const submit = async (): Promise<void> => {
       // 明細書表記：入力がありトリム後も中身がある項目だけ送信用オブジェクトに詰める
       const statementDescriptorPayload: Record<string, string> = {};
       if (step1Data.value.statement_descriptor_romaji?.trim()) {
-        statementDescriptorPayload.statement_descriptor =
-          step1Data.value.statement_descriptor_romaji.trim();
+        statementDescriptorPayload.statement_descriptor
+          = step1Data.value.statement_descriptor_romaji.trim();
       }
       if (step1Data.value.statement_descriptor_kana?.trim()) {
-        statementDescriptorPayload.statement_descriptor_kana =
-          step1Data.value.statement_descriptor_kana.trim();
+        statementDescriptorPayload.statement_descriptor_kana
+          = step1Data.value.statement_descriptor_kana.trim();
       }
       if (step1Data.value.statement_descriptor?.trim()) {
-        statementDescriptorPayload.statement_descriptor_kanji =
-          step1Data.value.statement_descriptor.trim();
+        statementDescriptorPayload.statement_descriptor_kanji
+          = step1Data.value.statement_descriptor.trim();
       }
 
       // 会社住所をフォームからコピーして送信用に用意
@@ -608,8 +631,8 @@ const submit = async (): Promise<void> => {
         : undefined;
 
       // 事業者タイプに応じてproduct_company（送信データ）を組立（法人のみ法人番号・会社住所を含める）
-      const baseWithStatement =
-        businessProfile.value?.business_type === "company"
+      const baseWithStatement
+        = businessProfile.value?.business_type === "company"
           ? {
               ...baseProductCompany,
               ...(tax_id !== undefined ? { tax_id } : {}),
@@ -641,23 +664,25 @@ const submit = async (): Promise<void> => {
     if (requiresDirectors) {
       if (!step2Payload) {
         step2Payload = { directors: [] };
-      } else if (!("directors" in step2Payload)) {
+      }
+      else if (!("directors" in step2Payload)) {
         step2Payload = { ...step2Payload, directors: [] };
       }
     }
 
     // 代表者情報を送信。役職が要求されておらず「代表取締役」のみのときは送らない（不要な送信を避ける）
-    const isRepTitleRequired =
-      !!step2Required && step2Required.has("rep_title");
+    const isRepTitleRequired
+      = !!step2Required && step2Required.has("rep_title");
     if (step2Payload) {
       const repInfoPayload = { ...step2Payload };
       if (
-        !isRepTitleRequired &&
-        repInfoPayload.rep_title === "代表取締役" &&
-        Object.keys(repInfoPayload).length === 1
+        !isRepTitleRequired
+        && repInfoPayload.rep_title === "代表取締役"
+        && Object.keys(repInfoPayload).length === 1
       ) {
         // 代表取締役のみの送信は不要なので除外
-      } else {
+      }
+      else {
         requestBody.rep_info = repInfoPayload;
       }
     }
@@ -736,8 +761,8 @@ const submit = async (): Promise<void> => {
       if (body.value.restart) {
         // セッションが失われた場合、データをクリアして最初のステップに戻る
         clearAllData();
-        errMsg.value =
-          "セッションが失われました。最初から登録をやり直してください。";
+        errMsg.value
+          = "セッションが失われました。最初から登録をやり直してください。";
         const firstRequiredStep = filteredSteps.value[0]?.number || 1;
         await navigateTo(`/stripe/account/${firstRequiredStep}`);
         return;
@@ -759,16 +784,20 @@ const submit = async (): Promise<void> => {
     }
 
     await navigateTo("/stripe/account/complete");
-  } catch (err: unknown) {
+  }
+  catch (err: unknown) {
     if (err instanceof Error) {
       errMsg.value = err.message;
-    } else if (typeof err === "string") {
-      errMsg.value = err;
-    } else {
-      errMsg.value =
-        "送信に失敗しました。お手数おかけしますが、しばらく時間をおいて再度お試しください。";
     }
-  } finally {
+    else if (typeof err === "string") {
+      errMsg.value = err;
+    }
+    else {
+      errMsg.value
+        = "送信に失敗しました。お手数おかけしますが、しばらく時間をおいて再度お試しください。";
+    }
+  }
+  finally {
     isSubmitting.value = false;
   }
 };
@@ -795,14 +824,14 @@ const step1Schema = object({
     .trim()
     .required("法人名または屋号（ローマ字）は必須です")
     .max(100, "法人名または屋号（ローマ字）は100文字以内で入力してください")
-    .matches(/^[a-zA-Z0-9\s\.\-,'&()]+$/u, "半角英数字で入力してください"),
+    .matches(/^[a-zA-Z0-9\s.\-,'&()]+$/u, "半角英数字で入力してください"),
   // 法人の場合のみ必須
   tax_id: string()
     .trim()
     .test(
       "tax-id-format",
       "法人番号は13桁の半角数字で入力してください",
-      (value) => !value || /^\d{13}$/u.test(value),
+      value => !value || /^\d{13}$/u.test(value),
     )
     .test("company-tax-id-required", "法人番号は必須です", (value) => {
       if (businessProfile.value?.business_type !== "company") return true;
@@ -888,9 +917,9 @@ const step1Schema = object({
     .test(
       "statement-descriptor-forbidden",
       "文字 &lt;&lt; &gt;&gt; \\ ' \" * ＊ は使用できません",
-      (v) =>
-        !v ||
-        (!/[<>\\'"*＊]/.test(v) && !v.includes("<<") && !v.includes(">>")),
+      v =>
+        !v
+        || (!/[<>\\'"*＊]/.test(v) && !v.includes("<<") && !v.includes(">>")),
     )
     .optional(),
   statement_descriptor_kana: string()
@@ -899,7 +928,7 @@ const step1Schema = object({
     .test(
       "statement-descriptor-kana-chars",
       "カタカナ・ハイフン・ドットのみ使用できます",
-      (v) => !v || v.length === 0 || /^[ァ-ヶー\s\-\.]+$/u.test(v),
+      v => !v || v.length === 0 || /^[ァ-ヶー\s\-.]+$/u.test(v),
     )
     .optional(),
   statement_descriptor_romaji: string()
@@ -908,21 +937,21 @@ const step1Schema = object({
     .test(
       "statement-descriptor-length",
       "明細書表記（ローマ字/英字）は5文字以上22文字以内で入力してください",
-      (v) => !v || v.length === 0 || (v.length >= 5 && v.length <= 22),
+      v => !v || v.length === 0 || (v.length >= 5 && v.length <= 22),
     )
     .test(
       "statement-descriptor-latin",
       "大文字の半角英数字で入力してください（スペースは不可）。使用できる記号はハイフン・ドットのみです。1文字以上は英字が必要です。",
       (v) => {
         if (!v || v.length === 0) return true;
-        if (!/^[A-Z0-9\-\.]+$/u.test(v)) return false;
+        if (!/^[A-Z0-9\-.]+$/u.test(v)) return false;
         return /[A-Z]/.test(v);
       },
     )
     .test(
       "statement-descriptor-forbidden",
       "文字 &lt; &gt; \\ ' \" * は使用できません",
-      (v) => !v || !/[<>\\'"*]/.test(v),
+      v => !v || !/[<>\\'"*]/.test(v),
     )
     .optional(),
 });
@@ -958,7 +987,7 @@ const step2Schema = object({
   rep_phone: string()
     .trim()
     .required("電話番号は必須です")
-    .transform((value) =>
+    .transform(value =>
       typeof value === "string" ? value.replace(/[\s-]/g, "") : value,
     )
     .matches(/^\d{10,11}$/u, "有効な電話番号を入力してください"),
@@ -1010,9 +1039,9 @@ const step2Schema = object({
       // 実際の日付として有効かチェック（例：2月30日などは無効）
       const date = new Date(year, month - 1, day);
       if (
-        date.getFullYear() !== year ||
-        date.getMonth() !== month - 1 ||
-        date.getDate() !== day
+        date.getFullYear() !== year
+        || date.getMonth() !== month - 1
+        || date.getDate() !== day
       ) {
         return this.createError({
           message: "生年月日は有効な日付を入力してください",
@@ -1085,7 +1114,7 @@ const step2Schema = object({
         phone: string()
           .trim()
           .required("電話番号は必須です")
-          .transform((value) =>
+          .transform(value =>
             typeof value === "string" ? value.replace(/[\s-]/g, "") : value,
           )
           .matches(/^\d{10,11}$/u, "有効な電話番号を入力してください"),
@@ -1139,9 +1168,9 @@ const step2Schema = object({
 
             const date = new Date(year, month - 1, day);
             if (
-              date.getFullYear() !== year ||
-              date.getMonth() !== month - 1 ||
-              date.getDate() !== day
+              date.getFullYear() !== year
+              || date.getMonth() !== month - 1
+              || date.getDate() !== day
             ) {
               return this.createError({
                 message: "生年月日は有効な日付を入力してください",
@@ -1229,24 +1258,24 @@ const step5Schema = object({
 });
 
 // vee-validate
-const { validate: validateStep1Vv, setValues: setStep1Values } =
-  useForm<Step1FormData>({
+const { validate: validateStep1Vv, setValues: setStep1Values }
+  = useForm<Step1FormData>({
     validationSchema: toTypedSchema(step1Schema),
   });
-const { validate: validateStep2Vv, setValues: setStep2Values } =
-  useForm<Step2FormData>({
+const { validate: validateStep2Vv, setValues: setStep2Values }
+  = useForm<Step2FormData>({
     validationSchema: toTypedSchema(step2Schema),
   });
-const { validate: validateStep3Vv, setValues: setStep3Values } =
-  useForm<Step3FormData>({
+const { validate: validateStep3Vv, setValues: setStep3Values }
+  = useForm<Step3FormData>({
     validationSchema: toTypedSchema(step3Schema),
   });
-const { validate: validateStep4Vv, setValues: setStep4Values } =
-  useForm<Step4FormData>({
+const { validate: validateStep4Vv, setValues: setStep4Values }
+  = useForm<Step4FormData>({
     validationSchema: toTypedSchema(step4Schema),
   });
-const { validate: validateStep5Vv, setValues: setStep5Values } =
-  useForm<Step5FormData>({
+const { validate: validateStep5Vv, setValues: setStep5Values }
+  = useForm<Step5FormData>({
     validationSchema: toTypedSchema(step5Schema),
   });
 
@@ -1376,7 +1405,7 @@ const checkStepAccess = async () => {
 // 次の必要なステップを取得する関数
 const getNextStep = (): number | null => {
   const currentIndex = filteredSteps.value.findIndex(
-    (step) => step.number === currentStep.value,
+    step => step.number === currentStep.value,
   );
 
   if (currentIndex === -1) {
@@ -1401,8 +1430,8 @@ const handleNext = async (): Promise<void> => {
     const step1Required = requiredFieldsByStep.value[1];
     const normalizedErrors = normalizeErrorPaths(rslt.errors);
     const filteredErrors = filterErrorsForStep(normalizedErrors, step1Required);
-    const isValid =
-      !step1Required || step1Required.size === 0
+    const isValid
+      = !step1Required || step1Required.size === 0
         ? rslt.valid
         : Object.keys(filteredErrors).length === 0;
 
@@ -1410,14 +1439,15 @@ const handleNext = async (): Promise<void> => {
       const nextStepNumber = getNextStep();
       if (nextStepNumber) {
         await navigateTo(`/stripe/account/${nextStepNumber}`);
-      } else {
+      }
+      else {
         await submit();
       }
       return;
     }
 
-    const errorsToShow =
-      !step1Required || step1Required.size === 0
+    const errorsToShow
+      = !step1Required || step1Required.size === 0
         ? normalizedErrors
         : filteredErrors;
     for (const [path, msg] of Object.entries(errorsToShow)) {
@@ -1438,8 +1468,8 @@ const handleNext = async (): Promise<void> => {
     const step2Required = requiredFieldsByStep.value[2];
     const normalizedErrors = normalizeErrorPaths(rslt.errors);
     const filteredErrors = filterErrorsForStep(normalizedErrors, step2Required);
-    const isValid =
-      !step2Required || step2Required.size === 0
+    const isValid
+      = !step2Required || step2Required.size === 0
         ? rslt.valid
         : Object.keys(filteredErrors).length === 0;
 
@@ -1447,14 +1477,15 @@ const handleNext = async (): Promise<void> => {
       const nextStepNumber = getNextStep();
       if (nextStepNumber) {
         await navigateTo(`/stripe/account/${nextStepNumber}`);
-      } else {
+      }
+      else {
         await submit();
       }
       return;
     }
 
-    const errorsToShow =
-      !step2Required || step2Required.size === 0
+    const errorsToShow
+      = !step2Required || step2Required.size === 0
         ? normalizedErrors
         : filteredErrors;
     for (const [path, msg] of Object.entries(errorsToShow)) {
@@ -1475,8 +1506,8 @@ const handleNext = async (): Promise<void> => {
     const step3Required = requiredFieldsByStep.value[3];
     const normalizedErrors = normalizeErrorPaths(rslt.errors);
     const filteredErrors = filterErrorsForStep(normalizedErrors, step3Required);
-    const isValid =
-      !step3Required || step3Required.size === 0
+    const isValid
+      = !step3Required || step3Required.size === 0
         ? rslt.valid
         : Object.keys(filteredErrors).length === 0;
 
@@ -1484,14 +1515,15 @@ const handleNext = async (): Promise<void> => {
       const nextStepNumber = getNextStep();
       if (nextStepNumber) {
         await navigateTo(`/stripe/account/${nextStepNumber}`);
-      } else {
+      }
+      else {
         await submit();
       }
       return;
     }
 
-    const errorsToShow =
-      !step3Required || step3Required.size === 0
+    const errorsToShow
+      = !step3Required || step3Required.size === 0
         ? normalizedErrors
         : filteredErrors;
     for (const [path, msg] of Object.entries(errorsToShow)) {
@@ -1512,8 +1544,8 @@ const handleNext = async (): Promise<void> => {
     const step4Required = requiredFieldsByStep.value[4];
     const normalizedErrors = normalizeErrorPaths(rslt.errors);
     const filteredErrors = filterErrorsForStep(normalizedErrors, step4Required);
-    const isValid =
-      !step4Required || step4Required.size === 0
+    const isValid
+      = !step4Required || step4Required.size === 0
         ? rslt.valid
         : Object.keys(filteredErrors).length === 0;
 
@@ -1521,14 +1553,15 @@ const handleNext = async (): Promise<void> => {
       const nextStepNumber = getNextStep();
       if (nextStepNumber) {
         await navigateTo(`/stripe/account/${nextStepNumber}`);
-      } else {
+      }
+      else {
         await submit();
       }
       return;
     }
 
-    const errorsToShow =
-      !step4Required || step4Required.size === 0
+    const errorsToShow
+      = !step4Required || step4Required.size === 0
         ? normalizedErrors
         : filteredErrors;
     for (const [path, msg] of Object.entries(errorsToShow)) {
@@ -1549,14 +1582,14 @@ const handleNext = async (): Promise<void> => {
     const step5Required = requiredFieldsByStep.value[5];
     const normalizedErrors = normalizeErrorPaths(rslt.errors);
     const filteredErrors = filterErrorsForStep(normalizedErrors, step5Required);
-    const isValid =
-      !step5Required || step5Required.size === 0
+    const isValid
+      = !step5Required || step5Required.size === 0
         ? rslt.valid
         : Object.keys(filteredErrors).length === 0;
 
     if (!isValid) {
-      const errorsToShow =
-        !step5Required || step5Required.size === 0
+      const errorsToShow
+        = !step5Required || step5Required.size === 0
           ? normalizedErrors
           : filteredErrors;
       for (const [path, msg] of Object.entries(errorsToShow)) {
@@ -1572,7 +1605,8 @@ const handleNext = async (): Promise<void> => {
 watch(errMsg, (newValue) => {
   if (newValue) {
     showErrDialog.value = true;
-  } else {
+  }
+  else {
     showErrDialog.value = false; // エラーメッセージがクリアされたらダイアログも閉じる
   }
 });
@@ -1606,17 +1640,20 @@ onMounted(async () => {
     if (rslt) {
       requiredSteps.value = rslt.steps;
       requiredFieldsByStep.value = rslt.fieldsByStep;
-    } else {
+    }
+    else {
       // 不足要件が取得できない、または空の場合
       // Stripeアカウントが存在しない場合は全ステップを表示
       // 既にStripeアカウントが存在する場合は要件が満たされていると判断が、念のため同様に全ステップを表示
       if (!businessProfile.value?.has_stripe_account) {
         requiredSteps.value = new Set([1, 2, 3, 4, 5]);
-      } else {
+      }
+      else {
         requiredSteps.value = new Set([1, 2, 3, 4, 5]);
       }
     }
-  } catch (error) {
+  }
+  catch (error) {
     if (import.meta.dev) {
       // eslint-disable-next-line no-console
       console.error("不足要件の取得に失敗しました:", error);

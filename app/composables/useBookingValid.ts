@@ -36,9 +36,9 @@ export const isValidIsoDate = (v: string) => {
   const d = Number(m[3]);
   const dt = new Date(Date.UTC(y, mo - 1, d));
   return (
-    dt.getUTCFullYear() === y &&
-    dt.getUTCMonth() + 1 === mo &&
-    dt.getUTCDate() === d
+    dt.getUTCFullYear() === y
+    && dt.getUTCMonth() + 1 === mo
+    && dt.getUTCDate() === d
   );
 };
 
@@ -62,12 +62,12 @@ export const createStep1Schema = () => {
       .test(
         "is-valid-date",
         "存在する日付を入力してください",
-        (value) => !!value && isValidIsoDate(value),
+        value => !!value && isValidIsoDate(value),
       )
       .test(
         "is-today-or-future",
         "集荷日は今日以降の日付を選択してください",
-        (value) => !!value && value >= today,
+        value => !!value && value >= today,
       ),
     delivery_location_name: string()
       .trim()
@@ -86,7 +86,7 @@ export const createStep1Schema = () => {
       .test(
         "is-valid-date",
         "存在する日付を入力してください",
-        (value) => !!value && isValidIsoDate(value),
+        value => !!value && isValidIsoDate(value),
       )
       .test(
         "is-after-pickup",
@@ -142,7 +142,7 @@ export const createStep3Schema = () => {
     customer_phone_number: string()
       .trim()
       .required("お電話番号は必須です")
-      .transform((value) =>
+      .transform(value =>
         typeof value === "string" ? value.replace(/[\s-]/g, "") : value,
       )
       .matches(/^(\+\d{7,15}|\d{10,11})$/u, "有効な電話番号を入力してください"),
@@ -150,7 +150,7 @@ export const createStep3Schema = () => {
     guest_name: string()
       .trim()
       .required("宿泊予約者名は必須です")
-      .transform((value) =>
+      .transform(value =>
         typeof value === "string"
           ? value.normalize("NFKC").replace(/\s+/g, " ")
           : value,

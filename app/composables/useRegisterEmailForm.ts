@@ -14,7 +14,8 @@ export const useRegisterEmailForm = () => {
         return fallback;
       }
       return parsed.value;
-    } catch {
+    }
+    catch {
       return fallback;
     }
   };
@@ -23,7 +24,8 @@ export const useRegisterEmailForm = () => {
     if (!import.meta.client) return;
     try {
       localStorage.setItem(key, JSON.stringify({ value, savedAt: Date.now() }));
-    } catch {
+    }
+    catch {
       // ストレージ保存失敗は無視
     }
   };
@@ -38,7 +40,8 @@ export const useRegisterEmailForm = () => {
   watch(email, (newValue) => {
     if (newValue) {
       saveWithExpiry("register.email", newValue);
-    } else {
+    }
+    else {
       localStorage.removeItem("register.email");
     }
   });
@@ -50,7 +53,8 @@ export const useRegisterEmailForm = () => {
       // 状態も初期値にリセット
       email.value = "";
       emailErr.value = "";
-    } catch {
+    }
+    catch {
       // ストレージ削除失敗は無視
     }
   };
@@ -67,7 +71,8 @@ export const useRegisterEmailForm = () => {
         const parsed = JSON.parse(raw) as { value: unknown; savedAt: number };
         if (!parsed || typeof parsed.savedAt !== "number") return true;
         return Date.now() - parsed.savedAt > TTL_MS;
-      } catch {
+      }
+      catch {
         return true;
       }
     };

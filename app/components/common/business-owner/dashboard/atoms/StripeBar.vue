@@ -55,7 +55,8 @@ const fetchAccountRequirements = async (): Promise<{
       eventually_due: data.eventually_due || [],
       past_due: data.past_due || [],
     };
-  } catch {
+  }
+  catch {
     return null;
   }
 };
@@ -72,10 +73,11 @@ onMounted(async () => {
         // past_dueが空でない場合は審査不合格
         hasPastDue.value = requirements.past_due.length > 0;
         // currently_dueが空でない場合は審査中（past_dueがない場合のみ）
-        isUnderReview.value =
-          requirements.currently_due.length > 0 && !hasPastDue.value;
+        isUnderReview.value
+          = requirements.currently_due.length > 0 && !hasPastDue.value;
       }
-    } catch {
+    }
+    catch {
       // エラー時は審査中とみなす
       isUnderReview.value = true;
       hasPastDue.value = false;

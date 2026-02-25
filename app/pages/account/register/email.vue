@@ -8,27 +8,33 @@
           アカウント登録
         </h1>
 
-        <div v-if="emailSent" class="space-y-6">
+        <div
+          v-if="emailSent"
+          class="space-y-6"
+        >
           <div class="flex flex-col items-center justify-center gap-2">
             <figure class="mx-auto w-20">
               <img
                 src="/img/mail.svg"
                 alt=""
                 class="h-full w-full object-contain"
-              />
+              >
             </figure>
             <p class="block text-center text-lg font-semibold text-gray-800">
               メールを送信しました
             </p>
           </div>
           <p class="mx-auto w-fit">
-            {{ email }} 宛に登録用メールを送信しました。<br />
-            メール内のリンクから登録を行なってください。<br />
+            {{ email }} 宛に登録用メールを送信しました。<br>
+            メール内のリンクから登録を行なってください。<br>
             リンクは30分間のみ有効です。
           </p>
         </div>
 
-        <div v-else class="mx-auto max-w-sm">
+        <div
+          v-else
+          class="mx-auto max-w-sm"
+        >
           <form
             class="mb-4 w-full"
             novalidate
@@ -52,7 +58,7 @@
                   autocomplete="email"
                   aria-required="true"
                   aria-describedby="email-error"
-                />
+                >
                 <p
                   v-if="emailErr"
                   id="email-error"
@@ -63,7 +69,10 @@
                 </p>
               </div>
 
-              <div v-if="errMsg" class="text-sm text-red-600">
+              <div
+                v-if="errMsg"
+                class="text-sm text-red-600"
+              >
                 {{ errMsg }}
               </div>
             </div>
@@ -73,7 +82,10 @@
               :disabled="isSubmitting"
               class="mx-auto block w-full max-w-[500px] rounded-lg bg-gray-800 px-8 py-3 font-semibold text-white hover:bg-gray-900 disabled:cursor-not-allowed disabled:bg-gray-300"
             >
-              <CommonAtomsLoadingAnimation v-if="isSubmitting" size="sm" />
+              <CommonAtomsLoadingAnimation
+                v-if="isSubmitting"
+                size="sm"
+              />
               <span v-else>登録用メールを送信</span>
             </button>
           </form>
@@ -154,7 +166,8 @@ const checkEmailAvailability = async (): Promise<boolean> => {
     }
 
     return true;
-  } catch (error: unknown) {
+  }
+  catch (error: unknown) {
     // エラーチェックに失敗した場合は送信を続行（バックエンドで再チェックされる）
     if (import.meta.dev) {
       // eslint-disable-next-line no-console
@@ -223,25 +236,30 @@ const handleSendEmail = async () => {
       // 429エラー（レート制限）の場合
       if (statusCode === 429 && errorData?.error) {
         errMsg.value = errorData.error;
-      } else if (errorData?.error) {
+      }
+      else if (errorData?.error) {
         // その他のエラーの場合
         errMsg.value = errorData.error;
-      } else {
-        // エラーメッセージがない場合のフォールバック
-        errMsg.value =
-          "メールの送信に失敗しました。しばらく時間をおいて再度お試しください。";
       }
-    } else if (data.value) {
+      else {
+        // エラーメッセージがない場合のフォールバック
+        errMsg.value
+          = "メールの送信に失敗しました。しばらく時間をおいて再度お試しください。";
+      }
+    }
+    else if (data.value) {
       emailSent.value = true;
     }
-  } catch (error: unknown) {
+  }
+  catch (error: unknown) {
     if (import.meta.dev) {
       // eslint-disable-next-line no-console
       console.error("Form submission error:", error);
     }
-    errMsg.value =
-      "予期しないエラーが発生しました。しばらく時間をおいて再度お試しください。";
-  } finally {
+    errMsg.value
+      = "予期しないエラーが発生しました。しばらく時間をおいて再度お試しください。";
+  }
+  finally {
     isSubmitting.value = false;
   }
 };

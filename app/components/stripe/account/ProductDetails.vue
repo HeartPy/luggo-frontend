@@ -1,11 +1,15 @@
 <template>
-  <div v-if="isProductSectionRequired" class="space-y-6">
+  <div
+    v-if="isProductSectionRequired"
+    class="space-y-6"
+  >
     <StripeAccountAtomsFormTtl>事業詳細</StripeAccountAtomsFormTtl>
     <!-- 業種 -->
-    <div v-if="isFieldRequired('product_mcc')" class="max-w-xl">
-      <label class="mb-1 block text-sm font-medium"
-        >業種<span class="ml-[0.2em] text-red-600">*</span></label
-      >
+    <div
+      v-if="isFieldRequired('product_mcc')"
+      class="max-w-xl"
+    >
+      <label class="mb-1 block text-sm font-medium">業種<span class="ml-[0.2em] text-red-600">*</span></label>
       <input
         value="宅配便・配送サービス"
         type="text"
@@ -17,7 +21,7 @@
         readonly
         required
         aria-describedby="product_mcc-error"
-      />
+      >
       <div
         v-if="errors?.product_mcc"
         id="product_mcc-error"
@@ -29,10 +33,11 @@
     </div>
 
     <!-- ウェブサイトURL -->
-    <div v-if="isFieldRequired('product_url')" class="max-w-xl">
-      <label class="mb-1 block text-sm font-medium"
-        >ウェブサイトURL<span class="ml-[0.2em] text-red-600">*</span></label
-      >
+    <div
+      v-if="isFieldRequired('product_url')"
+      class="max-w-xl"
+    >
+      <label class="mb-1 block text-sm font-medium">ウェブサイトURL<span class="ml-[0.2em] text-red-600">*</span></label>
       <input
         :value="formData.product_url"
         type="url"
@@ -45,7 +50,7 @@
         placeholder="例) https://example.com"
         aria-describedby="product_url-error"
         @input="updateFormData('product_url', $event)"
-      />
+      >
       <div
         v-if="errors?.product_url"
         id="product_url-error"
@@ -58,9 +63,7 @@
 
     <!-- 商品・サービス説明 -->
     <div v-if="isFieldRequired('product_description')">
-      <label class="mb-1 block text-sm font-medium"
-        >商品・サービス説明<span class="ml-[0.2em] text-red-600">*</span></label
-      >
+      <label class="mb-1 block text-sm font-medium">商品・サービス説明<span class="ml-[0.2em] text-red-600">*</span></label>
       <textarea
         :value="formData.product_description"
         class="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -119,7 +122,7 @@ const isProductSectionRequired = computed(() => {
   if (props.requiredFields.length === 0) {
     return false;
   }
-  return props.requiredFields.some((field) =>
+  return props.requiredFields.some(field =>
     ["product_mcc", "product_url", "product_description"].includes(field),
   );
 });
@@ -142,8 +145,8 @@ const generateBookingFormUrl = (subdomain: string): string => {
 };
 
 // デフォルトの商品・サービス説明テキスト
-const defaultProductDescription =
-  "旅行者の手荷物を、指定場所（宿泊施設・空港・駅など）から目的地（宿泊施設・空港・駅など）まで配送するサービスを提供しています。お客様は予約フォーム（Webサイト）を通じてサービス内容を確認し、オンラインで予約します。料金は予約時にクレジットカード等で決済いただきます。";
+const defaultProductDescription
+  = "旅行者の手荷物を、指定場所（宿泊施設・空港・駅など）から目的地（宿泊施設・空港・駅など）まで配送するサービスを提供しています。お客様は予約フォーム（Webサイト）を通じてサービス内容を確認し、オンラインで予約します。料金は予約時にクレジットカード等で決済いただきます。";
 
 onMounted(() => {
   const updates: Partial<Step4FormData> = {};

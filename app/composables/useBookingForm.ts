@@ -21,7 +21,8 @@ export const useBookingForm = () => {
         return fallback;
       }
       return parsed.value;
-    } catch {
+    }
+    catch {
       return fallback;
     }
   };
@@ -30,7 +31,8 @@ export const useBookingForm = () => {
     if (!import.meta.client) return;
     try {
       localStorage.setItem(key, JSON.stringify({ value, savedAt: Date.now() }));
-    } catch {
+    }
+    catch {
       // ストレージ保存失敗は無視
     }
   };
@@ -113,7 +115,8 @@ export const useBookingForm = () => {
       errsStep1.value = {};
       errsStep2.value = {};
       errsStep3.value = {};
-    } catch {
+    }
+    catch {
       // ストレージ削除失敗は無視
     }
   };
@@ -130,16 +133,17 @@ export const useBookingForm = () => {
         const parsed = JSON.parse(raw) as { value: unknown; savedAt: number };
         if (!parsed || typeof parsed.savedAt !== "number") return true;
         return Date.now() - parsed.savedAt > TTL_MS;
-      } catch {
+      }
+      catch {
         return true;
       }
     };
 
     // Step1のチェック
     if (
-      checkExpired("booking.step1") &&
-      (step1Data.value.pickup_location_name ||
-        step1Data.value.delivery_location_name)
+      checkExpired("booking.step1")
+      && (step1Data.value.pickup_location_name
+        || step1Data.value.delivery_location_name)
     ) {
       step1Data.value = {
         pickup_location_name: "",
@@ -154,16 +158,16 @@ export const useBookingForm = () => {
 
     // Step2のチェック
     if (
-      checkExpired("booking.step2") &&
-      Object.values(step2Data.value).some((count) => count > 0)
+      checkExpired("booking.step2")
+      && Object.values(step2Data.value).some(count => count > 0)
     ) {
       step2Data.value = {};
     }
 
     // Step3のチェック
     if (
-      checkExpired("booking.step3") &&
-      (step3Data.value.customer_name || step3Data.value.customer_email)
+      checkExpired("booking.step3")
+      && (step3Data.value.customer_name || step3Data.value.customer_email)
     ) {
       step3Data.value = {
         customer_name: "",
@@ -193,13 +197,13 @@ export const useBookingForm = () => {
       }
     });
 
-    watch(step1Data, (v) => saveWithExpiry<Step1FormData>("booking.step1", v), {
+    watch(step1Data, v => saveWithExpiry<Step1FormData>("booking.step1", v), {
       deep: true,
     });
-    watch(step2Data, (v) => saveWithExpiry<Step2FormData>("booking.step2", v), {
+    watch(step2Data, v => saveWithExpiry<Step2FormData>("booking.step2", v), {
       deep: true,
     });
-    watch(step3Data, (v) => saveWithExpiry<Step3FormData>("booking.step3", v), {
+    watch(step3Data, v => saveWithExpiry<Step3FormData>("booking.step3", v), {
       deep: true,
     });
   }

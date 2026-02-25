@@ -1,7 +1,11 @@
 <template>
   <div class="mb-10 md:mb-14">
     <div class="mx-auto flex w-fit items-start justify-center gap-x-6">
-      <div v-for="(step, index) in steps" :key="step.number" class="relative">
+      <div
+        v-for="(step, index) in steps"
+        :key="step.number"
+        class="relative"
+      >
         <div class="flex flex-col items-center">
           <span
             class="mb-2 block h-3 w-3 rounded-full"
@@ -10,7 +14,10 @@
               'bg-gray-200': currentStep < step.number,
             }"
           />
-          <p class="text-center text-sm text-gray-500" v-html="step.label" />
+          <p
+            class="text-center text-sm text-gray-500"
+            v-html="step.label"
+          />
         </div>
         <span
           v-if="index < steps.length - 1"

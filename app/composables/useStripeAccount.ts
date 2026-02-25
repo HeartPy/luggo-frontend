@@ -219,7 +219,8 @@ const fetchAccountRequirements = async (): Promise<{
       eventually_due: data.eventually_due || [],
       past_due: data.past_due || [],
     };
-  } catch {
+  }
+  catch {
     return null;
   }
 };
@@ -262,8 +263,8 @@ const analyzeStripeFields = (
     if (!matched) {
       for (const [stripeKey, mapping] of Object.entries(stripeFieldMapping)) {
         if (
-          stripeField.startsWith(stripeKey + ".") ||
-          stripeKey.startsWith(stripeField + ".")
+          stripeField.startsWith(stripeKey + ".")
+          || stripeKey.startsWith(stripeField + ".")
         ) {
           steps.add(mapping.step);
           const stepFields = fieldsByStep[mapping.step];
@@ -324,7 +325,8 @@ const analyzeStripeFields = (
             step5Fields.add("document_back");
           }
         }
-      } else {
+      }
+      else {
         // 代表者・取締役どちらの不足か不明なため、取締役セクションも表示
         steps.add(2);
         const stepFields = fieldsByStep[2];
@@ -334,21 +336,28 @@ const analyzeStripeFields = (
           if (stripeField.includes("relationship")) {
             stepFields.add("rep_title");
             stepFields.add("directors.title");
-          } else if (stripeField.includes("first_name")) {
+          }
+          else if (stripeField.includes("first_name")) {
             stepFields.add("first_name_kanji");
             stepFields.add("first_name_kana");
-          } else if (stripeField.includes("last_name")) {
+          }
+          else if (stripeField.includes("last_name")) {
             stepFields.add("last_name_kanji");
             stepFields.add("last_name_kana");
-          } else if (stripeField.includes("phone")) {
+          }
+          else if (stripeField.includes("phone")) {
             stepFields.add("rep_phone");
-          } else if (stripeField.includes("email")) {
+          }
+          else if (stripeField.includes("email")) {
             stepFields.add("rep_email");
-          } else if (stripeField.includes("dob")) {
+          }
+          else if (stripeField.includes("dob")) {
             stepFields.add("rep_dob");
-          } else if (stripeField.includes("address_kanji")) {
+          }
+          else if (stripeField.includes("address_kanji")) {
             stepFields.add("address_kanji");
-          } else if (stripeField.includes("address_kana")) {
+          }
+          else if (stripeField.includes("address_kana")) {
             stepFields.add("address_kana");
           }
         }

@@ -36,7 +36,8 @@ export const useSession = () => {
         // セッション有効性チェックを開始
         startSessionCheck();
       }
-    } catch (error) {
+    }
+    catch (error) {
       if (import.meta.dev) {
         // eslint-disable-next-line no-console
         console.error("Error starting session:", error);
@@ -74,7 +75,8 @@ export const useSession = () => {
       }
 
       return false;
-    } catch (error) {
+    }
+    catch (error) {
       if (import.meta.dev) {
         // eslint-disable-next-line no-console
         console.error("Error checking session:", error);
@@ -116,7 +118,8 @@ export const useSession = () => {
       onUnmounted(() => {
         stopSessionCheck();
       });
-    } catch {
+    }
+    catch {
       // onUnmountedが利用できない場合は無視（composableがsetup外で呼ばれた場合）
     }
   }

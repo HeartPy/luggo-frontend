@@ -10,7 +10,10 @@
         </h2>
 
         <!-- トークンエラー表示 -->
-        <div v-if="tokenErr" class="space-y-4">
+        <div
+          v-if="tokenErr"
+          class="space-y-4"
+        >
           <div class="rounded-lg bg-red-50 p-4">
             <p class="text-sm font-semibold text-red-800">
               {{ tokenErr }}
@@ -25,7 +28,10 @@
         </div>
 
         <!-- トークン検証中 -->
-        <div v-else-if="!tokenValid && token && !tokenErr" class="text-center">
+        <div
+          v-else-if="!tokenValid && token && !tokenErr"
+          class="text-center"
+        >
           <CommonAtomsLoadingAnimation size="md" />
         </div>
 
@@ -64,7 +70,11 @@
             </div>
           </Teleport>
 
-          <form class="mb-6" novalidate @submit.prevent="handleFormRegister">
+          <form
+            class="mb-6"
+            novalidate
+            @submit.prevent="handleFormRegister"
+          >
             <div class="mb-10 space-y-6">
               <div class="mx-auto max-w-sm">
                 <label class="mb-2 block font-semibold text-gray-800">
@@ -79,7 +89,7 @@
                       value="individual"
                       class="h-4 w-4 text-blue-600 focus:ring-blue-500"
                       required
-                    />
+                    >
                     <span class="text-sm text-gray-700">個人事業主</span>
                   </label>
                   <label class="flex items-center gap-2">
@@ -90,7 +100,7 @@
                       value="company"
                       class="h-4 w-4 text-blue-600 focus:ring-blue-500"
                       required
-                    />
+                    >
                     <span class="text-sm text-gray-700">法人</span>
                   </label>
                 </div>
@@ -123,7 +133,7 @@
                   }"
                   aria-required="true"
                   aria-describedby="company_name-error"
-                />
+                >
                 <p class="mt-1 text-xs text-gray-500">
                   法人の方は登記簿上の正式名称を入力してください。個人事業主の方で屋号がない場合は、代表者名(姓＋名)を入力してください。
                 </p>
@@ -143,7 +153,10 @@
                 </label>
                 <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-3">
                   <div class="max-w-sm sm:max-w-full">
-                    <label for="rep_last_name" class="mb-1 block text-sm">
+                    <label
+                      for="rep_last_name"
+                      class="mb-1 block text-sm"
+                    >
                       姓
                     </label>
                     <input
@@ -158,7 +171,7 @@
                       }"
                       aria-required="true"
                       aria-describedby="rep_last_name-error"
-                    />
+                    >
                     <p
                       v-if="errors.rep_last_name"
                       id="rep_last_name-error"
@@ -169,7 +182,10 @@
                     </p>
                   </div>
                   <div class="max-w-sm sm:max-w-full">
-                    <label for="rep_first_name" class="mb-1 block text-sm">
+                    <label
+                      for="rep_first_name"
+                      class="mb-1 block text-sm"
+                    >
                       名
                     </label>
                     <input
@@ -184,7 +200,7 @@
                       }"
                       aria-required="true"
                       aria-describedby="rep_first_name-error"
-                    />
+                    >
                     <p
                       v-if="errors.rep_first_name"
                       id="rep_first_name-error"
@@ -213,7 +229,7 @@
                       }"
                       aria-required="true"
                       aria-describedby="rep_last_name_kana-error"
-                    />
+                    >
                     <p
                       v-if="errors.rep_last_name_kana"
                       id="rep_last_name_kana-error"
@@ -242,7 +258,7 @@
                       }"
                       aria-required="true"
                       aria-describedby="rep_first_name_kana-error"
-                    />
+                    >
                     <p
                       v-if="errors.rep_first_name_kana"
                       id="rep_first_name_kana-error"
@@ -274,7 +290,7 @@
                   aria-required="true"
                   aria-describedby="phone-error"
                   @blur="handlePhoneBlur"
-                />
+                >
                 <p
                   v-if="errors.phone"
                   id="phone-error"
@@ -290,11 +306,7 @@
                   for="subdomain"
                   class="mb-2 flex items-center gap-2 font-semibold text-gray-800"
                 >
-                  <span
-                    >予約フォームのURL<span class="ml-1 text-red-600"
-                      >*</span
-                    ></span
-                  >
+                  <span>予約フォームのURL<span class="ml-1 text-red-600">*</span></span>
                   <!-- はてなマーク -->
                   <div class="group relative">
                     <button
@@ -332,7 +344,7 @@
                     aria-required="true"
                     aria-describedby="subdomain-error"
                     @input="handleSubdomainInput"
-                  />
+                  >
                   <span class="text-sm text-gray-600">.luggo.com</span>
                 </div>
                 <p
@@ -344,7 +356,7 @@
                   {{ errors.subdomain }}
                 </p>
                 <p class="mt-1 text-xs text-gray-500">
-                  3文字以上12文字以内、半角小文字の英字のみ使用できます<br />（例：reserve.luggo.com）
+                  3文字以上12文字以内、半角小文字の英字のみ使用できます<br>（例：reserve.luggo.com）
                 </p>
               </div>
 
@@ -367,27 +379,27 @@
                     autocomplete="new-password"
                     aria-required="true"
                     aria-describedby="password-error"
-                  />
+                  >
                   <button
                     type="button"
                     class="absolute right-3 top-1/2 -translate-y-1/2 focus:outline-none"
-                    @click="showPassword = !showPassword"
                     :aria-label="
                       showPassword ? 'パスワードを非表示' : 'パスワードを表示'
                     "
+                    @click="showPassword = !showPassword"
                   >
                     <img
                       v-if="showPassword"
                       class="h-6 w-6"
                       src="/img/pass-show.svg"
                       alt="パスワードを非表示"
-                    />
+                    >
                     <img
                       v-else
                       class="h-6 w-6"
                       src="/img/pass-hidden.svg"
                       alt="パスワードを表示"
-                    />
+                    >
                   </button>
                 </div>
                 <p
@@ -408,9 +420,7 @@
                   for="password_confirm"
                   class="mb-2 block font-semibold text-gray-800"
                 >
-                  パスワードの再入力（確認用）<span class="ml-1 text-red-600"
-                    >*</span
-                  >
+                  パスワードの再入力（確認用）<span class="ml-1 text-red-600">*</span>
                 </label>
                 <div class="relative">
                   <input
@@ -426,27 +436,27 @@
                     autocomplete="new-password"
                     aria-required="true"
                     aria-describedby="password-confirm-error"
-                  />
+                  >
                   <button
                     type="button"
                     class="absolute right-3 top-1/2 -translate-y-1/2 focus:outline-none"
-                    @click="showPassword = !showPassword"
                     :aria-label="
                       showPassword ? 'パスワードを非表示' : 'パスワードを表示'
                     "
+                    @click="showPassword = !showPassword"
                   >
                     <img
                       v-if="showPassword"
                       class="h-6 w-6"
                       src="/img/pass-show.svg"
                       alt="パスワードを非表示"
-                    />
+                    >
                     <img
                       v-else
                       class="h-6 w-6"
                       src="/img/pass-hidden.svg"
                       alt="パスワードを表示"
-                    />
+                    >
                   </button>
                 </div>
                 <p
@@ -465,12 +475,18 @@
               :disabled="isSubmitting"
               class="mx-auto block w-full max-w-[500px] rounded-lg bg-gray-800 px-8 py-3 font-semibold text-white hover:bg-gray-900 disabled:cursor-not-allowed disabled:bg-gray-300"
             >
-              <CommonAtomsLoadingAnimation v-if="isSubmitting" size="sm" />
+              <CommonAtomsLoadingAnimation
+                v-if="isSubmitting"
+                size="sm"
+              />
               <span v-else>アカウントを登録する</span>
             </button>
           </form>
 
-          <div v-if="errMsg" class="text-sm text-red-600">
+          <div
+            v-if="errMsg"
+            class="text-sm text-red-600"
+          >
             {{ errMsg }}
           </div>
         </div>
@@ -669,16 +685,16 @@ const errMsg = ref("");
 const showPassword = ref(false);
 const showSubdomainInfoModal = ref(false);
 
-const subdomainInfoText =
-  "オーナー様の予約フォームにアクセスするためのアドレスです。<br />好きな文字の列を入力してください。<br /><br />例：reserve.luggo.com";
+const subdomainInfoText
+  = "オーナー様の予約フォームにアクセスするためのアドレスです。<br />好きな文字の列を入力してください。<br /><br />例：reserve.luggo.com";
 
 // モーダルのフォーカス管理
 const focusFirstBtn = () => {
   nextTick(() => {
-    const dialog = document.querySelector('[role="dialog"]') as HTMLElement;
+    const dialog = document.querySelector("[role=\"dialog\"]") as HTMLElement;
     if (dialog) {
       const firstFocusable = dialog.querySelector(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+        "button, [href], input, select, textarea, [tabindex]:not([tabindex=\"-1\"])",
       ) as HTMLElement;
       if (firstFocusable) {
         firstFocusable.focus();
@@ -695,7 +711,8 @@ watch(
       if (isOpen) {
         document.body.style.overflow = "hidden";
         focusFirstBtn();
-      } else {
+      }
+      else {
         document.body.style.overflow = "";
       }
     }
@@ -726,7 +743,8 @@ const handleFormRegister = async () => {
       if (path === "email") {
         // メールアドレスのエラーはerrMsgに表示（入力フィールドがないため）
         errMsg.value = msg as string;
-      } else {
+      }
+      else {
         errors.value[path] = msg as string;
       }
     }
@@ -810,10 +828,12 @@ const handleRegister = async () => {
         if (subdomainError.includes("既に使用されています")) {
           // 重複エラー
           errors.value.subdomain = subdomainError;
-        } else if (subdomainError.includes("使用できません")) {
+        }
+        else if (subdomainError.includes("使用できません")) {
           // 禁止単語エラー
           errors.value.subdomain = subdomainError;
-        } else {
+        }
+        else {
           // その他のエラー（必須、文字数、文字種など）
           errors.value.subdomain = subdomainError;
         }
@@ -822,22 +842,22 @@ const handleRegister = async () => {
       }
 
       // トークン関連のエラーをチェック
-      const tokenError =
-        errorData.error || errorData.token?.[0] || errorData.email?.[0];
+      const tokenError
+        = errorData.error || errorData.token?.[0] || errorData.email?.[0];
       if (
-        tokenError &&
-        (tokenError.includes("有効期限が切れています") ||
-          tokenError.includes("送信されたメールアドレスと一致しません"))
+        tokenError
+        && (tokenError.includes("有効期限が切れています")
+          || tokenError.includes("送信されたメールアドレスと一致しません"))
       ) {
-        errMsg.value =
-          "このリンクは有効期限が切れているか、既に使用済みです。お手数おかけしますが、もう一度いちからやり直してください。";
+        errMsg.value
+          = "このリンクは有効期限が切れているか、既に使用済みです。お手数おかけしますが、もう一度いちからやり直してください。";
         tokenValid.value = false;
         isSubmitting.value = false;
         return;
       }
 
-      errMsg.value =
-        "登録に失敗しました。お手数おかけしますが、入力内容を確認して再度お試しいただくか、もう一度いちからやり直してください。";
+      errMsg.value
+        = "登録に失敗しました。お手数おかけしますが、入力内容を確認して再度お試しいただくか、もう一度いちからやり直してください。";
       return;
     }
 
@@ -848,14 +868,16 @@ const handleRegister = async () => {
         replace: true,
       },
     );
-  } catch (error: unknown) {
+  }
+  catch (error: unknown) {
     if (import.meta.dev) {
       // eslint-disable-next-line no-console
       console.error("Form submission error:", error);
     }
-    errMsg.value =
-      "予期しないエラーが発生しました。お手数おかけしますが、もう一度いちからやり直してください。";
-  } finally {
+    errMsg.value
+      = "予期しないエラーが発生しました。お手数おかけしますが、もう一度いちからやり直してください。";
+  }
+  finally {
     isSubmitting.value = false;
   }
 };
@@ -903,10 +925,11 @@ onMounted(async () => {
     let response: { valid: boolean; email?: string };
     try {
       response = await Promise.race([fetchPromise, timeoutPromise]);
-    } catch (err: unknown) {
+    }
+    catch (err: unknown) {
       if (err instanceof Error && err.message === "TIMEOUT") {
-        tokenErr.value =
-          "接続がタイムアウトしました。ネットワーク接続を確認して、もう一度お試しください。";
+        tokenErr.value
+          = "接続がタイムアウトしました。ネットワーク接続を確認して、もう一度お試しください。";
         return;
       }
       // その他のエラー（APIエラーなど）
@@ -923,20 +946,22 @@ onMounted(async () => {
       if (errorData?.data?.error) {
         // トークン関連のエラーの場合
         if (
-          errorData.data.error.includes("有効期限が切れています") ||
-          errorData.data.error.includes("トークンが指定されていません")
+          errorData.data.error.includes("有効期限が切れています")
+          || errorData.data.error.includes("トークンが指定されていません")
         ) {
-          tokenErr.value =
-            "このリンクは有効期限が切れているか、既に使用済みです。お手数おかけしますが、もう一度いちからやり直してください。";
-        } else {
-          // その他のエラー
-          tokenErr.value =
-            "予期しないエラーが発生しました。お手数おかけしますが、もう一度いちからやり直してください。";
+          tokenErr.value
+            = "このリンクは有効期限が切れているか、既に使用済みです。お手数おかけしますが、もう一度いちからやり直してください。";
         }
-      } else {
+        else {
+          // その他のエラー
+          tokenErr.value
+            = "予期しないエラーが発生しました。お手数おかけしますが、もう一度いちからやり直してください。";
+        }
+      }
+      else {
         // ネットワークエラーやサーバーエラーの場合
-        tokenErr.value =
-          "予期しないエラーが発生しました。お手数おかけしますが、もう一度いちからやり直してください。";
+        tokenErr.value
+          = "予期しないエラーが発生しました。お手数おかけしますが、もう一度いちからやり直してください。";
       }
       return;
     }
@@ -948,13 +973,14 @@ onMounted(async () => {
     if (tokenEmail.value) {
       formData.value.email = tokenEmail.value;
     }
-  } catch (error: unknown) {
+  }
+  catch (error: unknown) {
     if (import.meta.dev) {
       // eslint-disable-next-line no-console
       console.error("Token verification error:", error);
     }
-    tokenErr.value =
-      "予期しないエラーが発生しました。お手数おかけしますが、もう一度いちからやり直してください。";
+    tokenErr.value
+      = "予期しないエラーが発生しました。お手数おかけしますが、もう一度いちからやり直してください。";
   }
 });
 

@@ -7,7 +7,10 @@
         <figure
           class="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-green-100"
         >
-          <img src="/img/check-green.svg" class="h-8 w-8 object-contain" />
+          <img
+            src="/img/check-green.svg"
+            class="h-8 w-8 object-contain"
+          >
         </figure>
         <h1 class="mb-2 text-center text-2xl font-bold text-gray-800">
           予約が完了しました
@@ -21,7 +24,9 @@
         v-if="bookingId"
         class="mb-8 space-y-4 rounded-lg border-2 border-gray-500 bg-gray-50 p-8 text-center"
       >
-        <h2 class="text-lg font-semibold text-gray-800">予約ID</h2>
+        <h2 class="text-lg font-semibold text-gray-800">
+          予約ID
+        </h2>
         <div>
           <p
             class="text-2xl font-bold tracking-wider text-gray-800"
@@ -31,7 +36,7 @@
           </p>
         </div>
         <p class="text-sm text-gray-600">
-          この予約IDは予約確認やお問い合わせの際に必要です。<br />メモを取るか、スクリーンショットを保存してください。
+          この予約IDは予約確認やお問い合わせの際に必要です。<br>メモを取るか、スクリーンショットを保存してください。
         </p>
         <button
           type="button"
@@ -47,7 +52,7 @@
         class="mb-8 rounded-lg border-2 border-yellow-500 bg-yellow-50 p-8 text-center"
       >
         <p class="text-gray-700">
-          予約IDの取得に失敗しました。<br />お手数おかけしますが、お問い合わせの際は、運営にお名前と予約日時をお伝えください。
+          予約IDの取得に失敗しました。<br>お手数おかけしますが、お問い合わせの際は、運営にお名前と予約日時をお伝えください。
         </p>
       </div>
 
@@ -80,7 +85,8 @@ const copyBookingId = async () => {
     setTimeout(() => {
       copied.value = false;
     }, 2000);
-  } catch (err: unknown) {
+  }
+  catch (err: unknown) {
     if (import.meta.dev) {
       // eslint-disable-next-line no-console
       console.error("Failed to copy booking number:", err);
@@ -98,7 +104,8 @@ const copyBookingId = async () => {
       setTimeout(() => {
         copied.value = false;
       }, 2000);
-    } catch (err: unknown) {
+    }
+    catch (err: unknown) {
       if (import.meta.dev) {
         // eslint-disable-next-line no-console
         console.error("Failed to copy booking number (fallback):", err);
@@ -114,7 +121,8 @@ onMounted(async () => {
     const storedBookingId = sessionStorage.getItem("bookingId");
     if (storedBookingId) {
       bookingId.value = storedBookingId;
-    } else {
+    }
+    else {
       // 予約IDが見つからない場合はトップページにリダイレクト
       // （直接アクセスされた場合など）
       await navigateTo("/booking/1");

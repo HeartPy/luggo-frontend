@@ -17,7 +17,8 @@ export const useRegistrationForm = () => {
         return fallback;
       }
       return parsed.value;
-    } catch {
+    }
+    catch {
       return fallback;
     }
   };
@@ -26,7 +27,8 @@ export const useRegistrationForm = () => {
     if (!import.meta.client) return;
     try {
       localStorage.setItem(key, JSON.stringify({ value, savedAt: Date.now() }));
-    } catch {
+    }
+    catch {
       // ストレージ保存失敗は無視
     }
   };
@@ -58,7 +60,8 @@ export const useRegistrationForm = () => {
     (newValue) => {
       if (newValue) {
         saveWithExpiry("businessAccountRegistration.form", newValue);
-      } else {
+      }
+      else {
         localStorage.removeItem("businessAccountRegistration.form");
       }
     },
@@ -85,7 +88,8 @@ export const useRegistrationForm = () => {
       };
       // エラーオブジェクトもクリア
       errors.value = {};
-    } catch {
+    }
+    catch {
       // ストレージ削除失敗は無視
     }
   };
@@ -102,7 +106,8 @@ export const useRegistrationForm = () => {
         const parsed = JSON.parse(raw) as { value: unknown; savedAt: number };
         if (!parsed || typeof parsed.savedAt !== "number") return true;
         return Date.now() - parsed.savedAt > TTL_MS;
-      } catch {
+      }
+      catch {
         return true;
       }
     };

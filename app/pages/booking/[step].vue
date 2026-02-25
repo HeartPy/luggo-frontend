@@ -7,9 +7,16 @@
         荷物配送予約フォーム
       </h1>
 
-      <CommonAtomsErrDialog v-model="showErrDialog" :msg="errMsg" />
+      <CommonAtomsErrDialog
+        v-model="showErrDialog"
+        :msg="errMsg"
+      />
 
-      <form class="space-y-6" novalidate @submit.prevent="handleSubmit">
+      <form
+        class="space-y-6"
+        novalidate
+        @submit.prevent="handleSubmit"
+      >
         <BookingStep1Form
           v-if="currentStep === 1"
           :form-data="step1Data"
@@ -38,7 +45,10 @@
             class="flex items-center justify-center rounded-md bg-gray-800 px-8 py-3 font-semibold text-white hover:bg-gray-900 disabled:cursor-not-allowed disabled:bg-gray-300"
             :disabled="isSubmitting"
           >
-            <CommonAtomsLoadingAnimation v-if="isSubmitting" size="sm" />
+            <CommonAtomsLoadingAnimation
+              v-if="isSubmitting"
+              size="sm"
+            />
             <span v-else>
               {{ currentStep === 3 ? "お支払い情報のご入力へ" : "次へ" }}
             </span>
@@ -163,13 +173,15 @@ const fetchLuggageItems = async () => {
         step2Data.value[item.key] = 0;
       }
     }
-  } catch (err: unknown) {
+  }
+  catch (err: unknown) {
     luggageItemsErr.value = "荷物情報の取得に失敗しました";
     if (import.meta.dev) {
       // eslint-disable-next-line no-console
       console.error("Error fetching luggage items:", err);
     }
-  } finally {
+  }
+  finally {
     luggageItemsLoading.value = false;
   }
 };
@@ -178,25 +190,25 @@ const fetchLuggageItems = async () => {
 const hasUnsavedChanges = computed(() => {
   if (isSubmitted.value) return false;
 
-  const hasStep1Data =
-    step1Data.value.pickup_location_name !== "" ||
-    step1Data.value.pickup_location_address !== "" ||
-    step1Data.value.pickup_date !== "" ||
-    step1Data.value.delivery_location_name !== "" ||
-    step1Data.value.delivery_location_address !== "" ||
-    step1Data.value.delivery_date !== "" ||
-    step1Data.value.notes !== "";
+  const hasStep1Data
+    = step1Data.value.pickup_location_name !== ""
+      || step1Data.value.pickup_location_address !== ""
+      || step1Data.value.pickup_date !== ""
+      || step1Data.value.delivery_location_name !== ""
+      || step1Data.value.delivery_location_address !== ""
+      || step1Data.value.delivery_date !== ""
+      || step1Data.value.notes !== "";
 
   const hasStep2Data = Object.values(step2Data.value).some(
-    (count) => count > 0,
+    count => count > 0,
   );
 
-  const hasStep3Data =
-    step3Data.value.customer_name !== "" ||
-    step3Data.value.customer_phone_number !== "" ||
-    step3Data.value.customer_email !== "" ||
-    step3Data.value.customer_nationality !== "" ||
-    step3Data.value.guest_name !== "";
+  const hasStep3Data
+    = step3Data.value.customer_name !== ""
+      || step3Data.value.customer_phone_number !== ""
+      || step3Data.value.customer_email !== ""
+      || step3Data.value.customer_nationality !== ""
+      || step3Data.value.guest_name !== "";
 
   return hasStep1Data || hasStep2Data || hasStep3Data;
 });
@@ -220,7 +232,8 @@ watch(paymentClientSecret, (newValue) => {
   if (import.meta.client) {
     if (newValue) {
       sessionStorage.setItem("paymentClientSecret", newValue);
-    } else {
+    }
+    else {
       sessionStorage.removeItem("paymentClientSecret");
     }
   }
@@ -235,16 +248,16 @@ const step2Schema = computed(() => {
 const step3Schema = computed(() => createStep3Schema());
 
 // vee-validate
-const { validate: validateStep1Vv, setValues: setStep1Values } =
-  useForm<Step1FormData>({
+const { validate: validateStep1Vv, setValues: setStep1Values }
+  = useForm<Step1FormData>({
     validationSchema: computed(() => toTypedSchema(step1Schema.value)),
   });
-const { validate: validateStep2Vv, setValues: setStep2Values } =
-  useForm<Step2FormData>({
+const { validate: validateStep2Vv, setValues: setStep2Values }
+  = useForm<Step2FormData>({
     validationSchema: computed(() => toTypedSchema(step2Schema.value)),
   });
-const { validate: validateStep3Vv, setValues: setStep3Values } =
-  useForm<Step3FormData>({
+const { validate: validateStep3Vv, setValues: setStep3Values }
+  = useForm<Step3FormData>({
     validationSchema: computed(() => toTypedSchema(step3Schema.value)),
   });
 
@@ -304,7 +317,8 @@ const createPaymentIntent = async (): Promise<string | null> => {
           errMsgs.push(`${path}: ${msg}`);
         }
         errMsg.value = `入力内容に誤りがあります。以下の項目をご確認ください。\n${errMsgs.join(", ")}`;
-      } else {
+      }
+      else {
         // その他のエラー
         errMsg.value = "支払い情報の取得に失敗しました";
       }
@@ -326,7 +340,8 @@ const createPaymentIntent = async (): Promise<string | null> => {
     }
 
     return data.value.client_secret;
-  } catch (err: unknown) {
+  }
+  catch (err: unknown) {
     if (import.meta.dev) {
       // eslint-disable-next-line no-console
       console.error("Payment intent creation error:", err);
@@ -393,8 +408,8 @@ const handleSubmit = async () => {
     const sessionValid = await checkSessionValidity();
     if (!sessionValid) {
       clearAllData();
-      errMsg.value =
-        "セッションの有効期限が切れています。お手数おかけしますが、最初から入力し直してください。";
+      errMsg.value
+        = "セッションの有効期限が切れています。お手数おかけしますが、最初から入力し直してください。";
       isSubmitting.value = false;
       await navigateTo("/booking/1");
       return;
@@ -417,7 +432,8 @@ const handleSubmit = async () => {
           // eslint-disable-next-line no-console
           console.log("Navigation to confirm page completed");
         }
-      } catch (err: unknown) {
+      }
+      catch (err: unknown) {
         if (import.meta.dev) {
           // eslint-disable-next-line no-console
           console.error("Navigation failed:", err);
@@ -426,13 +442,15 @@ const handleSubmit = async () => {
         isSubmitting.value = false;
         return;
       }
-    } catch (err: unknown) {
+    }
+    catch (err: unknown) {
       if (import.meta.dev) {
         // eslint-disable-next-line no-console
         console.error("Payment intent creation error:", err);
       }
       errMsg.value = "支払い情報の取得に失敗しました";
-    } finally {
+    }
+    finally {
       isSubmitting.value = false;
     }
     return;
@@ -483,7 +501,8 @@ watch(
 watch(errMsg, (newValue) => {
   if (newValue) {
     showErrDialog.value = true;
-  } else {
+  }
+  else {
     showErrDialog.value = false; // エラーメッセージがクリアされたらダイアログも閉じる
   }
 });

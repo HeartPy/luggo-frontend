@@ -9,7 +9,10 @@
         </h1>
 
         <!-- トークンエラー表示 -->
-        <div v-if="tokenErr" class="space-y-4">
+        <div
+          v-if="tokenErr"
+          class="space-y-4"
+        >
           <div class="rounded-lg bg-red-50 p-4">
             <p class="text-sm font-semibold text-red-800">
               {{ tokenErr }}
@@ -24,13 +27,19 @@
         </div>
 
         <!-- トークン検証中 -->
-        <div v-else-if="!tokenValid && token && !tokenErr" class="text-center">
+        <div
+          v-else-if="!tokenValid && token && !tokenErr"
+          class="text-center"
+        >
           <CommonAtomsLoadingAnimation size="md" />
         </div>
 
         <!-- 再設定フォーム -->
         <div v-else-if="tokenValid">
-          <form novalidate @submit.prevent="handleReset">
+          <form
+            novalidate
+            @submit.prevent="handleReset"
+          >
             <div class="mb-10 space-y-6">
               <div>
                 <label
@@ -50,27 +59,27 @@
                     autocomplete="new-password"
                     aria-required="true"
                     aria-describedby="password-error"
-                  />
+                  >
                   <button
                     type="button"
                     class="absolute right-3 top-1/2 -translate-y-1/2 focus:outline-none"
-                    @click="showPassword = !showPassword"
                     :aria-label="
                       showPassword ? 'パスワードを非表示' : 'パスワードを表示'
                     "
+                    @click="showPassword = !showPassword"
                   >
                     <img
                       v-if="showPassword"
                       class="h-6 w-6"
                       src="/img/pass-show.svg"
                       alt="パスワードを非表示"
-                    />
+                    >
                     <img
                       v-else
                       class="h-6 w-6"
                       src="/img/pass-hidden.svg"
                       alt="パスワードを表示"
-                    />
+                    >
                   </button>
                 </div>
                 <p
@@ -101,27 +110,27 @@
                     autocomplete="new-password"
                     aria-required="true"
                     aria-describedby="password-confirm-error"
-                  />
+                  >
                   <button
                     type="button"
                     class="absolute right-3 top-1/2 -translate-y-1/2 focus:outline-none"
-                    @click="showPassword = !showPassword"
                     :aria-label="
                       showPassword ? 'パスワードを非表示' : 'パスワードを表示'
                     "
+                    @click="showPassword = !showPassword"
                   >
                     <img
                       v-if="showPassword"
                       class="h-6 w-6"
                       src="/img/pass-show.svg"
                       alt="パスワードを非表示"
-                    />
+                    >
                     <img
                       v-else
                       class="h-6 w-6"
                       src="/img/pass-hidden.svg"
                       alt="パスワードを表示"
-                    />
+                    >
                   </button>
                 </div>
                 <p
@@ -134,7 +143,10 @@
                 </p>
               </div>
 
-              <div v-if="errMsg" class="text-sm text-red-600">
+              <div
+                v-if="errMsg"
+                class="text-sm text-red-600"
+              >
                 {{ errMsg }}
               </div>
             </div>
@@ -144,14 +156,20 @@
               :disabled="isSubmitting"
               class="mx-auto block w-full max-w-[500px] rounded-lg bg-gray-800 px-8 py-3 font-semibold text-white hover:bg-gray-900 disabled:cursor-not-allowed disabled:bg-gray-300"
             >
-              <CommonAtomsLoadingAnimation v-if="isSubmitting" size="sm" />
+              <CommonAtomsLoadingAnimation
+                v-if="isSubmitting"
+                size="sm"
+              />
               <span v-else>パスワードを再設定</span>
             </button>
           </form>
         </div>
 
         <!-- トークンがない場合 -->
-        <div v-else class="space-y-4">
+        <div
+          v-else
+          class="space-y-4"
+        >
           <div class="rounded-lg bg-red-50 p-4">
             <p class="text-sm font-semibold text-red-800">
               トークンが見つかりません。再設定メールからアクセスしてください。
@@ -198,9 +216,7 @@ const resetSchema = object({
         const hasUpperCase = /[A-Z]/.test(value);
         const hasLowerCase = /[a-z]/.test(value);
         const hasNumber = /[0-9]/.test(value);
-        const hasSpecial = /[!@#$%^&*()_+\-=[\]{}|;:,.<>?]/.test(
-          value,
-        );
+        const hasSpecial = /[!@#$%^&*()_+\-=[\]{}|;:,.<>?]/.test(value);
         const typesCount = [
           hasUpperCase,
           hasLowerCase,
@@ -258,20 +274,21 @@ const verifyToken = async () => {
     );
 
     if (error.value || !data.value?.valid) {
-      tokenErr.value =
-        (error.value?.data as { error?: string })?.error ||
-        "このリンクは有効期限が切れているか、既に使用済みです。";
+      tokenErr.value
+        = (error.value?.data as { error?: string })?.error
+          || "このリンクは有効期限が切れているか、既に使用済みです。";
       return;
     }
 
     tokenValid.value = true;
-  } catch (error: unknown) {
+  }
+  catch (error: unknown) {
     if (import.meta.dev) {
       // eslint-disable-next-line no-console
       console.error("Token verify error:", error);
     }
-    tokenErr.value =
-      "予期しないエラーが発生しました。しばらく時間をおいて再度お試しください。";
+    tokenErr.value
+      = "予期しないエラーが発生しました。しばらく時間をおいて再度お試しください。";
   }
 };
 
@@ -316,27 +333,24 @@ const handleReset = async () => {
 
     await ensureCsrf(apiBase);
 
-    const { error } = await useFetch(
-      `${apiBase}/api/users/password/reset`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(getCsrf() ? { "X-CSRFToken": getCsrf() } : {}),
-        },
-        body: {
-          token: token.value,
-          password: password.value,
-        },
-        credentials: "include",
+    const { error } = await useFetch(`${apiBase}/api/users/password/reset`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...(getCsrf() ? { "X-CSRFToken": getCsrf() } : {}),
       },
-    );
+      body: {
+        token: token.value,
+        password: password.value,
+      },
+      credentials: "include",
+    });
 
     if (error.value) {
       const errorData = error.value.data as { error?: string };
-      errMsg.value =
-        errorData?.error ||
-        "パスワードの再設定に失敗しました。しばらく時間をおいて再度お試しください。";
+      errMsg.value
+        = errorData?.error
+          || "パスワードの再設定に失敗しました。しばらく時間をおいて再度お試しください。";
       return;
     }
 
@@ -344,14 +358,16 @@ const handleReset = async () => {
       `/account/password/complete?token=${encodeURIComponent(token.value)}`,
       { replace: true },
     );
-  } catch (error: unknown) {
+  }
+  catch (error: unknown) {
     if (import.meta.dev) {
       // eslint-disable-next-line no-console
       console.error("Password reset error:", error);
     }
-    errMsg.value =
-      "予期しないエラーが発生しました。しばらく時間をおいて再度お試しください。";
-  } finally {
+    errMsg.value
+      = "予期しないエラーが発生しました。しばらく時間をおいて再度お試しください。";
+  }
+  finally {
     isSubmitting.value = false;
   }
 };

@@ -8,7 +8,10 @@
           <figure
             class="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-green-100"
           >
-            <img src="/img/check-green.svg" class="h-8 w-8 object-contain" />
+            <img
+              src="/img/check-green.svg"
+              class="h-8 w-8 object-contain"
+            >
           </figure>
           <h1
             class="mb-8 text-center text-2xl font-bold text-gray-800 md:mb-12"
@@ -17,7 +20,7 @@
           </h1>
         </div>
         <p class="mx-auto mb-6 w-fit text-center text-gray-600">
-          パスワードの再設定が完了しました。<br />
+          パスワードの再設定が完了しました。<br>
           新しいパスワードでログインしてください。
         </p>
         <NuxtLink

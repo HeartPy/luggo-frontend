@@ -11,10 +11,16 @@
         size="md"
         message="荷物情報を読み込み中..."
       />
-      <div v-else-if="luggageItemsError" class="py-4 text-center text-red-600">
+      <div
+        v-else-if="luggageItemsError"
+        class="py-4 text-center text-red-600"
+      >
         <p>{{ luggageItemsError }}</p>
       </div>
-      <div v-else class="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-3">
+      <div
+        v-else
+        class="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-3"
+      >
         <div
           v-for="luggageItem in luggageItems"
           :key="luggageItem.id"
@@ -26,7 +32,7 @@
                 class="h-full w-full object-contain"
                 :src="getImageUrl(luggageItem.image_src)"
                 alt=""
-              />
+              >
             </figure>
             <p class="mb-1 text-sm font-semibold text-gray-700">
               {{ luggageItem.name }}
@@ -84,15 +90,15 @@
         金額<small>（税込）</small>
       </h2>
       <div class="rounded-md border-2 border-gray-300 p-4 text-center">
-        <span class="text-2xl font-bold text-gray-800"
-          >¥{{ totalAmount.toLocaleString() }}</span
-        >
+        <span class="text-2xl font-bold text-gray-800">¥{{ totalAmount.toLocaleString() }}</span>
       </div>
     </div>
 
     <!-- 注意事項 -->
     <div class="rounded-md border border-pink-200 bg-pink-50 p-6">
-      <h3 class="mb-4 font-semibold text-red-600">注意事項</h3>
+      <h3 class="mb-4 font-semibold text-red-600">
+        注意事項
+      </h3>
 
       <div class="space-y-4 text-sm text-gray-700">
         <div>
@@ -113,7 +119,10 @@
             取り扱い可能な荷物
           </h4>
           <ul class="mb-2 ml-8 list-disc space-y-1">
-            <li v-for="item in props.luggageItemsData" :key="item.id">
+            <li
+              v-for="item in props.luggageItemsData"
+              :key="item.id"
+            >
               {{ item.name }}
             </li>
           </ul>
@@ -123,12 +132,15 @@
           </div>
         </div>
 
-        <hr class="border-gray-300" />
+        <hr class="border-gray-300">
 
         <div>
           <p>上記以外で不明な点がございましたらお気軽にお問い合わせください</p>
           <p class="font-semibold">
-            電話番号：<a class="underline" href="tel:#">000-000-0000</a>
+            電話番号：<a
+              class="underline"
+              href="tel:#"
+            >000-000-0000</a>
           </p>
         </div>
       </div>
@@ -168,7 +180,7 @@ const luggageItems = computed<LuggageItem[]>(() => {
     return [];
   }
 
-  return props.luggageItemsData.map((item) => ({
+  return props.luggageItemsData.map(item => ({
     ...item,
     count: props.formData[item.key] ?? 0,
   }));

@@ -7,7 +7,7 @@ export const useCsrf = () => {
     if (!import.meta.client) return undefined;
     const match = document.cookie
       .split("; ")
-      .find((cookie) => cookie.startsWith("csrftoken="));
+      .find(cookie => cookie.startsWith("csrftoken="));
     return match ? match.split("=")[1] : undefined;
   };
 

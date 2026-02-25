@@ -203,16 +203,18 @@ const convertHalfWidthKanaToFullWidth = (text: string): string => {
 
     // 濁点・半濁点の組み合わせをチェック（例: ｶﾞ, ﾊﾟ）
     if (
-      nextChar &&
-      (nextChar === "ﾞ" || nextChar === "ﾟ") &&
-      halfToFullMap[char + nextChar]
+      nextChar
+      && (nextChar === "ﾞ" || nextChar === "ﾟ")
+      && halfToFullMap[char + nextChar]
     ) {
       result += halfToFullMap[char + nextChar];
       i += 2;
-    } else if (char && halfToFullMap[char]) {
+    }
+    else if (char && halfToFullMap[char]) {
       result += halfToFullMap[char];
       i += 1;
-    } else {
+    }
+    else {
       result += char;
       i += 1;
     }
@@ -294,7 +296,8 @@ export const usePostalCodeSearch = () => {
         return searchResult;
       }
       return null;
-    } catch (error: unknown) {
+    }
+    catch (error: unknown) {
       // エラーは静かに処理（ユーザーには表示しない）
       if (error instanceof Error) {
         // 開発時のみエラーをログ出力

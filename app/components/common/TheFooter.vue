@@ -31,9 +31,7 @@
                 :to="footerItem.link"
                 class="px-2 py-1 text-gray-800"
               >
-                {{
-                  footerItem.label
-                }}
+                {{ footerItem.label }}
               </NuxtLink>
             </li>
           </ul>

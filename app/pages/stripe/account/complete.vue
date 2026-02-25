@@ -8,7 +8,7 @@
           アカウント登録申請の完了
         </h1>
         <p class="mx-auto mb-6 w-fit text-gray-600">
-          アカウント登録申請が完了しました。<br /><br />Stripeによる審査結果は１〜２営業日以内に、ユーザー登録時に入力いただいたメールアドレス宛にお知らせいたします。
+          アカウント登録申請が完了しました。<br><br>Stripeによる審査結果は１〜２営業日以内に、ユーザー登録時に入力いただいたメールアドレス宛にお知らせいたします。
         </p>
         <NuxtLink
           class="mx-auto block w-fit rounded-md border-2 border-gray-300 bg-transparent px-8 py-3 font-semibold text-gray-700 hover:opacity-80"

@@ -20,7 +20,8 @@ onMounted(async () => {
       await navigateTo(`/stripe/account/${firstRequiredStep}`, {
         replace: true,
       });
-    } catch {
+    }
+    catch {
       await navigateTo("/stripe/account/1", { replace: true });
     }
   }
