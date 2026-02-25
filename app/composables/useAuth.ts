@@ -7,6 +7,34 @@ type AuthInfo = {
   user_type?: string;
 };
 
+export const logout = async (): Promise<boolean> => {
+  if (!import.meta.client) {
+    return false;
+  }
+
+  const { ensureCsrf, getCsrf } = useCsrf();
+
+  try {
+    const config = useRuntimeConfig();
+    const apiBase = config.public.apiBaseUrl;
+    await ensureCsrf(apiBase);
+
+    const res = await fetch(`${apiBase}/api/users/auth/logout`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        ...(getCsrf() ? { "X-CSRFToken": getCsrf() } : {}),
+      },
+    });
+
+    return res.ok;
+  }
+  catch {
+    return false;
+  }
+};
+
 // 認証情報を取得する関数（ユーザー情報を含む）
 export const getAuthInfo = async (): Promise<AuthInfo> => {
   if (!import.meta.client) {
@@ -39,7 +67,8 @@ export const getAuthInfo = async (): Promise<AuthInfo> => {
       email: data.email,
       user_type: data.user_type,
     };
-  } catch {
+  }
+  catch {
     return { authenticated: false };
   }
 };

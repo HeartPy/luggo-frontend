@@ -1,6 +1,7 @@
 <template>
   <div class="flex min-h-screen items-center justify-center">
-    <div class="w-[calc(100%-8vw)] max-w-md bg-white">
+    <CommonAtomsLoadingAnimation v-if="isCheckingAuth" />
+    <div v-else class="w-[calc(100%-8vw)] max-w-md bg-white">
       <h2 class="mb-8 text-center text-2xl font-bold text-gray-800">
         ログイン
       </h2>
@@ -207,6 +208,7 @@ import { object, string } from "yup";
 import { useForm } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/yup";
 import { useCsrf } from "~/composables/useCsrf";
+import { getAuthInfo } from "~/composables/useAuth";
 
 type LoginFormData = {
   email: string;
@@ -237,8 +239,23 @@ const verificationCode = ref("");
 const codeErr = ref("");
 const savedPassword = ref("");
 const showPassword = ref(false);
+const isCheckingAuth = ref(true);
 
 const { ensureCsrf, getCsrf } = useCsrf();
+
+onMounted(async () => {
+  try {
+    const authInfo = await getAuthInfo();
+    if (authInfo.authenticated && authInfo.user_type === "business_owner") {
+      await navigateTo("/business-owner/dashboard", { replace: true });
+      return;
+    }
+  } catch {
+    // 認証チェック失敗時はログインフォームを表示
+  } finally {
+    isCheckingAuth.value = false;
+  }
+});
 
 const handleFormLogin = () => {
   formTouched.value = true;
