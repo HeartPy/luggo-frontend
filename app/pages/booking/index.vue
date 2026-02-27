@@ -1,3 +1,11 @@
 <script setup lang="ts">
-await navigateTo("/booking/1", { replace: true });
+const route = useRoute();
+const query: Record<string, string> = {};
+if (typeof route.query.subdomain === "string" && route.query.subdomain) {
+  query.subdomain = route.query.subdomain;
+}
+await navigateTo(
+  { path: "/booking/1", query },
+  { replace: true },
+);
 </script>
