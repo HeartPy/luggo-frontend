@@ -9,31 +9,33 @@
             src="/img/luggo.svg"
             alt="LugGo"
             class="h-full w-full object-contain"
-          >
+          />
         </figure>
         <span class="whitespace-nowrap text-xl font-bold text-gray-800">
           LugGo
         </span>
       </div>
-      <div class="overflow-y-auto">
+      <div class="w-full overflow-y-auto">
         <nav>
           <ul class="flex flex-col items-center">
-            <li
-              v-for="navItem in navItems"
-              :key="navItem.id"
-            >
-              <NuxtLink
-                class="flex w-full items-center py-4 font-semibold hover:opacity-80"
-                to="#"
+            <li class="w-full" v-for="navItem in navItems" :key="navItem.key">
+              <button
+                type="button"
+                class="relative flex w-full items-center justify-center py-4 font-semibold hover:opacity-80"
+                :class="{
+                  'bg-gray-200 before:absolute before:left-0 before:top-0 before:h-full before:w-1 before:bg-gray-800':
+                    navItem.key === currentView,
+                }"
+                @click="emit('select', navItem.key)"
               >
                 <img
                   v-if="navItem.icon"
                   :src="navItem.icon"
                   alt=""
                   class="mr-2 h-4 w-4 object-contain"
-                >
+                />
                 <span>{{ navItem.label }}</span>
-              </NuxtLink>
+              </button>
             </li>
           </ul>
         </nav>
@@ -44,28 +46,23 @@
 
 <script setup lang="ts">
 type NavItem = {
-  id: number;
+  key: string;
   icon?: string;
   label: string;
 };
 
+defineProps<{
+  currentView: string;
+}>();
+
+const emit = defineEmits<{
+  select: [key: string];
+}>();
+
 const navItems = ref<NavItem[]>([
-  {
-    id: 1,
-    label: "予約一覧",
-  },
-  {
-    id: 2,
-    label: "配達者一覧",
-  },
-  {
-    id: 3,
-    label: "売上管理",
-  },
-  {
-    id: 4,
-    icon: "/img/settings.svg",
-    label: "料金の設定",
-  },
+  { key: "reservations", label: "予約一覧" },
+  { key: "drivers", label: "配達者一覧" },
+  { key: "revenue", label: "売上管理" },
+  { key: "pricing-settings", icon: "/img/settings.svg", label: "料金の設定" },
 ]);
 </script>
