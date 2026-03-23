@@ -36,17 +36,150 @@ export const isValidIsoDate = (v: string) => {
   const d = Number(m[3]);
   const dt = new Date(Date.UTC(y, mo - 1, d));
   return (
-    dt.getUTCFullYear() === y
-    && dt.getUTCMonth() + 1 === mo
-    && dt.getUTCDate() === d
+    dt.getUTCFullYear() === y &&
+    dt.getUTCMonth() + 1 === mo &&
+    dt.getUTCDate() === d
   );
 };
 
+// 郵便番号の先頭2桁から都道府県コードへのマッピング
+const POSTAL_PREFIX_TO_PREF: Record<string, string> = {
+  "00": "01",
+  "04": "01",
+  "05": "01",
+  "06": "01",
+  "07": "01",
+  "08": "01",
+  "09": "01",
+  "03": "02",
+  "02": "03",
+  "98": "04",
+  "01": "05",
+  "99": "06",
+  "96": "07",
+  "97": "07",
+  "30": "08",
+  "31": "08",
+  "32": "09",
+  "37": "10",
+  "33": "11",
+  "34": "11",
+  "35": "11",
+  "36": "11",
+  "26": "12",
+  "27": "12",
+  "28": "12",
+  "29": "12",
+  "10": "13",
+  "11": "13",
+  "12": "13",
+  "13": "13",
+  "14": "13",
+  "15": "13",
+  "16": "13",
+  "17": "13",
+  "18": "13",
+  "19": "13",
+  "20": "13",
+  "21": "14",
+  "22": "14",
+  "23": "14",
+  "24": "14",
+  "25": "14",
+  "94": "15",
+  "95": "15",
+  "93": "16",
+  "92": "17",
+  "91": "18",
+  "40": "19",
+  "38": "20",
+  "39": "20",
+  "50": "21",
+  "41": "22",
+  "42": "22",
+  "43": "22",
+  "44": "23",
+  "45": "23",
+  "46": "23",
+  "47": "23",
+  "48": "23",
+  "49": "23",
+  "51": "24",
+  "52": "25",
+  "60": "26",
+  "61": "26",
+  "53": "27",
+  "54": "27",
+  "55": "27",
+  "56": "27",
+  "57": "27",
+  "58": "27",
+  "59": "27",
+  "65": "28",
+  "66": "28",
+  "67": "28",
+  "63": "29",
+  "64": "30",
+  "68": "31",
+  "69": "32",
+  "70": "33",
+  "71": "33",
+  "72": "34",
+  "73": "34",
+  "74": "35",
+  "75": "35",
+  "77": "36",
+  "76": "37",
+  "79": "38",
+  "78": "39",
+  "80": "40",
+  "81": "40",
+  "82": "40",
+  "83": "40",
+  "84": "41",
+  "85": "42",
+  "86": "43",
+  "87": "44",
+  "88": "45",
+  "89": "46",
+  "90": "47",
+  "62": "28",
+};
+
+export function prefCodeFromPostal(postalCode: string): string | null {
+  if (postalCode.length < 2) return null;
+  const prefix = postalCode.substring(0, 2);
+  return POSTAL_PREFIX_TO_PREF[prefix] ?? null;
+}
+
 // Step1のバリデーションスキーマを生成
-export const createStep1Schema = () => {
+export const createStep1Schema = (options?: {
+  departurePrefectures?: string[];
+  deliverablePrefectures?: string[];
+}) => {
   const today = getToday();
+  const departurePrefectures = options?.departurePrefectures ?? [];
+  const deliverablePrefectures = options?.deliverablePrefectures ?? [];
 
   return object({
+    pickup_postal_code: string()
+      .trim()
+      .required("集荷場所の郵便番号は必須です")
+      .matches(/^[0-9]{7}$/u, "郵便番号は7桁の半角数字で入力してください")
+      .test(
+        "is-departure-area",
+        "この郵便番号は集荷地域の対象外です",
+        function (value) {
+          if (!value) return true;
+          if (departurePrefectures.length === 0) {
+            return this.createError({
+              message: "集荷地域が設定されていないため予約できません",
+            });
+          }
+          const code = prefCodeFromPostal(value);
+          return code !== null && departurePrefectures.includes(code);
+        },
+      ),
     pickup_location_name: string().trim().required("集荷場所の名称は必須です"),
     pickup_location_address: string()
       .trim()
@@ -62,12 +195,30 @@ export const createStep1Schema = () => {
       .test(
         "is-valid-date",
         "存在する日付を入力してください",
-        value => !!value && isValidIsoDate(value),
+        (value) => !!value && isValidIsoDate(value),
       )
       .test(
         "is-today-or-future",
         "集荷日は今日以降の日付を選択してください",
-        value => !!value && value >= today,
+        (value) => !!value && value >= today,
+      ),
+    delivery_postal_code: string()
+      .trim()
+      .required("配送場所の郵便番号は必須です")
+      .matches(/^[0-9]{7}$/u, "郵便番号は7桁の半角数字で入力してください")
+      .test(
+        "is-deliverable-area",
+        "この郵便番号は配達地域の対象外です",
+        function (value) {
+          if (!value) return true;
+          if (deliverablePrefectures.length === 0) {
+            return this.createError({
+              message: "配達地域が設定されていないため予約できません",
+            });
+          }
+          const code = prefCodeFromPostal(value);
+          return code !== null && deliverablePrefectures.includes(code);
+        },
       ),
     delivery_location_name: string()
       .trim()
@@ -86,7 +237,7 @@ export const createStep1Schema = () => {
       .test(
         "is-valid-date",
         "存在する日付を入力してください",
-        value => !!value && isValidIsoDate(value),
+        (value) => !!value && isValidIsoDate(value),
       )
       .test(
         "is-after-pickup",
@@ -142,7 +293,7 @@ export const createStep3Schema = () => {
     customer_phone_number: string()
       .trim()
       .required("お電話番号は必須です")
-      .transform(value =>
+      .transform((value) =>
         typeof value === "string" ? value.replace(/[\s-]/g, "") : value,
       )
       .matches(/^(\+\d{7,15}|\d{10,11})$/u, "有効な電話番号を入力してください"),
@@ -150,7 +301,7 @@ export const createStep3Schema = () => {
     guest_name: string()
       .trim()
       .required("宿泊予約者名は必須です")
-      .transform(value =>
+      .transform((value) =>
         typeof value === "string"
           ? value.normalize("NFKC").replace(/\s+/g, " ")
           : value,

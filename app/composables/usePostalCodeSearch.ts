@@ -319,7 +319,15 @@ export const usePostalCodeSearch = () => {
     },
   ) => {
     const target = event.target as HTMLInputElement;
-    const value = target.value.replace(/[^0-9]/g, ""); // 数字のみ抽出
+    // 全角数字→半角変換後、数字以外を除去
+    const value = target.value
+      .replace(/[０-９]/g, ch =>
+        String.fromCharCode(ch.charCodeAt(0) - 0xfee0),
+      )
+      .replace(/[^0-9]/g, "");
+
+    // DOM の表示値を即座に整形済みの値に同期
+    target.value = value;
 
     // 郵便番号を更新
     options.onPostalCodeUpdate(value);

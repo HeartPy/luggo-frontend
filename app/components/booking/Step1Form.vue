@@ -23,17 +23,18 @@
           @input="handleSearchInput($event, 'pickup')"
           @focus="showSuggestions.pickup = true"
           @blur="handleBlur('pickup')"
-        >
+        />
 
         <!-- サジェストドロップダウン -->
         <div
-          v-if="showSuggestions.pickup && suggestions.pickup.length > 0"
+          v-if="showSuggestions.pickup && filteredSuggestions.pickup.length > 0"
           class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md border border-gray-300 bg-white shadow-lg"
         >
           <div
-            v-for="suggestion in suggestions.pickup"
+            v-for="suggestion in filteredSuggestions.pickup"
             :key="suggestion.place_id"
             class="cursor-pointer border-b border-gray-100 px-3 py-2 last:border-b-0 hover:bg-gray-100"
+            @mousedown.prevent
             @click="selectSuggestion(suggestion, 'pickup')"
           >
             <div class="flex items-start space-x-3">
@@ -45,10 +46,7 @@
                   {{ suggestion.address }}
                 </div>
                 <div class="mt-1 flex items-center space-x-2">
-                  <span
-                    v-if="suggestion.rating"
-                    class="text-xs text-gray-500"
-                  >
+                  <span v-if="suggestion.rating" class="text-xs text-gray-500">
                     ⭐ {{ suggestion.rating }} ({{
                       suggestion.user_ratings_total
                     }}件)
@@ -72,6 +70,40 @@
         aria-live="polite"
       >
         {{ errors.pickup_location_name }}
+      </div>
+    </div>
+
+    <!-- 集荷場所の郵便番号 -->
+    <div>
+      <label
+        for="pickupPostalCode"
+        class="mb-2 block font-semibold text-gray-800"
+      >
+        集荷場所の郵便番号<span class="ml-[0.2em] text-red-600">*</span>
+      </label>
+      <input
+        id="pickupPostalCode"
+        :value="formData.pickup_postal_code"
+        type="text"
+        inputmode="numeric"
+        name="pickupPostalCode"
+        class="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
+        :class="{ 'border-red-500': errors.pickup_postal_code }"
+        placeholder="例) 1234567"
+        maxlength="7"
+        required
+        aria-required="true"
+        aria-describedby="pickup_postal_code-error"
+        @input="handlePickupPostalCode($event)"
+      />
+      <p class="mt-1 text-xs text-gray-500">半角数字で入力してください</p>
+      <div
+        v-if="errors.pickup_postal_code"
+        id="pickup_postal_code-error"
+        class="mt-1 text-sm text-red-600"
+        aria-live="polite"
+      >
+        {{ errors.pickup_postal_code }}
       </div>
     </div>
 
@@ -108,16 +140,10 @@
 
     <!-- 集荷日 -->
     <div>
-      <label
-        for="pickupDate"
-        class="mb-2 block font-semibold text-gray-800"
-      >
+      <label for="pickupDate" class="mb-2 block font-semibold text-gray-800">
         集荷日<span class="ml-[0.2em] text-red-600">*</span>
       </label>
-      <div
-        class="relative"
-        @click="openNativeDatePicker(pickupDateInput)"
-      >
+      <div class="relative" @click="openNativeDatePicker(pickupDateInput)">
         <input
           id="pickupDate"
           ref="pickupDateInput"
@@ -131,12 +157,12 @@
           aria-describedby="pickup_date-error"
           :min="today"
           @input="handleInput('pickup_date', $event)"
-        >
+        />
         <img
           class="pointer-events-none absolute right-5 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400 transition-colors hover:text-gray-600"
           src="/img/calendar.svg"
           alt=""
-        >
+        />
       </div>
       <div
         v-if="errors.pickup_date"
@@ -171,17 +197,20 @@
           @input="handleSearchInput($event, 'delivery')"
           @focus="showSuggestions.delivery = true"
           @blur="handleBlur('delivery')"
-        >
+        />
 
         <!-- サジェストドロップダウン -->
         <div
-          v-if="showSuggestions.delivery && suggestions.delivery.length > 0"
+          v-if="
+            showSuggestions.delivery && filteredSuggestions.delivery.length > 0
+          "
           class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md border border-gray-300 bg-white shadow-lg"
         >
           <div
-            v-for="suggestion in suggestions.delivery"
+            v-for="suggestion in filteredSuggestions.delivery"
             :key="suggestion.place_id"
             class="cursor-pointer border-b border-gray-100 px-3 py-2 last:border-b-0 hover:bg-gray-100"
+            @mousedown.prevent
             @click="selectSuggestion(suggestion, 'delivery')"
           >
             <div class="flex items-start space-x-3">
@@ -193,10 +222,7 @@
                   {{ suggestion.address }}
                 </div>
                 <div class="mt-1 flex items-center space-x-2">
-                  <span
-                    v-if="suggestion.rating"
-                    class="text-xs text-gray-500"
-                  >
+                  <span v-if="suggestion.rating" class="text-xs text-gray-500">
                     ⭐ {{ suggestion.rating }} ({{
                       suggestion.user_ratings_total
                     }}件)
@@ -220,6 +246,40 @@
         aria-live="polite"
       >
         {{ errors.delivery_location_name }}
+      </div>
+    </div>
+
+    <!-- 配送場所の郵便番号 -->
+    <div>
+      <label
+        for="deliveryPostalCode"
+        class="mb-2 block font-semibold text-gray-800"
+      >
+        配送場所の郵便番号<span class="ml-[0.2em] text-red-600">*</span>
+      </label>
+      <input
+        id="deliveryPostalCode"
+        :value="formData.delivery_postal_code"
+        type="text"
+        inputmode="numeric"
+        name="deliveryPostalCode"
+        class="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
+        :class="{ 'border-red-500': errors.delivery_postal_code }"
+        placeholder="例) 1234567"
+        maxlength="7"
+        required
+        aria-required="true"
+        aria-describedby="delivery_postal_code-error"
+        @input="handleDeliveryPostalCode($event)"
+      />
+      <p class="mt-1 text-xs text-gray-500">半角数字で入力してください</p>
+      <div
+        v-if="errors.delivery_postal_code"
+        id="delivery_postal_code-error"
+        class="mt-1 text-sm text-red-600"
+        aria-live="polite"
+      >
+        {{ errors.delivery_postal_code }}
       </div>
     </div>
 
@@ -256,16 +316,10 @@
 
     <!-- 配送日 -->
     <div>
-      <label
-        for="deliveryDate"
-        class="mb-2 block font-semibold text-gray-800"
-      >
+      <label for="deliveryDate" class="mb-2 block font-semibold text-gray-800">
         配送日<span class="ml-[0.2em] text-red-600">*</span>
       </label>
-      <div
-        class="relative"
-        @click="openNativeDatePicker(deliveryDateInput)"
-      >
+      <div class="relative" @click="openNativeDatePicker(deliveryDateInput)">
         <input
           id="deliveryDate"
           ref="deliveryDateInput"
@@ -279,11 +333,11 @@
           aria-describedby="delivery_date-error"
           :min="minDeliveryDate"
           @input="handleInput('delivery_date', $event)"
-        >
+        />
         <img
           class="pointer-events-none absolute right-5 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400 transition-colors hover:text-gray-600"
           src="/img/calendar.svg"
-        >
+        />
       </div>
       <div
         v-if="errors.delivery_date"
@@ -297,10 +351,7 @@
 
     <!-- 備考 -->
     <div>
-      <label
-        for="notes"
-        class="mb-2 block font-semibold text-gray-800"
-      >
+      <label for="notes" class="mb-2 block font-semibold text-gray-800">
         備考
       </label>
       <textarea
@@ -318,6 +369,7 @@
 
 <script setup lang="ts">
 import type { Step1FormData } from "~/types/booking";
+import { usePostalCodeSearch } from "~/composables/usePostalCodeSearch";
 
 // サジェストの型定義
 type LocationSuggestion = {
@@ -333,9 +385,14 @@ type LocationSuggestion = {
 type Props = {
   formData: Step1FormData;
   errors: Partial<Record<keyof Step1FormData, string>>;
+  departurePrefectures?: string[];
+  deliverablePrefectures?: string[];
 };
 
-const props = defineProps<Props>();
+const props = withDefaults(defineProps<Props>(), {
+  departurePrefectures: () => [],
+  deliverablePrefectures: () => [],
+});
 
 type Emits = {
   "update:form-data": [formData: Step1FormData];
@@ -353,8 +410,7 @@ const openNativeDatePicker = (el: HTMLInputElement | undefined) => {
   if (typeof el.showPicker === "function") {
     try {
       el.showPicker();
-    }
-    catch {
+    } catch {
       // 意図的に無視（フォーカスのみにフォールバック）
     }
   }
@@ -382,7 +438,106 @@ const handleInput = (key: keyof Step1FormData, event: Event) => {
   emit("update:form-data", updatedData);
 };
 
-// ここからサジェスト関連のコード
+// --- 郵便番号検索 ---
+const { searchAddress, handlePostalCode } = usePostalCodeSearch();
+
+const PREFECTURE_FULL_NAMES: Record<string, string> = {
+  "01": "北海道",
+  "02": "青森県",
+  "03": "岩手県",
+  "04": "宮城県",
+  "05": "秋田県",
+  "06": "山形県",
+  "07": "福島県",
+  "08": "茨城県",
+  "09": "栃木県",
+  "10": "群馬県",
+  "11": "埼玉県",
+  "12": "千葉県",
+  "13": "東京都",
+  "14": "神奈川県",
+  "15": "新潟県",
+  "16": "富山県",
+  "17": "石川県",
+  "18": "福井県",
+  "19": "山梨県",
+  "20": "長野県",
+  "21": "岐阜県",
+  "22": "静岡県",
+  "23": "愛知県",
+  "24": "三重県",
+  "25": "滋賀県",
+  "26": "京都府",
+  "27": "大阪府",
+  "28": "兵庫県",
+  "29": "奈良県",
+  "30": "和歌山県",
+  "31": "鳥取県",
+  "32": "島根県",
+  "33": "岡山県",
+  "34": "広島県",
+  "35": "山口県",
+  "36": "徳島県",
+  "37": "香川県",
+  "38": "愛媛県",
+  "39": "高知県",
+  "40": "福岡県",
+  "41": "佐賀県",
+  "42": "長崎県",
+  "43": "熊本県",
+  "44": "大分県",
+  "45": "宮崎県",
+  "46": "鹿児島県",
+  "47": "沖縄県",
+};
+
+const handlePickupPostalCode = (event: Event) => {
+  handlePostalCode(event, {
+    onPostalCodeUpdate: (value) => {
+      emit("update:form-data", {
+        ...props.formData,
+        pickup_postal_code: value,
+      });
+    },
+    onSearch: async (postalCode) => {
+      const result = await searchAddress(postalCode);
+      if (!result) {
+        return;
+      }
+      const address = `${result.state}${result.city}${result.town}`;
+      emit("update:form-data", {
+        ...props.formData,
+        pickup_postal_code: postalCode,
+        pickup_location_address: address,
+      });
+    },
+  });
+};
+
+const handleDeliveryPostalCode = (event: Event) => {
+  handlePostalCode(event, {
+    onPostalCodeUpdate: (value) => {
+      emit("update:form-data", {
+        ...props.formData,
+        delivery_postal_code: value,
+      });
+    },
+    onSearch: async (postalCode) => {
+      const result = await searchAddress(postalCode);
+      if (!result) {
+        return;
+      }
+      const address = `${result.state}${result.city}${result.town}`;
+      emit("update:form-data", {
+        ...props.formData,
+        delivery_postal_code: postalCode,
+        delivery_location_address: address,
+      });
+    },
+  });
+};
+
+// --- ここからはサジェスト関連の処理 ---
 const searchQueries = ref({
   pickup: props.formData.pickup_location_name || "",
   delivery: props.formData.delivery_location_name || "",
@@ -424,9 +579,8 @@ const handleSearchInput = async (event: Event, type: "pickup" | "delivery") => {
   const target = event.target as HTMLInputElement;
   const query = target.value;
 
-  // 入力ハンドラーを呼び出し
-  const fieldName
-    = type === "pickup" ? "pickup_location_name" : "delivery_location_name";
+  const fieldName =
+    type === "pickup" ? "pickup_location_name" : "delivery_location_name";
   handleInput(fieldName, event);
 
   // デバウンス処理
@@ -438,8 +592,7 @@ const handleSearchInput = async (event: Event, type: "pickup" | "delivery") => {
     searchTimeout.value = setTimeout(async () => {
       await fetchSuggestions(query, type);
     }, 300);
-  }
-  else {
+  } else {
     suggestions.value[type] = [];
   }
 };
@@ -450,47 +603,111 @@ const fetchSuggestions = async (query: string, type: "pickup" | "delivery") => {
     const config = useRuntimeConfig();
     const apiBaseUrl = config.public.apiBaseUrl;
 
+    // 集荷は出発地域、配送は配達可能地域でサーバー側を絞り込む
+    const prefCodes =
+      type === "pickup"
+        ? props.departurePrefectures
+        : props.deliverablePrefectures;
+    const prefParam =
+      prefCodes.length > 0
+        ? `&prefectures=${encodeURIComponent(prefCodes.join(","))}`
+        : "";
+
     const { data, error } = await useFetch<{
       suggestions: LocationSuggestion[];
     }>(
-      `${apiBaseUrl}/api/bookings/location-suggestions?q=${encodeURIComponent(query)}`,
+      `${apiBaseUrl}/api/bookings/location-suggestions?q=${encodeURIComponent(query)}${prefParam}`,
     );
 
     if (error.value) {
-      // Error fetching location suggestions
       return;
     }
 
     if (data.value) {
       suggestions.value[type] = data.value.suggestions || [];
     }
-  }
-  catch {
-    // Error fetching location suggestions
+  } catch {
+    // サジェスト取得失敗は静かに無視
   }
 };
+
+// 住所から都道府県コードを抽出
+function extractPrefCodeFromAddress(address: string): string | null {
+  for (const [code, name] of Object.entries(PREFECTURE_FULL_NAMES)) {
+    if (address.includes(name)) return code;
+  }
+  return null;
+}
+
+// 出発地域/配達可能地域でフィルタリングされたサジェスト
+const filteredSuggestions = computed(() => {
+  const pickup = suggestions.value.pickup.filter((suggestion) => {
+    if (props.departurePrefectures.length === 0) return true;
+    const code = extractPrefCodeFromAddress(suggestion.address);
+    return code !== null && props.departurePrefectures.includes(code);
+  });
+
+  const delivery = suggestions.value.delivery.filter((suggestion) => {
+    if (props.deliverablePrefectures.length === 0) return true;
+    const code = extractPrefCodeFromAddress(suggestion.address);
+    return code !== null && props.deliverablePrefectures.includes(code);
+  });
+
+  return { pickup, delivery };
+});
+
+// 住所文字列から郵便番号7桁を抽出（〒・ハイフン除去）
+const extractPostalCode = (address: string): string | null => {
+  const match = address.match(/〒?(\d{3})-?(\d{4})/);
+  if (match && match[1] && match[2]) {
+    return `${match[1]}${match[2]}`;
+  }
+  return null;
+};
+
+// 住所文字列から郵便番号を除去
+// 住所欄には郵便番号は必要ないため
+const stripPostalCode = (address: string): string =>
+  address.replace(/〒?\d{3}-?\d{4}\s*/, "").trim();
 
 // サジェスト選択処理
 const selectSuggestion = (
   suggestion: LocationSuggestion,
   type: "pickup" | "delivery",
 ) => {
+  // 前の検索予約をキャンセル
+  // 古いキーワードで検索しないため
+  if (searchTimeout.value) {
+    clearTimeout(searchTimeout.value);
+    searchTimeout.value = null;
+  }
+
   searchQueries.value[type] = suggestion.name;
 
   // フォームデータを更新
-  const fieldName
-    = type === "pickup" ? "pickup_location_name" : "delivery_location_name";
-  const addressFieldName
-    = type === "pickup" ? "pickup_location_address" : "delivery_location_address";
+  const fieldName =
+    type === "pickup" ? "pickup_location_name" : "delivery_location_name";
+  const addressFieldName =
+    type === "pickup" ? "pickup_location_address" : "delivery_location_address";
+  const postalCodeField =
+    type === "pickup" ? "pickup_postal_code" : "delivery_postal_code";
+
+  const extractedPostalCode = extractPostalCode(suggestion.address);
 
   const updatedData = {
     ...props.formData,
     [fieldName]: suggestion.name,
-    [addressFieldName]: suggestion.address,
+    [addressFieldName]: stripPostalCode(suggestion.address),
+    // 住所に郵便番号が含まれる場合のみ上書き
+    // :value バインドのため @input は発火せず住所検索は走らない
+    ...(extractedPostalCode !== null
+      ? { [postalCodeField]: extractedPostalCode }
+      : {}),
   };
 
   emit("update:form-data", updatedData);
   showSuggestions.value[type] = false;
+  suggestions.value[type] = [];
 };
 
 // フォーカスアウト処理
@@ -504,9 +721,11 @@ const handleBlur = (type: "pickup" | "delivery") => {
 const getPlaceTypeLabel = (placeTypes: string[]) => {
   const typeLabels: Record<string, string> = {
     lodging: "宿泊施設",
+    hotel: "宿泊施設",
     airport: "空港",
     train_station: "駅",
     subway_station: "地下鉄駅",
+    transit_station: "交通拠点",
   };
 
   for (const placeType of placeTypes) {

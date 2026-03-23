@@ -11,7 +11,7 @@ export default defineNuxtRouteMiddleware(async (_to) => {
       return navigateTo("/account/login");
     }
 
-    // ビジネスオーナーでない場合はログインページにリダイレクト
+    // 事業者でない場合はログインページにリダイレクト
     if (authInfo.user_type !== "business_owner") {
       return navigateTo("/account/login");
     }

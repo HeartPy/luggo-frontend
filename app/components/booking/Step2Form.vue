@@ -11,20 +11,17 @@
         size="md"
         message="荷物情報を読み込み中..."
       />
-      <div
-        v-else-if="luggageItemsError"
-        class="py-4 text-center text-red-600"
-      >
+      <div v-else-if="luggageItemsError" class="py-4 text-center text-red-600">
         <p>{{ luggageItemsError }}</p>
       </div>
       <div
         v-else
-        class="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-3"
+        class="flex flex-col justify-center gap-x-20 gap-y-10 sm:flex-row"
       >
         <div
           v-for="luggageItem in luggageItems"
           :key="luggageItem.id"
-          class="flex items-center justify-center gap-x-10 gap-y-3 text-center sm:flex-col"
+          class="flex w-full min-w-0 items-center justify-center gap-x-10 gap-y-3 text-center sm:w-fit sm:flex-col"
         >
           <div class="flex flex-col items-center justify-center">
             <figure class="mb-4 h-20 w-20">
@@ -32,10 +29,12 @@
                 class="h-full w-full object-contain"
                 :src="getImageUrl(luggageItem.image_src)"
                 alt=""
-              >
+              />
             </figure>
-            <p class="mb-1 text-sm font-semibold text-gray-700">
-              {{ luggageItem.name }}
+            <p
+              class="mb-1 whitespace-pre-line text-sm font-semibold text-gray-700"
+            >
+              {{ luggageItem.name.replace("（", "\n（") }}
             </p>
             <span class="block text-sm text-gray-700">
               ¥{{ luggageItem.price.toLocaleString() }} / 個
@@ -90,15 +89,15 @@
         金額<small>（税込）</small>
       </h2>
       <div class="rounded-md border-2 border-gray-300 p-4 text-center">
-        <span class="text-2xl font-bold text-gray-800">¥{{ totalAmount.toLocaleString() }}</span>
+        <span class="text-2xl font-bold text-gray-800"
+          >¥{{ totalAmount.toLocaleString() }}</span
+        >
       </div>
     </div>
 
     <!-- 注意事項 -->
     <div class="rounded-md border border-pink-200 bg-pink-50 p-6">
-      <h3 class="mb-4 font-semibold text-red-600">
-        注意事項
-      </h3>
+      <h3 class="mb-4 font-semibold text-red-600">注意事項</h3>
 
       <div class="space-y-4 text-sm text-gray-700">
         <div>
@@ -119,28 +118,21 @@
             取り扱い可能な荷物
           </h4>
           <ul class="mb-2 ml-8 list-disc space-y-1">
-            <li
-              v-for="item in props.luggageItemsData"
-              :key="item.id"
-            >
-              {{ item.name }}
+            <li v-for="luggageItem in luggageItems" :key="luggageItem.key">
+              {{ luggageItem.name }}
             </li>
           </ul>
           <div class="ml-3 text-xs text-gray-600">
-            <p>※サイズは3辺の合計が160cm</p>
             <p>※重量は30kgまで</p>
           </div>
         </div>
 
-        <hr class="border-gray-300">
+        <hr class="border-gray-300" />
 
         <div>
           <p>上記以外で不明な点がございましたらお気軽にお問い合わせください</p>
           <p class="font-semibold">
-            電話番号：<a
-              class="underline"
-              href="tel:#"
-            >000-000-0000</a>
+            電話番号：<a class="underline" href="tel:#">000-000-0000</a>
           </p>
         </div>
       </div>
@@ -180,7 +172,7 @@ const luggageItems = computed<LuggageItem[]>(() => {
     return [];
   }
 
-  return props.luggageItemsData.map(item => ({
+  return props.luggageItemsData.map((item) => ({
     ...item,
     count: props.formData[item.key] ?? 0,
   }));

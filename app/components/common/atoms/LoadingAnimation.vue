@@ -3,13 +3,14 @@
     class="flex flex-col items-center justify-center"
     :class="containerPaddingClass"
   >
-    <div
-      class="relative"
-      :class="spinnerSizeClass"
-    >
-      <div class="absolute inset-0 rounded-full border-4 border-gray-200" />
+    <div class="relative" :class="spinnerSizeClass">
       <div
-        class="absolute inset-0 animate-spin rounded-full border-4 border-transparent border-t-gray-800"
+        class="absolute inset-0 rounded-full border-gray-200"
+        :class="spinnerBorderClass"
+      />
+      <div
+        class="absolute inset-0 animate-spin rounded-full border-transparent border-t-gray-800"
+        :class="spinnerBorderClass"
         :style="{ animationDuration: '1s' }"
       />
     </div>
@@ -17,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-type Size = "sm" | "md" | "lg";
+type Size = "xs" | "sm" | "md" | "lg";
 
 const props = withDefaults(
   defineProps<{
@@ -30,6 +31,8 @@ const props = withDefaults(
 
 const spinnerSizeClass = computed(() => {
   switch (props.size) {
+    case "xs":
+      return "h-4 w-4";
     case "sm":
       return "h-6 w-6";
     case "md":
@@ -41,8 +44,13 @@ const spinnerSizeClass = computed(() => {
   }
 });
 
+const spinnerBorderClass = computed(() =>
+  props.size === "xs" ? "border-2" : "border-4",
+);
+
 const containerPaddingClass = computed(() => {
   switch (props.size) {
+    case "xs":
     case "sm":
       return "p-0";
     case "md":
