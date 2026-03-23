@@ -59,6 +59,8 @@ export default defineNuxtRouteMiddleware(async (_to) => {
         company_name: string;
         subdomain: string;
         is_active: boolean;
+        service_areas: string[];
+        pricing_rules: Record<string, Record<string, number>>;
       }>(`${apiBase}/api/business/subdomain/profile`, {
         method: "GET",
         params: { subdomain },

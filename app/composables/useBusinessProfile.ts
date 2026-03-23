@@ -1,7 +1,7 @@
 import { useCsrf } from "~/composables/useCsrf";
 
 /**
- * 現在ログイン中のビジネスオーナーのプロフィール情報を管理するcomposable
+ * 現在ログイン中の事業者のプロフィール情報を管理するcomposable
  */
 export const useBusinessProfile = () => {
   const businessProfile = useState<{
@@ -35,7 +35,7 @@ export const useBusinessProfile = () => {
   const isLoading = ref(false);
   const error = ref<string | null>(null);
 
-  // 現在ログイン中のビジネスオーナーのプロフィール情報を取得
+  // 現在ログイン中の事業者のプロフィール情報を取得
   const fetchBusinessProfile = async (): Promise<void> => {
     if (!import.meta.client) return;
 
