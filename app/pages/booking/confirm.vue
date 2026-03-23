@@ -303,14 +303,20 @@ import {
 } from "~/composables/useBookingValid";
 import type { LuggageItemData, ApiErrRes, BookingData } from "~/types/booking";
 
-const { step1Data, step2Data, step3Data, completeFormData, clearAllData }
+const { step1Data, step2Data, step3Data, luggageItemsData, completeFormData, clearAllData }
   = useBookingForm();
 
 const { ensureCsrf, getCsrf } = useCsrf();
 const { checkSessionValidity } = useSession();
+const route = useRoute();
 const router = useRouter();
 const config = useRuntimeConfig();
 const apiBase = config.public.apiBaseUrl;
+
+const bookingPath = (step: number | string) => ({
+  path: `/booking/${step}`,
+  query: route.query,
+});
 const publicKey = config.public.stripePublishableKey;
 
 const loading = ref(true);
@@ -319,8 +325,6 @@ const isSubmitted = ref(false);
 const errMsg = ref("");
 const showErrDialog = ref(false);
 const paymentClientSecret = ref<string | null>(null);
-const luggageItemsData = ref<LuggageItemData[]>([]);
-
 // Stripe関連
 const paymentLoading = ref(true);
 const loadingErr = ref("");
@@ -679,7 +683,7 @@ const confirmPayment = async (): Promise<{
 
 // 戻るボタン
 const goPrev = () => {
-  router.push("/booking/3");
+  router.push(bookingPath(3));
 };
 
 // 予約を確定する
@@ -695,7 +699,7 @@ const handleConfirm = async () => {
         = "セッションの有効期限が切れています。お手数おかけしますが、最初から入力し直してください。";
       isSubmitting.value = false;
       clearAllData();
-      await router.push("/booking/1");
+      await router.push(bookingPath(1));
       return;
     }
 
@@ -704,7 +708,7 @@ const handleConfirm = async () => {
         = "情報の取得に失敗しました。お手数をおかけしますが、最初から入力し直してください。";
       isSubmitting.value = false;
       clearAllData();
-      await router.push("/booking/1");
+      await router.push(bookingPath(1));
       return;
     }
 
@@ -859,7 +863,7 @@ const handleConfirm = async () => {
       }
     }
 
-    await router.push("/booking/complete");
+    await router.push({ path: "/booking/complete", query: route.query });
   }
   catch (err: unknown) {
     if (import.meta.dev) {
@@ -885,30 +889,12 @@ watch(errMsg, (newValue) => {
 
 onMounted(async () => {
   if (import.meta.client) {
-    // 荷物情報を取得（Step2のバリデーションにも必要）
-    try {
-      const { data, error: fetchErr } = await useFetch<{
-        items: LuggageItemData[];
-      }>(`${apiBase}/api/bookings/luggage-items`, {
-        method: "GET",
-        credentials: "include",
-      });
-
-      if (fetchErr.value || !data.value?.items) {
-        errMsg.value = "荷物情報の取得に失敗しました";
-        loading.value = false;
-        return;
-      }
-
-      luggageItemsData.value = data.value.items;
-    }
-    catch (err: unknown) {
-      if (import.meta.dev) {
-        // eslint-disable-next-line no-console
-        console.error("Error fetching luggage items:", err);
-      }
-      errMsg.value = "荷物情報の取得に失敗しました";
+    // 荷物データが存在しない場合はフローを経由していないため Step1 へ戻す
+    if (luggageItemsData.value.length === 0) {
+      errMsg.value
+        = "荷物情報が見つかりません。お手数をおかけしますが、最初から入力し直してください。";
       loading.value = false;
+      await router.push(bookingPath(1));
       return;
     }
 
@@ -918,7 +904,7 @@ onMounted(async () => {
       errMsg.value
         = "入力内容が完了していません。お手数をおかけしますが、入力内容をご確認ください。";
       loading.value = false;
-      await router.push("/booking/1");
+      await router.push(bookingPath(1));
       return;
     }
 
@@ -930,7 +916,7 @@ onMounted(async () => {
       errMsg.value
         = "入力内容が完了していません。お手数をおかけしますが、入力内容をご確認ください。";
       loading.value = false;
-      await router.push("/booking/2");
+      await router.push(bookingPath(2));
       return;
     }
 
@@ -940,7 +926,7 @@ onMounted(async () => {
       errMsg.value
         = "入力内容が完了していません。お手数をおかけしますが、入力内容をご確認ください。";
       loading.value = false;
-      await router.push("/booking/3");
+      await router.push(bookingPath(3));
       return;
     }
 
@@ -955,7 +941,7 @@ onMounted(async () => {
         = "情報の取得に失敗しました。お手数をおかけしますが、最初から入力し直してください。";
       loading.value = false;
       clearAllData();
-      await router.push("/booking/1");
+      await router.push(bookingPath(1));
       return;
     }
 

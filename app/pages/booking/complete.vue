@@ -72,6 +72,7 @@
 </template>
 
 <script setup lang="ts">
+const route = useRoute();
 const bookingId = ref<string | null>(null);
 const copied = ref(false);
 
@@ -125,7 +126,7 @@ onMounted(async () => {
     else {
       // 予約IDが見つからない場合はトップページにリダイレクト
       // （直接アクセスされた場合など）
-      await navigateTo("/booking/1");
+      await navigateTo({ path: "/booking/1", query: route.query });
     }
   }
 });

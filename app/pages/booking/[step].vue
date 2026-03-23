@@ -7,20 +7,15 @@
         荷物配送予約フォーム
       </h1>
 
-      <CommonAtomsErrDialog
-        v-model="showErrDialog"
-        :msg="errMsg"
-      />
+      <CommonAtomsErrDialog v-model="showErrDialog" :msg="errMsg" />
 
-      <form
-        class="space-y-6"
-        novalidate
-        @submit.prevent="handleSubmit"
-      >
+      <form class="space-y-6" novalidate @submit.prevent="handleSubmit">
         <BookingStep1Form
           v-if="currentStep === 1"
           :form-data="step1Data"
           :errors="errsStep1"
+          :departure-prefectures="allowedDeparturePrefectures"
+          :deliverable-prefectures="allowedDeliverablePrefectures"
           @update:form-data="Object.assign(step1Data, $event)"
         />
         <BookingStep2Form
@@ -43,12 +38,9 @@
           <button
             type="submit"
             class="flex items-center justify-center rounded-md bg-gray-800 px-8 py-3 font-semibold text-white hover:bg-gray-900 disabled:cursor-not-allowed disabled:bg-gray-300"
-            :disabled="isSubmitting"
+            :disabled="isSubmitting || luggageItemsLoading"
           >
-            <CommonAtomsLoadingAnimation
-              v-if="isSubmitting"
-              size="sm"
-            />
+            <CommonAtomsLoadingAnimation v-if="isSubmitting" size="sm" />
             <span v-else>
               {{ currentStep === 3 ? "お支払い情報のご入力へ" : "次へ" }}
             </span>
@@ -100,21 +92,24 @@ definePageMeta({
 
 const router = useRouter();
 
+const bookingPath = (step: number | string) => ({
+  path: `/booking/${step}`,
+  query: route.query,
+});
+
 const currentStep = computed(() => {
   const n = Number(route.params.step);
   return Number.isFinite(n) ? Math.max(1, n) : 1;
 });
 
-const prevStepPath = computed(
-  () => `/booking/${Math.max(1, currentStep.value - 1)}`,
-);
-
-const goPrev = () => navigateTo(prevStepPath.value);
+const goPrev = () =>
+  navigateTo(bookingPath(Math.max(1, currentStep.value - 1)));
 
 const {
   step1Data,
   step2Data,
   step3Data,
+  luggageItemsData,
   errsStep1,
   errsStep2,
   errsStep3,
@@ -132,9 +127,25 @@ const paymentClientSecret = ref<string | null>(null);
 const { ensureCsrf, getCsrf } = useCsrf();
 const { startSession, checkSessionValidity } = useSession();
 
-const luggageItemsData = ref<LuggageItemData[]>([]);
 const luggageItemsLoading = ref(false);
 const luggageItemsErr = ref("");
+
+// サブドメインミドルウェアで取得した事業者プロフィールから集荷/配達可能地域・決済先を取得
+const businessProfileState = useState<{
+  id?: string;
+  service_areas?: string[];
+  pricing_rules?: Record<string, Record<string, number>>;
+} | null>("businessProfile", () => null);
+
+const allowedDeparturePrefectures = computed<string[]>(
+  () => businessProfileState.value?.service_areas ?? [],
+);
+
+const allowedDeliverablePrefectures = computed<string[]>(() => {
+  const rules = businessProfileState.value?.pricing_rules;
+  if (!rules) return [];
+  return Object.keys(rules);
+});
 
 // バックエンドから荷物情報を取得してStep2FormDataを初期化
 const fetchLuggageItems = async () => {
@@ -145,12 +156,20 @@ const fetchLuggageItems = async () => {
     const config = useRuntimeConfig();
     const apiBase = config.public.apiBaseUrl;
 
+    const bpId = businessProfileState.value?.id ?? "";
+    const deliveryPostal = encodeURIComponent(
+      step1Data.value.delivery_postal_code || "",
+    );
+
     const { data, error: fetchErr } = await useFetch<{
       items: LuggageItemData[];
-    }>(`${apiBase}/api/bookings/luggage-items`, {
-      method: "GET",
-      credentials: "include",
-    });
+    }>(
+      `${apiBase}/api/bookings/luggage-items?business_owner=${bpId}&delivery_postal_code=${deliveryPostal}`,
+      {
+        method: "GET",
+        credentials: "include",
+      },
+    );
 
     if (fetchErr.value) {
       luggageItemsErr.value = "荷物情報の取得に失敗しました";
@@ -173,15 +192,13 @@ const fetchLuggageItems = async () => {
         step2Data.value[item.key] = 0;
       }
     }
-  }
-  catch (err: unknown) {
+  } catch (err: unknown) {
     luggageItemsErr.value = "荷物情報の取得に失敗しました";
     if (import.meta.dev) {
       // eslint-disable-next-line no-console
       console.error("Error fetching luggage items:", err);
     }
-  }
-  finally {
+  } finally {
     luggageItemsLoading.value = false;
   }
 };
@@ -190,25 +207,27 @@ const fetchLuggageItems = async () => {
 const hasUnsavedChanges = computed(() => {
   if (isSubmitted.value) return false;
 
-  const hasStep1Data
-    = step1Data.value.pickup_location_name !== ""
-      || step1Data.value.pickup_location_address !== ""
-      || step1Data.value.pickup_date !== ""
-      || step1Data.value.delivery_location_name !== ""
-      || step1Data.value.delivery_location_address !== ""
-      || step1Data.value.delivery_date !== ""
-      || step1Data.value.notes !== "";
+  const hasStep1Data =
+    step1Data.value.pickup_location_name !== "" ||
+    step1Data.value.pickup_postal_code !== "" ||
+    step1Data.value.pickup_location_address !== "" ||
+    step1Data.value.pickup_date !== "" ||
+    step1Data.value.delivery_location_name !== "" ||
+    step1Data.value.delivery_postal_code !== "" ||
+    step1Data.value.delivery_location_address !== "" ||
+    step1Data.value.delivery_date !== "" ||
+    step1Data.value.notes !== "";
 
   const hasStep2Data = Object.values(step2Data.value).some(
-    count => count > 0,
+    (count) => count > 0,
   );
 
-  const hasStep3Data
-    = step3Data.value.customer_name !== ""
-      || step3Data.value.customer_phone_number !== ""
-      || step3Data.value.customer_email !== ""
-      || step3Data.value.customer_nationality !== ""
-      || step3Data.value.guest_name !== "";
+  const hasStep3Data =
+    step3Data.value.customer_name !== "" ||
+    step3Data.value.customer_phone_number !== "" ||
+    step3Data.value.customer_email !== "" ||
+    step3Data.value.customer_nationality !== "" ||
+    step3Data.value.guest_name !== "";
 
   return hasStep1Data || hasStep2Data || hasStep3Data;
 });
@@ -232,14 +251,18 @@ watch(paymentClientSecret, (newValue) => {
   if (import.meta.client) {
     if (newValue) {
       sessionStorage.setItem("paymentClientSecret", newValue);
-    }
-    else {
+    } else {
       sessionStorage.removeItem("paymentClientSecret");
     }
   }
 });
 
-const step1Schema = computed(() => createStep1Schema());
+const step1Schema = computed(() =>
+  createStep1Schema({
+    departurePrefectures: allowedDeparturePrefectures.value,
+    deliverablePrefectures: allowedDeliverablePrefectures.value,
+  }),
+);
 
 const step2Schema = computed(() => {
   return createStep2Schema(luggageItemsData.value);
@@ -248,16 +271,16 @@ const step2Schema = computed(() => {
 const step3Schema = computed(() => createStep3Schema());
 
 // vee-validate
-const { validate: validateStep1Vv, setValues: setStep1Values }
-  = useForm<Step1FormData>({
+const { validate: validateStep1Vv, setValues: setStep1Values } =
+  useForm<Step1FormData>({
     validationSchema: computed(() => toTypedSchema(step1Schema.value)),
   });
-const { validate: validateStep2Vv, setValues: setStep2Values }
-  = useForm<Step2FormData>({
+const { validate: validateStep2Vv, setValues: setStep2Values } =
+  useForm<Step2FormData>({
     validationSchema: computed(() => toTypedSchema(step2Schema.value)),
   });
-const { validate: validateStep3Vv, setValues: setStep3Values }
-  = useForm<Step3FormData>({
+const { validate: validateStep3Vv, setValues: setStep3Values } =
+  useForm<Step3FormData>({
     validationSchema: computed(() => toTypedSchema(step3Schema.value)),
   });
 
@@ -293,7 +316,10 @@ const createPaymentIntent = async (): Promise<string | null> => {
         "Content-Type": "application/json",
         ...(getCsrf() ? { "X-CSRFToken": getCsrf() } : {}),
       },
-      body: completeFormData.value,
+      body: {
+        ...completeFormData.value,
+        business_owner_id: businessProfileState.value?.id ?? "",
+      },
     });
 
     if (fetchErr.value) {
@@ -317,8 +343,7 @@ const createPaymentIntent = async (): Promise<string | null> => {
           errMsgs.push(`${path}: ${msg}`);
         }
         errMsg.value = `入力内容に誤りがあります。以下の項目をご確認ください。\n${errMsgs.join(", ")}`;
-      }
-      else {
+      } else {
         // その他のエラー
         errMsg.value = "支払い情報の取得に失敗しました";
       }
@@ -340,8 +365,7 @@ const createPaymentIntent = async (): Promise<string | null> => {
     }
 
     return data.value.client_secret;
-  }
-  catch (err: unknown) {
+  } catch (err: unknown) {
     if (import.meta.dev) {
       // eslint-disable-next-line no-console
       console.error("Payment intent creation error:", err);
@@ -353,6 +377,8 @@ const createPaymentIntent = async (): Promise<string | null> => {
 
 // 送信フォームの処理
 const handleSubmit = async () => {
+  if (luggageItemsLoading.value) return;
+
   if (currentStep.value === 1) {
     // 既存エラークリア
     (Object.keys(errsStep1.value) as Array<keyof Step1FormData>).forEach(
@@ -363,7 +389,7 @@ const handleSubmit = async () => {
     setStep1Values(step1Data.value);
     const rslt = await validateStep1Vv();
 
-    if (rslt.valid) return navigateTo("/booking/2");
+    if (rslt.valid) return navigateTo(bookingPath(2));
 
     for (const [path, msg] of Object.entries(rslt.errors)) {
       const key = path as keyof Step1FormData;
@@ -378,7 +404,7 @@ const handleSubmit = async () => {
     });
     setStep2Values(step2Data.value);
     const rslt = await validateStep2Vv();
-    if (rslt.valid) return navigateTo("/booking/3");
+    if (rslt.valid) return navigateTo(bookingPath(3));
     for (const [path, msg] of Object.entries(rslt.errors)) {
       const key = path || "";
       errsStep2.value[key] = msg as string;
@@ -408,10 +434,10 @@ const handleSubmit = async () => {
     const sessionValid = await checkSessionValidity();
     if (!sessionValid) {
       clearAllData();
-      errMsg.value
-        = "セッションの有効期限が切れています。お手数おかけしますが、最初から入力し直してください。";
+      errMsg.value =
+        "セッションの有効期限が切れています。お手数おかけしますが、最初から入力し直してください。";
       isSubmitting.value = false;
-      await navigateTo("/booking/1");
+      await navigateTo(bookingPath(1));
       return;
     }
 
@@ -426,14 +452,13 @@ const handleSubmit = async () => {
       paymentClientSecret.value = clientSecret;
 
       try {
-        await router.push("/booking/confirm");
+        await router.push({ path: "/booking/confirm", query: route.query });
 
         if (import.meta.dev) {
           // eslint-disable-next-line no-console
           console.log("Navigation to confirm page completed");
         }
-      }
-      catch (err: unknown) {
+      } catch (err: unknown) {
         if (import.meta.dev) {
           // eslint-disable-next-line no-console
           console.error("Navigation failed:", err);
@@ -442,15 +467,13 @@ const handleSubmit = async () => {
         isSubmitting.value = false;
         return;
       }
-    }
-    catch (err: unknown) {
+    } catch (err: unknown) {
       if (import.meta.dev) {
         // eslint-disable-next-line no-console
         console.error("Payment intent creation error:", err);
       }
       errMsg.value = "支払い情報の取得に失敗しました";
-    }
-    finally {
+    } finally {
       isSubmitting.value = false;
     }
     return;
@@ -467,18 +490,18 @@ const checkStepAccess = async () => {
 
     case 2:
       if (!canProceedStep1.value) {
-        await navigateTo("/booking/1");
+        await navigateTo(bookingPath(1));
         return;
       }
       break;
 
     case 3:
       if (!canProceedStep1.value) {
-        await navigateTo("/booking/1");
+        await navigateTo(bookingPath(1));
         return;
       }
       if (!canProceedStep2.value) {
-        await navigateTo("/booking/2");
+        await navigateTo(bookingPath(2));
         return;
       }
       break;
@@ -501,11 +524,20 @@ watch(
 watch(errMsg, (newValue) => {
   if (newValue) {
     showErrDialog.value = true;
-  }
-  else {
+  } else {
     showErrDialog.value = false; // エラーメッセージがクリアされたらダイアログも閉じる
   }
 });
+
+// 配達先郵便番号が7桁に変わったら荷物情報を再取得
+watch(
+  () => step1Data.value.delivery_postal_code,
+  async (newCode) => {
+    if (newCode && newCode.length === 7) {
+      await fetchLuggageItems();
+    }
+  },
+);
 
 onMounted(async () => {
   if (import.meta.client) {

@@ -1,8 +1,10 @@
 export type Step1FormData = {
   pickup_location_name: string;
+  pickup_postal_code: string;
   pickup_location_address: string;
   pickup_date: string;
   delivery_location_name: string;
+  delivery_postal_code: string;
   delivery_location_address: string;
   delivery_date: string;
   notes: string;
