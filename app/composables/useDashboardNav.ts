@@ -5,9 +5,9 @@ export type DashboardView =
   | "pricing-settings";
 
 const viewTtls: Record<DashboardView, string> = {
-  reservations: "予約一覧",
-  drivers: "配達者一覧",
-  revenue: "売上管理",
+  "reservations": "予約一覧",
+  "drivers": "配達者一覧",
+  "revenue": "売上管理",
   "pricing-settings": "料金の設定",
 };
 
@@ -66,11 +66,9 @@ export const useDashboardNav = () => {
     updateTtl();
   };
 
-  // 選択したビューで状態を更新し、URLをそのビューに遷移させる
+  // 選択したビューのURLへ遷移
   const navigate = (view: string) => {
     if (!isDashboardView(view)) return;
-    currentView.value = view;
-    updateTtl();
     const path =
       view === "reservations"
         ? "/business-owner/dashboard"
