@@ -155,7 +155,8 @@
           required
           aria-required="true"
           aria-describedby="pickup_date-error"
-          :min="today"
+          :min="minPickupDate"
+          :max="maxBookingDate"
           @input="handleInput('pickup_date', $event)"
         />
         <img
@@ -332,6 +333,7 @@
           aria-required="true"
           aria-describedby="delivery_date-error"
           :min="minDeliveryDate"
+          :max="maxBookingDate"
           @input="handleInput('delivery_date', $event)"
         />
         <img
@@ -370,6 +372,7 @@
 <script setup lang="ts">
 import type { Step1FormData } from "~/types/booking";
 import { usePostalCodeSearch } from "~/composables/usePostalCodeSearch";
+import { getMinPickupDate, getMaxBookingDate } from "~/composables/useBookingValid";
 
 // サジェストの型定義
 type LocationSuggestion = {
@@ -416,19 +419,13 @@ const openNativeDatePicker = (el: HTMLInputElement | undefined) => {
   }
 };
 
-// 今日の日付（最小値として使用）
-const today = computed(() =>
-  new Intl.DateTimeFormat("en-CA", {
-    timeZone: "Asia/Tokyo",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).format(new Date()),
-);
+// 集荷日の最小値（前日23時締切）と最大値（半年先）
+const minPickupDate = computed(() => getMinPickupDate());
+const maxBookingDate = computed(() => getMaxBookingDate());
 
 // 配送日の最小値（集荷日以降）
 const minDeliveryDate = computed(() => {
-  return props.formData.pickup_date || today.value;
+  return props.formData.pickup_date || minPickupDate.value;
 });
 
 // 入力ハンドラー

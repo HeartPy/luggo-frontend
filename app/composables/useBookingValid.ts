@@ -5,14 +5,54 @@ import type {
   LuggageItemData,
 } from "~/types/booking";
 
-// 今日の日付を取得（YYYY-MM-DD形式）
-export const getToday = () => {
-  return new Intl.DateTimeFormat("en-CA", {
-    timeZone: "Asia/Tokyo",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).format(new Date());
+// JST基準の年・月・日・時を数値で取得
+const _jstFormatter = new Intl.DateTimeFormat("en-CA", {
+  timeZone: "Asia/Tokyo",
+  year: "numeric",
+  month: "numeric",
+  day: "numeric",
+  hour: "numeric",
+  hour12: false,
+});
+
+const _jstParts = () => {
+  const parts = _jstFormatter.formatToParts(new Date());
+  const get = (type: Intl.DateTimeFormatPartTypes) =>
+    Number(parts.find((part) => part.type === type)!.value);
+  return {
+    year: get("year"),
+    month: get("month"),
+    day: get("day"),
+    hour: get("hour"),
+  };
+};
+
+// UTC の Date を「JSTの年月日」から組み立てる
+// 時刻は00:00にリセット
+const _jstDateUTC = (year: number, month: number, day: number) =>
+  new Date(Date.UTC(year, month - 1, day));
+
+// Date → YYYY-MM-DD
+// UTC基準で取り出し
+const _formatUTC = (date: Date) =>
+  `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, "0")}-${String(date.getUTCDate()).padStart(2, "0")}`;
+
+// 予約受付の最短日（前日23時締切）
+// 23:00 JST 未満 → 翌日から、23:00 以降 → 翌々日から
+export const getMinPickupDate = () => {
+  const { year, month, day, hour } = _jstParts();
+  const daysAhead = hour < 23 ? 1 : 2;
+  const date = _jstDateUTC(year, month, day);
+  date.setUTCDate(date.getUTCDate() + daysAhead);
+  return _formatUTC(date);
+};
+
+// 予約受付の最長日（180日先）
+export const getMaxBookingDate = () => {
+  const { year, month, day } = _jstParts();
+  const date = _jstDateUTC(year, month, day);
+  date.setUTCDate(date.getUTCDate() + 180);
+  return _formatUTC(date);
 };
 
 // 入力された日付を YYYY-MM-DD へ正規化
@@ -157,7 +197,8 @@ export const createStep1Schema = (options?: {
   departurePrefectures?: string[];
   deliverablePrefectures?: string[];
 }) => {
-  const today = getToday();
+  const minPickup = getMinPickupDate();
+  const maxDate = getMaxBookingDate();
   const departurePrefectures = options?.departurePrefectures ?? [];
   const deliverablePrefectures = options?.deliverablePrefectures ?? [];
 
@@ -198,9 +239,14 @@ export const createStep1Schema = (options?: {
         (value) => !!value && isValidIsoDate(value),
       )
       .test(
-        "is-today-or-future",
-        "集荷日は今日以降の日付を選択してください",
-        (value) => !!value && value >= today,
+        "is-min-pickup",
+        "前日の23時を過ぎているため、この日付は選択できません",
+        (value) => !!value && value >= minPickup,
+      )
+      .test(
+        "is-within-max",
+        "予約できるのは半年先までです",
+        (value) => !!value && value <= maxDate,
       ),
     delivery_postal_code: string()
       .trim()
@@ -246,6 +292,11 @@ export const createStep1Schema = (options?: {
           const pickup = (this.parent as Step1FormData).pickup_date;
           return !!value && !!pickup && value >= pickup;
         },
+      )
+      .test(
+        "is-within-max",
+        "予約できるのは半年先までです",
+        (value) => !!value && value <= maxDate,
       ),
     notes: string().optional(),
   });

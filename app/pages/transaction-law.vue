@@ -3,9 +3,7 @@
     <div class="bg-white px-4 py-20">
       <div class="mx-auto max-w-4xl">
         <CommonAtomsTopicPath>
-          <template #currentPath_name>
-            特定商取引法に基づく表記
-          </template>
+          <template #currentPath_name> 特定商取引法に基づく表記 </template>
         </CommonAtomsTopicPath>
         <div>
           <h1
@@ -21,10 +19,7 @@
               <p class="mb-1 font-bold">
                 {{ transactionLawItem.ttl }}
               </p>
-              <p
-                class="text-sm"
-                v-html="transactionLawItem.txt"
-              />
+              <p class="text-sm" v-html="transactionLawItem.txt" />
             </div>
           </ul>
         </div>
@@ -74,7 +69,7 @@ const transactionLawItems = ref<TransactionLawItem[]>([
   {
     id: 7,
     ttl: "キャンセルについて",
-    txt: "・集荷日前日の23時までにご連絡いただいた場合：0%<br />・集荷日前日の23時以降にご連絡いただいた場合：100%<br />・事前連絡がなかった場合：100%",
+    txt: "・集荷日前日の22時59分までにご連絡いただいた場合：0%<br />・集荷日前日の23時以降にご連絡いただいた場合：100%<br />・事前連絡がなかった場合：100%",
   },
 ]);
 
