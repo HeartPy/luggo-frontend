@@ -13,7 +13,7 @@ export const useSession = () => {
 
       await ensureCsrf(apiBase);
 
-      const { data, error } = await useFetch<{
+      const data = await $fetch<{
         sessionStarted: boolean;
         expiresAt?: string;
       }>(`${apiBase}/api/common/session/start`, {
@@ -24,15 +24,7 @@ export const useSession = () => {
         },
       });
 
-      if (error.value) {
-        if (import.meta.dev) {
-          // eslint-disable-next-line no-console
-          console.error("Failed to start session:", error.value);
-        }
-        return;
-      }
-
-      if (data.value?.sessionStarted && data.value?.expiresAt) {
+      if (data?.sessionStarted && data?.expiresAt) {
         // セッション有効性チェックを開始
         startSessionCheck();
       }
@@ -52,7 +44,7 @@ export const useSession = () => {
       const config = useRuntimeConfig();
       const apiBase = config.public.apiBaseUrl;
 
-      const { data, error } = await useFetch<{
+      const data = await $fetch<{
         valid: boolean;
         message?: string;
         expired?: boolean;
@@ -62,16 +54,8 @@ export const useSession = () => {
         credentials: "include",
       });
 
-      if (error.value) {
-        if (import.meta.dev) {
-          // eslint-disable-next-line no-console
-          console.error("Failed to check session:", error.value);
-        }
-        return false;
-      }
-
-      if (data.value?.valid && data.value?.expiresAt) {
-        return data.value.valid;
+      if (data?.valid && data?.expiresAt) {
+        return data.valid;
       }
 
       return false;

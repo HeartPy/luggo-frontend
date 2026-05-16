@@ -264,23 +264,21 @@ const verifyToken = async () => {
     const config = useRuntimeConfig();
     const apiBase = config.public.apiBaseUrl;
 
-    const { data, error } = await useFetch<{ valid: boolean }>(
-      `${apiBase}/api/users/password/verify-token`,
-      {
+    try {
+      await $fetch(`${apiBase}/api/users/password/verify-token`, {
         method: "GET",
         params: { token: token.value },
         credentials: "include",
-      },
-    );
+      });
 
-    if (error.value || !data.value?.valid) {
-      tokenErr.value
-        = (error.value?.data as { error?: string })?.error
-          || "このリンクは有効期限が切れているか、既に使用済みです。";
-      return;
+      tokenValid.value = true;
     }
-
-    tokenValid.value = true;
+    catch (fetchErr: unknown) {
+      const errorData = (fetchErr as { data?: { error?: string } })?.data;
+      tokenErr.value
+        = errorData?.error
+          || "このリンクは有効期限が切れているか、既に使用済みです。";
+    }
   }
   catch (error: unknown) {
     if (import.meta.dev) {
@@ -333,21 +331,22 @@ const handleReset = async () => {
 
     await ensureCsrf(apiBase);
 
-    const { error } = await useFetch(`${apiBase}/api/users/password/reset`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        ...(getCsrf() ? { "X-CSRFToken": getCsrf() } : {}),
-      },
-      body: {
-        token: token.value,
-        password: password.value,
-      },
-      credentials: "include",
-    });
-
-    if (error.value) {
-      const errorData = error.value.data as { error?: string };
+    try {
+      await $fetch(`${apiBase}/api/users/password/reset`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(getCsrf() ? { "X-CSRFToken": getCsrf()! } : {}),
+        },
+        body: {
+          token: token.value,
+          password: password.value,
+        },
+        credentials: "include",
+      });
+    }
+    catch (fetchErr: unknown) {
+      const errorData = (fetchErr as { data?: { error?: string } })?.data;
       errMsg.value
         = errorData?.error
           || "パスワードの再設定に失敗しました。しばらく時間をおいて再度お試しください。";
