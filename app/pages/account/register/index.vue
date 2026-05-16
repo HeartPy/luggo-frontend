@@ -291,6 +291,9 @@
                   aria-describedby="phone-error"
                   @blur="handlePhoneBlur"
                 >
+                <p class="mt-1 text-xs text-gray-500">
+                  半角数字で入力してください（ハイフンなし）
+                </p>
                 <p
                   v-if="errors.phone"
                   id="phone-error"
@@ -784,13 +787,12 @@ const handleRegister = async () => {
 
     await ensureCsrf(apiBase);
 
-    const { error } = await useFetch(
-      `${apiBase}/api/business/account/register`,
-      {
+    try {
+      await $fetch(`${apiBase}/api/business/account/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          ...(getCsrf() ? { "X-CSRFToken": getCsrf() } : {}),
+          ...(getCsrf() ? { "X-CSRFToken": getCsrf()! } : {}),
         },
         body: {
           token: token.value,
@@ -806,16 +808,17 @@ const handleRegister = async () => {
           password: formData.value.password,
         },
         credentials: "include",
-      },
-    );
-
-    if (error.value) {
-      const errorData = error.value.data as {
-        error?: string;
-        subdomain?: string[];
-        token?: string[];
-        email?: string[];
-      };
+      });
+    }
+    catch (fetchErr: unknown) {
+      const errorData = (fetchErr as {
+        data?: {
+          error?: string;
+          subdomain?: string[];
+          token?: string[];
+          email?: string[];
+        };
+      })?.data ?? {};
 
       if (import.meta.dev) {
         // eslint-disable-next-line no-console

@@ -152,23 +152,21 @@ const handleFormSubmit = async () => {
 
     await ensureCsrf(apiBase);
 
-    const { error } = await useFetch(
-      `${apiBase}/api/users/password/request-reset`,
-      {
+    try {
+      await $fetch(`${apiBase}/api/users/password/request-reset`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          ...(getCsrf() ? { "X-CSRFToken": getCsrf() } : {}),
+          ...(getCsrf() ? { "X-CSRFToken": getCsrf()! } : {}),
         },
         body: {
           email: email.value.trim().toLowerCase(),
         },
         credentials: "include",
-      },
-    );
-
-    if (error.value) {
-      const errorData = error.value.data as { error?: string };
+      });
+    }
+    catch (fetchErr: unknown) {
+      const errorData = (fetchErr as { data?: { error?: string } })?.data;
       errMsg.value
         = errorData?.error
           || "メールの送信に失敗しました。しばらく時間をおいて再度お試しください。";
