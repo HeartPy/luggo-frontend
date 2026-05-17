@@ -2,13 +2,19 @@ export type DashboardView =
   | "reservations"
   | "drivers"
   | "revenue"
-  | "pricing-settings";
+  | "pricing-settings"
+  | "business-settings"
+  | "business-info"
+  | "payment-info";
 
 const viewTtls: Record<DashboardView, string> = {
   "reservations": "予約一覧",
   "drivers": "配達者一覧",
   "revenue": "売上管理",
   "pricing-settings": "料金の設定",
+  "business-settings": "事業の設定",
+  "business-info": "ユーザー情報",
+  "payment-info": "決済設定情報",
 };
 
 const VALID_VIEWS: DashboardView[] = [
@@ -16,6 +22,9 @@ const VALID_VIEWS: DashboardView[] = [
   "drivers",
   "revenue",
   "pricing-settings",
+  "business-settings",
+  "business-info",
+  "payment-info",
 ];
 
 function isDashboardView(value: unknown): value is DashboardView {
