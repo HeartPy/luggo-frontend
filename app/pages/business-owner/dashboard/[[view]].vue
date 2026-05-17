@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="pb-16">
     <BusinessOwnerDashboardReservationsList
       v-if="currentView === 'reservations'"
     />
@@ -9,6 +9,15 @@
     />
     <BusinessOwnerDashboardPricingSettings
       v-else-if="currentView === 'pricing-settings'"
+    />
+    <BusinessOwnerDashboardBusinessSettings
+      v-else-if="currentView === 'business-settings'"
+    />
+    <BusinessOwnerDashboardBusinessInfo
+      v-else-if="currentView === 'business-info'"
+    />
+    <BusinessOwnerDashboardPaymentInfo
+      v-else-if="currentView === 'payment-info'"
     />
     <div v-else />
 

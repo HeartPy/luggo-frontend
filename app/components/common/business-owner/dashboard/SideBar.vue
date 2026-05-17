@@ -1,7 +1,7 @@
 <template>
   <div>
     <div
-      class="flex h-full min-h-screen flex-col items-center justify-start border-r-[2px] border-gray-200"
+      class="fixed z-30 flex h-full min-h-screen w-60 flex-col items-center justify-start border-r-[2px] border-gray-200 bg-white"
     >
       <div class="flex h-16 items-center gap-2 bg-white">
         <figure class="h-6 w-6">
@@ -9,7 +9,7 @@
             src="/img/luggo.svg"
             alt="LugGo"
             class="h-full w-full object-contain"
-          >
+          />
         </figure>
         <span class="whitespace-nowrap text-xl font-bold text-gray-800">
           LugGo
@@ -18,11 +18,7 @@
       <div class="w-full overflow-y-auto">
         <nav>
           <ul class="flex flex-col items-center">
-            <li
-              v-for="navItem in navItems"
-              :key="navItem.key"
-              class="w-full"
-            >
+            <li v-for="navItem in navItems" :key="navItem.key" class="w-full">
               <button
                 type="button"
                 class="relative flex w-full items-center justify-center py-4 font-semibold hover:opacity-80"
@@ -37,7 +33,7 @@
                   :src="navItem.icon"
                   alt=""
                   class="mr-2 h-4 w-4 object-contain"
-                >
+                />
                 <span>{{ navItem.label }}</span>
               </button>
             </li>
@@ -68,5 +64,6 @@ const navItems = ref<NavItem[]>([
   { key: "drivers", label: "配達者一覧" },
   { key: "revenue", label: "売上管理" },
   { key: "pricing-settings", icon: "/img/settings.svg", label: "料金の設定" },
+  { key: "business-settings", icon: "/img/settings.svg", label: "事業の設定" },
 ]);
 </script>
