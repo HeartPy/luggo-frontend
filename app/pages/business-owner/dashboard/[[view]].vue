@@ -21,7 +21,7 @@
     />
     <div v-else />
 
-    <!-- 料金設定で未保存のまま別タブへ切り替えようとしたときの確認 -->
+    <!-- 料金設定・事業設定で未保存のまま別タブへ切り替えようとしたときの確認 -->
     <CommonAtomsConfirmDialog
       v-model="showLeaveConfirm"
       title="確認"
@@ -56,12 +56,18 @@ const showLeaveConfirm = ref(false);
 const pendingLeaveToPath = ref<string | null>(null);
 const isNavigatingAfterConfirm = ref(false);
 
+const pricingCanSaveState = useState("pricingSettingsCanSave", () => false);
+const businessSettingsCanSaveState = useState(
+  "businessSettingsCanSave",
+  () => false,
+);
+
 function getViewParam(view: string | string[] | undefined): string | undefined {
   if (view === undefined || view === "") return undefined;
   return Array.isArray(view) ? view[0] : view;
 }
 
-// 同じダッシュボード内で別タブへ切り替えようとしたときに、料金設定に未保存があれば確認
+// 同じダッシュボード内で別タブへ切り替えようとしたときに、未保存があれば確認
 onBeforeRouteUpdate((to, from, next) => {
   if (isNavigatingAfterConfirm.value) {
     isNavigatingAfterConfirm.value = false;
@@ -69,12 +75,11 @@ onBeforeRouteUpdate((to, from, next) => {
     return;
   }
   const fromView = getViewParam(from.params.view);
-  if (fromView !== "pricing-settings") {
-    next();
-    return;
-  }
-  const pricingCanSave = useState("pricingSettingsCanSave", () => false);
-  if (pricingCanSave.value) {
+  const hasUnsavedChanges =
+    (fromView === "pricing-settings" && pricingCanSaveState.value) ||
+    (fromView === "business-settings" && businessSettingsCanSaveState.value);
+
+  if (hasUnsavedChanges) {
     next(false);
     pendingLeaveToPath.value = to.fullPath;
     showLeaveConfirm.value = true;

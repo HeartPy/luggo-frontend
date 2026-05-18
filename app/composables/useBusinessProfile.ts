@@ -16,7 +16,7 @@ export const useBusinessProfile = () => {
     rep_last_name_kana: string;
     rep_first_name_kana: string;
     service_areas: string[];
-    max_luggage_capacity: number;
+    daily_max_luggage: number;
     operating_hours_start: string | null;
     operating_hours_end: string | null;
     operating_days: string;
