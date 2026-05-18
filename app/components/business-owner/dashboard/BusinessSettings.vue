@@ -87,25 +87,19 @@
 
       <template v-else>
         <!-- 1日の最大荷物個数セクション -->
-        <section class="mb-10">
-          <h2 class="mb-4 text-lg font-bold text-gray-800">
-            1日の最大荷物個数
-          </h2>
-          <p class="mb-4 text-sm text-gray-600">
+        <section class="mb-10 space-y-4">
+          <h2 class="text-lg font-bold text-gray-800">1日の最大荷物個数</h2>
+          <p class="text-sm text-gray-600">
             1日あたりに集荷・配送できる荷物の合計個数の上限を設定します。0の場合は予約を受け付けません。
           </p>
-          <label
-            class="mb-4 flex cursor-pointer items-center gap-2"
-          >
+          <label class="flex w-fit cursor-pointer items-center gap-2">
             <input
               type="checkbox"
-              class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+              class="h-4 w-4 rounded border-gray-300 accent-green-600"
               :checked="localDailyMaxLuggage === -1"
               @change="toggleDailyMaxUnlimited"
             />
-            <span class="text-sm font-medium text-gray-700">
-              制限なし
-            </span>
+            <span class="text-sm font-medium text-gray-700">制限なし</span>
           </label>
           <div
             v-if="localDailyMaxLuggage !== -1"
@@ -122,25 +116,28 @@
         </section>
 
         <!-- 定休日セクション -->
-        <section class="mb-10">
-          <h2 class="mb-4 text-lg font-bold text-gray-800">定休日</h2>
-          <p class="mb-4 text-sm text-gray-600">
+        <section class="mb-10 space-y-4">
+          <h2 class="text-lg font-bold text-gray-800">定休日</h2>
+          <p class="text-sm text-gray-600">
             チェックした曜日は定休日となり、集荷日・配送日として選択できなくなります。
           </p>
           <div class="flex flex-wrap gap-4">
             <label
-              v-for="(dayLabel, idx) in weekdayLabels"
-              :key="idx"
+              v-for="(dayLabel, displayIdx) in weekdayLabels"
+              :key="apiWeekdayIndex(displayIdx)"
               class="flex cursor-pointer items-center gap-2 rounded-md border border-gray-200 px-4 py-3 transition-colors hover:bg-gray-50"
               :class="{
-                'border-red-300 bg-red-50': localOperatingDays[idx] === '0',
+                'border-red-300 bg-red-50':
+                  localOperatingDays[apiWeekdayIndex(displayIdx)] === '0',
               }"
             >
               <input
                 type="checkbox"
-                class="h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500"
-                :checked="localOperatingDays[idx] === '0'"
-                @change="toggleDay(idx)"
+                class="h-4 w-4 rounded border-gray-300"
+                :checked="
+                  localOperatingDays[apiWeekdayIndex(displayIdx)] === '0'
+                "
+                @change="toggleDay(apiWeekdayIndex(displayIdx))"
               />
               <span class="text-sm font-medium text-gray-700">
                 {{ dayLabel }}
@@ -163,8 +160,8 @@
                     class="border border-gray-200 bg-gray-50 px-3 py-2 text-center text-gray-600"
                   />
                   <th
-                    v-for="(dayLabel, wdIdx) in weekdayLabelsShort"
-                    :key="wdIdx"
+                    v-for="(dayLabel, displayIdx) in weekdayLabelsShort"
+                    :key="apiWeekdayIndex(displayIdx)"
                     class="border border-gray-200 bg-gray-50 px-3 py-2 text-center text-gray-600"
                   >
                     {{ dayLabel }}
@@ -179,18 +176,24 @@
                     第{{ week }}週
                   </td>
                   <td
-                    v-for="(_, wdIdx) in weekdayLabelsShort"
-                    :key="wdIdx"
-                    class="border border-gray-200 px-3 py-2 text-center"
+                    v-for="(_, displayIdx) in weekdayLabelsShort"
+                    :key="apiWeekdayIndex(displayIdx)"
+                    class="border border-gray-200"
                   >
-                    <label class="inline-flex cursor-pointer items-center">
+                    <label
+                      class="inline-flex h-full w-full cursor-pointer items-center px-3 py-2 transition-colors hover:bg-gray-50"
+                    >
                       <input
                         type="checkbox"
-                        class="h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500"
+                        class="mx-auto h-4 w-4 rounded border-gray-300"
                         :checked="
-                          localNthWeekdayHolidays.has(`${week}-${wdIdx}`)
+                          localNthWeekdayHolidays.has(
+                            `${week}-${apiWeekdayIndex(displayIdx)}`,
+                          )
                         "
-                        @change="toggleNthWeekday(week, wdIdx)"
+                        @change="
+                          toggleNthWeekday(week, apiWeekdayIndex(displayIdx))
+                        "
                       />
                     </label>
                   </td>
@@ -201,14 +204,14 @@
         </section>
 
         <!-- 臨時休業セクション -->
-        <section class="mb-10">
-          <h2 class="mb-4 text-lg font-bold text-gray-800">臨時休業</h2>
-          <p class="mb-4 text-sm text-gray-600">
+        <section class="mb-10 space-y-4">
+          <h2 class="text-lg font-bold text-gray-800">臨時休業</h2>
+          <p class="text-sm text-gray-600">
             特定の日付を臨時休業日に設定できます。設定した日は集荷日・配送日として選択できなくなります。
           </p>
 
           <!-- 日付追加フォーム -->
-          <div class="mb-4 flex items-end gap-3">
+          <div class="flex items-end gap-3">
             <div>
               <label
                 for="closureDate"
@@ -216,17 +219,27 @@
               >
                 日付を選択
               </label>
-              <input
-                id="closureDate"
-                v-model="newClosureDate"
-                type="date"
-                class="rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
-                :min="todayIso"
-              />
+              <div
+                class="relative"
+                @click="openNativeDatePicker(closureDateInput)"
+              >
+                <input
+                  id="closureDate"
+                  ref="closureDateInput"
+                  v-model="newClosureDate"
+                  type="date"
+                  class="w-full cursor-pointer appearance-none rounded-md border border-gray-300 px-3 py-2 pr-12 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-clear-button]:hidden [&::-webkit-inner-spin-button]:hidden"
+                  :min="todayIso"
+                />
+                <img
+                  class="pointer-events-none absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2"
+                  src="/img/calendar.svg"
+                />
+              </div>
             </div>
             <button
               type="button"
-              class="rounded-md bg-gray-700 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-gray-800 disabled:cursor-not-allowed disabled:bg-gray-300"
+              class="rounded-md bg-gray-700 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-gray-800 disabled:cursor-not-allowed disabled:bg-gray-300"
               :disabled="!newClosureDate || newClosureDate < todayIso"
               @click="addClosure"
             >
@@ -235,20 +248,20 @@
           </div>
 
           <!-- 追加済み臨時休業日リスト -->
-          <div v-if="localClosures.length > 0" class="space-y-2">
+          <div v-if="sortedClosures.length > 0" class="space-y-2">
             <div
-              v-for="d in sortedClosures"
-              :key="d"
+              v-for="closureDate in sortedClosures"
+              :key="closureDate"
               class="flex items-center justify-between rounded-md border border-gray-200 px-4 py-2"
-              :class="{ 'opacity-50': d < todayIso }"
+              :class="{ 'opacity-50': closureDate < todayIso }"
             >
               <span class="text-sm text-gray-700">
-                {{ formatDateJa(d) }}
+                {{ formatDateJa(closureDate) }}
               </span>
               <button
                 type="button"
                 class="text-sm text-red-600 hover:text-red-800"
-                @click="removeClosure(d)"
+                @click="removeClosure(closureDate)"
               >
                 削除
               </button>
@@ -275,15 +288,24 @@ const { ensureCsrf, getCsrf } = useCsrf();
 const { fetchBusinessProfile } = useBusinessProfile();
 
 const weekdayLabels = [
+  "日曜日",
   "月曜日",
   "火曜日",
   "水曜日",
   "木曜日",
   "金曜日",
   "土曜日",
-  "日曜日",
 ];
-const weekdayLabelsShort = ["月", "火", "水", "木", "金", "土", "日"];
+const weekdayLabelsShort = ["日", "月", "火", "水", "木", "金", "土"];
+
+// 保存データは「月曜から」並ぶ7文字
+// 画面の左から何番目 →   日 月 火 水 木 金 土
+// 保存データの何番目 →   6  0  1  2  3  4  5
+const API_WEEKDAY_BY_DISPLAY = [6, 0, 1, 2, 3, 4, 5] as const;
+
+function apiWeekdayIndex(displayIdx: number): number {
+  return API_WEEKDAY_BY_DISPLAY[displayIdx] ?? displayIdx;
+}
 
 const isLoading = ref(true);
 const isSaving = ref(false);
@@ -291,6 +313,7 @@ const isSavingDraft = ref(false);
 const isDiscardingDraft = ref(false);
 const saveErr = ref<string | null>(null);
 
+// 最後の本保存以降に一時保存があるかどうか
 const hasDraftSaveSinceLastRealSave = useState(
   "businessSettingsHasDraftSave",
   () => false,
@@ -310,15 +333,39 @@ const localNthWeekdayHolidays = ref<Set<string>>(new Set());
 const localDailyMaxLuggage = ref(0);
 const localClosures = ref<string[]>([]);
 const newClosureDate = ref("");
+const closureDateInput = ref<HTMLInputElement>();
 
-const todayIso = computed(() => {
-  const now = new Date();
-  const y = now.getFullYear();
-  const m = String(now.getMonth() + 1).padStart(2, "0");
-  const d = String(now.getDate()).padStart(2, "0");
-  return `${y}-${m}-${d}`;
+// 日付入力フィールド全体をクリックしたときに、ブラウザ標準の日付ピッカーを開く
+function openNativeDatePicker(el: HTMLInputElement | undefined) {
+  if (!el) return;
+  el.focus();
+  if (typeof el.showPicker === "function") {
+    try {
+      el.showPicker();
+    } catch {
+      // フォーカスのみにフォールバック
+    }
+  }
+}
+
+// Date オブジェクトを "YYYY-MM-DD" 形式の文字列に変換
+function toIsoDate(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+const todayIso = computed(() => toIsoDate(new Date()));
+
+// 終了から7日経過した臨時休業日は一覧から非表示（DBには残す）
+const closureDisplayCutoffIso = computed(() => {
+  const date = new Date();
+  date.setDate(date.getDate() - 7);
+  return toIsoDate(date);
 });
 
+// 現在の入力内容を、変更検知や復元用にコピー
 function cloneLocal(): SettingsSnapshot {
   return {
     operatingDays: localOperatingDays.value,
@@ -328,10 +375,12 @@ function cloneLocal(): SettingsSnapshot {
   };
 }
 
+// 「保存済み」の基準として現在の内容を覚えておく（以降この値と比較して変更検知）
 function takeSnapshot() {
   snapshot.value = cloneLocal();
 }
 
+// 入力を、最後に覚えた基準（保存済み or 保存直前の状態）まで戻す
 function restoreSnapshot() {
   if (!snapshot.value) return;
   localOperatingDays.value = snapshot.value.operatingDays;
@@ -340,13 +389,15 @@ function restoreSnapshot() {
   localClosures.value = [...snapshot.value.closures];
 }
 
+// 現在の入力が、最後に takeSnapshot() した内容と違うか（未保存の変更があるか）
 const isDirty = computed(() => {
   if (!snapshot.value) return false;
   if (localOperatingDays.value !== snapshot.value.operatingDays) return true;
   const nwA = [...localNthWeekdayHolidays.value].sort().join(",");
   const nwB = [...snapshot.value.nthWeekdayHolidays].sort().join(",");
   if (nwA !== nwB) return true;
-  if (localDailyMaxLuggage.value !== snapshot.value.dailyMaxLuggage) return true;
+  if (localDailyMaxLuggage.value !== snapshot.value.dailyMaxLuggage)
+    return true;
   const a = [...localClosures.value].sort().join(",");
   const b = [...snapshot.value.closures].sort().join(",");
   return a !== b;
@@ -356,23 +407,29 @@ const canSave = computed(
   () => isDirty.value || hasDraftSaveSinceLastRealSave.value,
 );
 
-const sortedClosures = computed(() => [...localClosures.value].sort());
+const sortedClosures = computed(() =>
+  [...localClosures.value]
+    .filter((closureDate) => closureDate >= closureDisplayCutoffIso.value)
+    .sort(),
+);
 
+// 定休日チェックの ON/OFF を切り替える（その曜日の operating_days を 1 ⇄ 0 に反転）
 function toggleDay(idx: number) {
   const chars = localOperatingDays.value.split("");
   chars[idx] = chars[idx] === "1" ? "0" : "1";
   localOperatingDays.value = chars.join("");
 }
 
+// 「制限なし」チェックの ON/OFF を切り替える（-1 ⇄ 0）
 function toggleDailyMaxUnlimited() {
   if (localDailyMaxLuggage.value === -1) {
     localDailyMaxLuggage.value = 0;
-  }
-  else {
+  } else {
     localDailyMaxLuggage.value = -1;
   }
 }
 
+// 第N週・曜日のチェック ON/OFF を切り替える（"週-曜日" を Set に追加/削除）
 function toggleNthWeekday(week: number, wdIdx: number) {
   const key = `${week}-${wdIdx}`;
   const next = new Set(localNthWeekdayHolidays.value);
@@ -384,6 +441,7 @@ function toggleNthWeekday(week: number, wdIdx: number) {
   localNthWeekdayHolidays.value = next;
 }
 
+// 入力された日付を臨時休業日リストに追加する（過去日・重複はスキップ）
 function addClosure() {
   if (!newClosureDate.value || newClosureDate.value < todayIso.value) return;
   if (localClosures.value.includes(newClosureDate.value)) return;
@@ -391,17 +449,20 @@ function addClosure() {
   newClosureDate.value = "";
 }
 
-function removeClosure(d: string) {
-  localClosures.value = localClosures.value.filter((c) => c !== d);
+// 指定した日付を臨時休業日リストから外す
+function removeClosure(closureDate: string) {
+  localClosures.value = localClosures.value.filter((c) => c !== closureDate);
 }
 
+// "YYYY-MM-DD" を「2026年5月19日（火）」のような表示用文字列に整える
 function formatDateJa(iso: string): string {
-  const [y, m, d] = iso.split("-");
-  const dt = new Date(Number(y), Number(m) - 1, Number(d));
+  const [year, month, day] = iso.split("-");
+  const dt = new Date(Number(year), Number(month) - 1, Number(day));
   const dayOfWeek = ["日", "月", "火", "水", "木", "金", "土"][dt.getDay()];
-  return `${y}年${Number(m)}月${Number(d)}日（${dayOfWeek}）`;
+  return `${year}年${Number(month)}月${Number(day)}日（${dayOfWeek}）`;
 }
 
+// サーバーから返ってきたドラフトの中身を検証し、想定どおりの形なら SettingsSnapshot にして返す
 function normalizeDraft(raw: unknown): SettingsSnapshot | null {
   if (!raw || typeof raw !== "object") return null;
   const obj = raw as Record<string, unknown>;
@@ -411,9 +472,7 @@ function normalizeDraft(raw: unknown): SettingsSnapshot | null {
   const nwh = Array.isArray(obj.nthWeekdayHolidays)
     ? obj.nthWeekdayHolidays.filter((v): v is string => typeof v === "string")
     : [];
-  const dml = typeof obj.dailyMaxLuggage === "number"
-    ? obj.dailyMaxLuggage
-    : 0;
+  const dml = typeof obj.dailyMaxLuggage === "number" ? obj.dailyMaxLuggage : 0;
   return {
     operatingDays: obj.operatingDays,
     nthWeekdayHolidays: nwh,
@@ -422,6 +481,7 @@ function normalizeDraft(raw: unknown): SettingsSnapshot | null {
   };
 }
 
+// サーバー上の一時保存（ドラフト）を取得し、あればフォームに反映
 async function loadDraftFromServer(): Promise<boolean> {
   if (!import.meta.client) return false;
   try {
@@ -441,11 +501,23 @@ async function loadDraftFromServer(): Promise<boolean> {
     takeSnapshot();
     hasDraftSaveSinceLastRealSave.value = true;
     return true;
-  } catch {
+  } catch (err: unknown) {
+    if (
+      err &&
+      typeof err === "object" &&
+      "status" in err &&
+      (err as { status: number }).status === 401
+    ) {
+      saveErr.value =
+        "ログインの有効期限が切れました。再ログインしてください。";
+      isNavigatingAfterLeaveConfirm.value = true;
+      navigateTo("/account/login");
+    }
     return false;
   }
 }
 
+// 現在の入力内容をサーバーに一時保存（ドラフト）として送る
 async function saveDraftToServer(): Promise<boolean> {
   if (!import.meta.client) return false;
   try {
@@ -462,13 +534,27 @@ async function saveDraftToServer(): Promise<boolean> {
       body: { draft },
     });
     return true;
-  } catch {
+  } catch (err: unknown) {
+    if (
+      err &&
+      typeof err === "object" &&
+      "status" in err &&
+      (err as { status: number }).status === 401
+    ) {
+      saveErr.value =
+        "ログインの有効期限が切れました。再ログインしてください。";
+      isNavigatingAfterLeaveConfirm.value = true;
+      navigateTo("/account/login");
+      return false;
+    }
+    saveErr.value = "一時保存に失敗しました。";
     return false;
   } finally {
     isSavingDraft.value = false;
   }
 }
 
+// サーバーから「本保存」済みの設定を取得して、フォームに反映
 async function fetchSettings() {
   isLoading.value = true;
   try {
@@ -486,13 +572,26 @@ async function fetchSettings() {
     localDailyMaxLuggage.value = data.daily_max_luggage ?? 0;
     localClosures.value = [...data.temporary_closures];
     takeSnapshot();
-  } catch {
+  } catch (err: unknown) {
+    if (
+      err &&
+      typeof err === "object" &&
+      "status" in err &&
+      (err as { status: number }).status === 401
+    ) {
+      saveErr.value =
+        "ログインの有効期限が切れました。再ログインしてください。";
+      isNavigatingAfterLeaveConfirm.value = true;
+      navigateTo("/account/login");
+      return;
+    }
     saveErr.value = "設定の取得に失敗しました。";
   } finally {
     isLoading.value = false;
   }
 }
 
+// 「保存する」ボタン: 現在の入力をサーバーに本保存し、結果をフォームに反映
 async function handleSave() {
   isSaving.value = true;
   saveErr.value = null;
@@ -544,15 +643,16 @@ async function handleSave() {
   }
 }
 
+// 「一時保存」ボタン: 現在の入力をドラフトとして保存（本保存はしない）
 async function handleSaveDraft() {
+  saveErr.value = null;
+  const ok = await saveDraftToServer();
+  if (!ok) return;
   takeSnapshot();
   hasDraftSaveSinceLastRealSave.value = true;
-  await saveDraftToServer();
 }
 
-// 一時保存（ドラフト）を破棄して、サーバー保存済みの状態に戻す
-//   - DB 上のドラフトを DELETE
-//   - その後、サーバー値で再フェッチして反映
+// サーバー上のドラフトを削除（フォームの再反映は呼び出し側で行う）
 async function discardDraftFromServer(): Promise<boolean> {
   if (!import.meta.client) return false;
   try {
@@ -566,17 +666,32 @@ async function discardDraftFromServer(): Promise<boolean> {
       },
     });
     return true;
-  } catch {
+  } catch (err: unknown) {
+    if (
+      err &&
+      typeof err === "object" &&
+      "status" in err &&
+      (err as { status: number }).status === 401
+    ) {
+      saveErr.value =
+        "ログインの有効期限が切れました。再ログインしてください。";
+      isNavigatingAfterLeaveConfirm.value = true;
+      navigateTo("/account/login");
+      return false;
+    }
+    saveErr.value = "一時保存の破棄に失敗しました。";
     return false;
   } finally {
     isDiscardingDraft.value = false;
   }
 }
 
+// 事業設定に未保存の変更があるを共有
 const businessSettingsCanSaveState = useState(
   "businessSettingsCanSave",
   () => false,
 );
+
 watch(
   isDirty,
   (value) => {
@@ -586,35 +701,36 @@ watch(
 );
 
 const showDiscardConfirm = ref(false);
+const showDiscardDraftConfirm = ref(false);
 const showLeaveConfirm = ref(false);
 const pendingLeavePath = ref<string | null>(null);
 const isNavigatingAfterLeaveConfirm = ref(false);
 
+// 「保存しない」ボタン: 変更を取り消す前に確認ダイアログを表示
 function handleDiscardClick() {
   showDiscardConfirm.value = true;
 }
 
+// 確認後、入力を最後に覚えた基準まで戻す
 function doDiscard() {
   restoreSnapshot();
 }
 
-const showDiscardDraftConfirm = ref(false);
-
+// 「一時保存を破棄」ボタン: 破棄前に確認ダイアログを表示
 function handleDiscardDraftClick() {
   showDiscardDraftConfirm.value = true;
 }
 
+// 確認後、サーバー上のドラフトを削除し、保存済みの値でフォームを再初期化
 async function doDiscardDraft() {
+  saveErr.value = null;
   const ok = await discardDraftFromServer();
-  if (!ok) {
-    saveErr.value = "一時保存の破棄に失敗しました。";
-    return;
-  }
-  // サーバー値（最新の保存済み設定）でフォームを再初期化
+  if (!ok) return;
   await fetchSettings();
   hasDraftSaveSinceLastRealSave.value = false;
 }
 
+// 「ページから離れる」確認ダイアログで OK されたとき、入力を戻してから遷移
 function confirmLeave() {
   const path = pendingLeavePath.value;
   pendingLeavePath.value = null;
@@ -626,6 +742,7 @@ function confirmLeave() {
   }
 }
 
+// アプリ内で別ページへ移動するとき: 未保存なら確認ダイアログを出して遷移を止める
 onBeforeRouteLeave((to, _from, next) => {
   if (isNavigatingAfterLeaveConfirm.value) {
     isNavigatingAfterLeaveConfirm.value = false;
@@ -641,8 +758,10 @@ onBeforeRouteLeave((to, _from, next) => {
   }
 });
 
+// タブを閉じる・更新するなど: 未保存かつ保存中でなければブラウザ標準の確認を出す
 useBeforeUnload(isSaving, ref(false), isDirty);
 
+// 画面表示時: 本保存を読み込み → あればドラフトで上書き
 onMounted(async () => {
   await fetchSettings();
 
@@ -650,12 +769,14 @@ onMounted(async () => {
     return;
   }
 
+  // ドラフト取得に失敗したが一時保存フラグだけ残っているときのフォールバック
   if (hasDraftSaveSinceLastRealSave.value) {
     takeSnapshot();
     return;
   }
 });
 
+// 画面を離れるとき: タブ切替用フラグをクリアし、未保存なら入力を基準状態に戻す
 onUnmounted(() => {
   businessSettingsCanSaveState.value = false;
 
