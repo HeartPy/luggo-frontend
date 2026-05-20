@@ -276,6 +276,7 @@ export const usePricingSettings = () => {
   );
 
   const isSavingDraft = ref(false);
+  const isDiscardingDraft = ref(false);
 
   // 現在のフォーム状態のコピーをスナップショットに保存
   const takeSnapshot = () => {
@@ -564,17 +565,62 @@ export const usePricingSettings = () => {
     return await saveDraftToServer();
   };
 
-  // 保存ボタンを有効にするか（変更あり、または一時保存済みで本保存を行なっていない場合有効）
+  // 配達可能な荷物タイプが 1 つ以上選択されているか
+  const hasEnabledLuggageType = computed(() =>
+    LUGGAGE_TYPES.some((luggageType) => enabledLuggageTypes.value[luggageType.key]),
+  );
+
+  // 集荷地域（出発側の都道府県）が 1 つ以上選択されているか
+  const hasDeparturePrefecture = computed(
+    () => departurePrefectures.value.length > 0,
+  );
+
+  // 配送地域（「配達可」になっている都道府県）が 1 つ以上選択されているか
+  const hasDeliveryPrefecture = computed(() =>
+    ALL_PREFECTURES.some((pref) => deliveryEnabled.value[pref.code]),
+  );
+
+  // 配送可の各都道府県について、表示中の荷物タイプの料金がすべて入力済みか
+  //   ※ 金額の妥当性（100 円以上か等）は save 時の validate() で別途検証する
+  const hasAllRequiredPrices = computed(() => {
+    for (const pref of ALL_PREFECTURES) {
+      if (!deliveryEnabled.value[pref.code]) continue;
+      const pricing = prefecturePricing.value[pref.code];
+      if (!pricing) return false;
+      for (const luggageType of visibleLuggageTypes.value) {
+        const price = pricing[luggageType.key];
+        if (price === null || price === undefined) return false;
+      }
+    }
+    return true;
+  });
+
+  // 保存ボタンを有効にするか
+  //   - 変更あり、または一時保存済みで本保存を行なっていない場合
+  //   - かつ、最低限の設定（配達可能な荷物・集荷地域・配送地域・料金）が揃っている場合のみ
   const canSave = computed(
-    () => isDirty.value || hasDraftSaveSinceLastRealSave.value,
+    () =>
+      (isDirty.value || hasDraftSaveSinceLastRealSave.value) &&
+      hasEnabledLuggageType.value &&
+      hasDeparturePrefecture.value &&
+      hasDeliveryPrefecture.value &&
+      hasAllRequiredPrices.value,
   );
 
   // 事業者プロフィール（集荷エリア・料金ルール）から料金設定フォームの状態を初期化
-  // ドラフト（≒一時保存）がない状態で、 料金設定タブの表示時に呼ばれる。
+  // ドラフト（≒一時保存）がない状態の初期表示、および一時保存破棄時に呼ばれる。
+  //   - 既存のフォーム状態（メモリ・ドラフトいずれも）に依らず、必ずプロフィール準拠の
+  //     状態に揃え直すため、最初に全都道府県・全荷物タイプを空状態へリセットする。
   const initFromProfile = (profile: {
     service_areas?: readonly string[];
     pricing_rules?: Record<string, Record<string, number>>;
   }) => {
+    departurePrefectures.value = [];
+    deliveryEnabled.value = buildEmptyPrefFlags();
+    prefecturePricing.value = buildEmptyPricing();
+    enabledLuggageTypes.value = buildDefaultEnabledLuggageTypes();
+    validationErrs.value = {};
+
     if (profile.service_areas) {
       departurePrefectures.value = [...profile.service_areas];
     }
@@ -616,6 +662,36 @@ export const usePricingSettings = () => {
     hasDraftSaveSinceLastRealSave.value = false;
   };
 
+  // 一時保存（ドラフト）を破棄し、サーバー保存済みの状態（プロフィール反映済み設定）に戻す。
+  //   - DB 上のドラフトを DELETE で削除
+  //   - その後、渡されたプロフィール内容でフォームを再初期化
+  const discardDraft = async (profile: {
+    service_areas?: readonly string[];
+    pricing_rules?: Record<string, Record<string, number>>;
+  }): Promise<boolean> => {
+    if (!import.meta.client) return false;
+    try {
+      isDiscardingDraft.value = true;
+      const config = useRuntimeConfig();
+      const apiBase = config.public.apiBaseUrl;
+      const { ensureCsrf, getCsrf } = useCsrf();
+      await ensureCsrf(apiBase);
+      await $fetch(`${apiBase}/api/business/profile/pricing/draft`, {
+        method: "DELETE",
+        credentials: "include",
+        headers: {
+          ...(getCsrf() ? { "X-CSRFToken": getCsrf() } : {}),
+        },
+      });
+      initFromProfile(profile);
+      return true;
+    } catch {
+      return false;
+    } finally {
+      isDiscardingDraft.value = false;
+    }
+  };
+
   return {
     departurePrefectures,
     deliveryEnabled,
@@ -628,6 +704,7 @@ export const usePricingSettings = () => {
     hasDraftSaveSinceLastRealSave: readonly(hasDraftSaveSinceLastRealSave),
     isSaving: readonly(isSaving),
     isSavingDraft: readonly(isSavingDraft),
+    isDiscardingDraft: readonly(isDiscardingDraft),
     saveErr: readonly(saveErr),
     togglePrefecture,
     toggleLuggageType,
@@ -635,6 +712,7 @@ export const usePricingSettings = () => {
     save,
     discard,
     saveDraft,
+    discardDraft,
     initFromProfile,
     takeSnapshot,
     loadDraftFromServer,
