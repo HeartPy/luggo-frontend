@@ -1,5 +1,5 @@
 <template>
-  <div class="pb-16">
+  <div>
     <!-- 保存しない確認ダイアログ -->
     <CommonAtomsConfirmDialog
       v-model="showDiscardConfirm"
@@ -8,6 +8,16 @@
       confirm-label="破棄する"
       cancel-label="キャンセル"
       @confirm="doDiscard"
+    />
+
+    <!-- 一時保存を破棄確認ダイアログ -->
+    <CommonAtomsConfirmDialog
+      v-model="showDiscardDraftConfirm"
+      title="確認"
+      message="一時保存を破棄して、反映されている設定の状態に戻しますか？"
+      confirm-label="一時保存を破棄"
+      cancel-label="キャンセル"
+      @confirm="doDiscardDraft"
     />
 
     <!-- ページ離脱確認ダイアログ -->
@@ -41,6 +51,15 @@
       >
         <CommonAtomsLoadingAnimation v-if="isSavingDraft" size="xs" />
         <span v-else>一時保存（設定を反映しない）</span>
+      </button>
+      <button
+        type="button"
+        class="rounded-md border-2 border-gray-300 bg-white px-6 py-2 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-white"
+        :disabled="!hasDraftSaveSinceLastRealSave || isDiscardingDraft"
+        @click="handleDiscardDraftClick"
+      >
+        <CommonAtomsLoadingAnimation v-if="isDiscardingDraft" size="xs" />
+        <span v-else>一時保存を破棄</span>
       </button>
       <button
         type="button"
@@ -261,6 +280,7 @@ const {
   canSave,
   isSaving,
   isSavingDraft,
+  isDiscardingDraft,
   saveErr,
   hasDraftSaveSinceLastRealSave,
   togglePrefecture,
@@ -269,6 +289,7 @@ const {
   save,
   discard,
   saveDraft,
+  discardDraft,
   initFromProfile,
   takeSnapshot,
   loadDraftFromServer,
@@ -338,6 +359,10 @@ const handlePriceInput = (
 // 保存ボタンクリックハンドラ
 const handleSave = async () => {
   const ok = await save();
+  if (ok) {
+    // ヘッダーの「サイトを表示」ボタンの活性判定で参照する businessProfile を最新化
+    await fetchBusinessProfile();
+  }
   // 保存失敗かつログイン切れ時、直後のログイン遷移で未保存確認ダイアログを出さない
   if (!ok && saveErr.value?.includes("ログイン")) {
     isNavigatingAfterLeaveConfirm.value = true;
@@ -365,6 +390,23 @@ const handleDiscardClick = () => {
 
 const doDiscard = () => {
   discard();
+};
+
+const showDiscardDraftConfirm = ref(false);
+
+const handleDiscardDraftClick = () => {
+  showDiscardDraftConfirm.value = true;
+};
+
+// 一時保存を破棄して、サーバー保存済みの状態（プロフィール反映済み設定）に戻す
+//   - サーバー上のドラフトを削除
+//   - 最新のプロフィールを取得してフォームを再初期化
+const doDiscardDraft = async () => {
+  await fetchBusinessProfile();
+  await discardDraft({
+    service_areas: businessProfile.value?.service_areas,
+    pricing_rules: businessProfile.value?.pricing_rules,
+  });
 };
 
 // 未保存でページを離脱したとき、保留パスへ遷移
