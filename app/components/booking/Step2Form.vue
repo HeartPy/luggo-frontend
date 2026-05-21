@@ -99,41 +99,58 @@
     <div class="rounded-md border border-pink-200 bg-pink-50 p-6">
       <h3 class="mb-4 font-semibold text-red-600">注意事項</h3>
 
-      <div class="space-y-4 text-sm text-gray-700">
+      <div class="space-y-6 text-sm text-gray-700">
         <div>
           <h4
-            class="mb-1 border-l-4 border-red-500 pl-2 font-semibold text-red-600"
+            class="mb-2 border-l-4 border-red-500 pl-2 font-semibold text-red-600"
           >
-            当日配送について
+            配送荷物のお手続きについて
           </h4>
           <p class="ml-3">
-            荷物の配送は翌日の午前10:00までにお渡しいたします。
+            配送当日の午前9時までに、ホテルや旅館のフロント、もしくは駅や空港のカウンターにお荷物をお預けください。
           </p>
         </div>
 
         <div>
           <h4
-            class="mb-1 border-l-4 border-red-500 pl-2 font-semibold text-red-600"
+            class="mb-2 border-l-4 border-red-500 pl-2 font-semibold text-red-600"
           >
-            取り扱い可能な荷物
+            お届け時間について
           </h4>
-          <ul class="mb-2 ml-8 list-disc space-y-1">
-            <li v-for="luggageItem in luggageItems" :key="luggageItem.key">
-              {{ luggageItem.name }}
+          <p class="ml-3">配送当日の20時までに、お荷物をお届けいたします。</p>
+        </div>
+
+        <div>
+          <h4
+            class="mb-2 border-l-4 border-red-500 pl-2 font-semibold text-red-600"
+          >
+            お取り扱いできないお荷物
+          </h4>
+          <ul class="mb-2 ml-8 list-disc space-y-2">
+            <li
+              v-for="prohibitedItem in prohibitedItems"
+              :key="prohibitedItem.id"
+            >
+              <h5 class="mb-1 font-semibold">{{ prohibitedItem.type }}</h5>
+              <p v-if="prohibitedItem.items">{{ prohibitedItem.items }}</p>
             </li>
           </ul>
-          <div class="ml-3 text-xs text-gray-600">
-            <p>※重量は30kgまで</p>
-          </div>
         </div>
 
         <hr class="border-gray-300" />
 
         <div>
-          <p>上記以外で不明な点がございましたらお気軽にお問い合わせください</p>
-          <p class="font-semibold">
-            電話番号：<a class="underline" href="tel:#">000-000-0000</a>
+          <p class="mb-2">
+            上記以外で不明な点がございましたらお気軽にお問い合わせください
           </p>
+          <div v-if="props.supportEmail" class="font-semibold">
+            <p>
+              メールアドレス：<a
+                class="underline"
+                :href="`mailto:${props.supportEmail}`"
+              >{{ props.supportEmail }}</a>
+            </p>
+          </div>
         </div>
       </div>
     </div>
@@ -149,11 +166,13 @@ type Props = {
   luggageItemsData: LuggageItemData[];
   luggageItemsLoading?: boolean;
   luggageItemsError?: string;
+  supportEmail?: string;
 };
 
 const props = withDefaults(defineProps<Props>(), {
   luggageItemsLoading: false,
   luggageItemsError: "",
+  supportEmail: "",
 });
 
 type Emits = {
@@ -204,4 +223,52 @@ const increment = (key: string) => {
 const decrement = (key: string) => {
   setCount(key, (props.formData[key] ?? 0) - 1);
 };
+
+type ProhibitedItem = {
+  id: number;
+  type: string;
+  items?: string;
+};
+
+const prohibitedItems = ref<ProhibitedItem[]>([
+  {
+    id: 1,
+    type: "危険物",
+    items:
+      "ガスボンベ・スプレー缶、可燃性液体（ガソリン・灯油）、火薬・花火、バッテリー（大容量リチウム電池など）、",
+  },
+  {
+    id: 2,
+    type: "高価品・貴重品",
+    items: "現金、クレジットカード、宝石・貴金属、高級時計、美術品",
+  },
+  {
+    id: 3,
+    type: "個人情報・重要書類",
+    items: "パスポート、契約書、チケット類",
+  },
+  {
+    id: 4,
+    type: "食品・生もの",
+    items: "生鮮食品、冷蔵・冷凍が必要なもの、匂いが強いもの",
+  },
+  {
+    id: 5,
+    type: "壊れやすいもの",
+    items: "ガラス製品、精密機器",
+  },
+  {
+    id: 6,
+    type: "法律的に問題があるもの",
+    items: "違法薬物、武器（ナイフ・銃など）、偽ブランド品",
+  },
+  {
+    id: 7,
+    type: "漏れる可能性のある液体類",
+  },
+  {
+    id: 8,
+    type: "1個あたり、30kgを超えるお荷物",
+  },
+]);
 </script>

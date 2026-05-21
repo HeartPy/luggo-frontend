@@ -66,6 +66,11 @@ export default defineNuxtRouteMiddleware(async (_to) => {
       is_active: boolean;
       service_areas: string[];
       pricing_rules: Record<string, Record<string, number>>;
+      operating_days: string;
+      nth_weekday_holidays: string[];
+      daily_max_luggage: number;
+      temporary_closures: string[];
+      support_email: string;
     }>(`${apiBase}/api/business/subdomain/profile`, {
       method: "GET",
       params: { subdomain },

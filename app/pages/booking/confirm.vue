@@ -733,84 +733,81 @@ const handleConfirm = async () => {
 
     const maxRetries = 3;
     let retryCount = 0;
-    let bookingData: Ref<BookingData | null | undefined> | null = null;
-    let fetchErr: Ref<unknown> | null = null;
+    let bookingData: BookingData | null = null;
+    let fetchErr: unknown = null;
 
     // リトライループ
     while (retryCount <= maxRetries) {
-      const fetchRslt = await useFetch<BookingData>(
-        `${apiBase}/api/bookings/`,
-        {
+      try {
+        bookingData = await $fetch<BookingData>(`${apiBase}/api/bookings/`, {
           method: "POST",
           credentials: "include",
           headers: {
             "Content-Type": "application/json",
-            ...(getCsrf() ? { "X-CSRFToken": getCsrf() } : {}),
+            ...(getCsrf() ? { "X-CSRFToken": getCsrf()! } : {}),
           },
           body: {
             ...completeFormData.value,
             payment_intent_id: rslt.paymentIntentId,
           },
-        },
-      );
+        });
+        fetchErr = null;
 
-      bookingData = fetchRslt.data;
-      fetchErr = fetchRslt.error;
-
-      // 成功した場合
-      if (!fetchErr?.value && bookingData?.value) {
-        break;
-      }
-
-      const apiErr = (fetchErr?.value as unknown as ApiErrRes) || {
-        data: {},
-      };
-
-      // 決済が完了していない場合やバリデーションエラーはリトライしない
-      if (
-        apiErr.data.payment_status
-        || apiErr.data.valid_errs
-        || (fetchErr?.value as { statusCode?: number })?.statusCode === 400
-      ) {
-        break;
-      }
-
-      // リトライ可能なエラーの場合（500エラーなど）
-      if (
-        (fetchErr?.value as { statusCode?: number })?.statusCode === 500
-        && apiErr.data.retry_recommended
-      ) {
-        retryCount++;
-        if (retryCount <= maxRetries) {
-          // 指数バックオフでリトライ
-          const delay = Math.min(1000 * Math.pow(2, retryCount - 1), 5000);
-          if (import.meta.dev) {
-            // eslint-disable-next-line no-console
-            console.log(
-              `予約送信をリトライします (${retryCount}/${maxRetries}): ${delay}ms後に再試行`,
-            );
-          }
-          await new Promise(resolve => setTimeout(resolve, delay));
-          continue;
+        // 成功した場合
+        if (bookingData) {
+          break;
         }
       }
+      catch (err: unknown) {
+        fetchErr = err;
 
-      // その他のエラーはリトライしない
-      break;
+        const apiErr = (err as unknown as ApiErrRes) || { data: {} };
+        const statusCode = (err as { statusCode?: number; status?: number })
+          ?.statusCode ?? (err as { status?: number })?.status;
+
+        // 決済が完了していない場合やバリデーションエラーはリトライしない
+        if (
+          apiErr.data?.payment_status
+          || apiErr.data?.valid_errs
+          || statusCode === 400
+        ) {
+          break;
+        }
+
+        // リトライ可能なエラーの場合（500エラーなど）
+        if (statusCode === 500 && apiErr.data?.retry_recommended) {
+          retryCount++;
+          if (retryCount <= maxRetries) {
+            // 指数バックオフでリトライ
+            const delay = Math.min(1000 * Math.pow(2, retryCount - 1), 5000);
+            if (import.meta.dev) {
+              // eslint-disable-next-line no-console
+              console.log(
+                `予約送信をリトライします (${retryCount}/${maxRetries}): ${delay}ms後に再試行`,
+              );
+            }
+            await new Promise(resolve => setTimeout(resolve, delay));
+            continue;
+          }
+        }
+
+        // その他のエラーはリトライしない
+        break;
+      }
     }
 
     // エラーハンドリング
-    if (fetchErr?.value) {
-      const apiErr = fetchErr.value as unknown as ApiErrRes;
+    if (fetchErr) {
+      const apiErr = fetchErr as unknown as ApiErrRes;
 
       // 決済が完了していない場合
-      if (apiErr.data.payment_status) {
+      if (apiErr.data?.payment_status) {
         errMsg.value
           = "決済処理が完了していません。お支払い情報に問題がないかご確認いただき、再度予約手続きを行ってください。";
         isSubmitting.value = false;
         return;
       }
-      else if (apiErr.data.valid_errs) {
+      else if (apiErr.data?.valid_errs) {
         // バリデーションエラーが発生している場合
         const validErrs = apiErr.data.valid_errs;
         const errMsgs: string[] = [];
@@ -843,7 +840,7 @@ const handleConfirm = async () => {
     }
 
     // bookingData が存在しない場合
-    if (!bookingData?.value) {
+    if (!bookingData) {
       errMsg.value
         = "決済は完了していますが、予約情報の取得に失敗しました。お手数をおかけしますが、運営にご連絡ください。";
       isSubmitting.value = false;
@@ -851,7 +848,7 @@ const handleConfirm = async () => {
     }
 
     // 予約番号を取得
-    const bookingId = bookingData.value.booking?.booking_number || null;
+    const bookingId = bookingData.booking?.booking_number || null;
 
     clearAllData();
     isSubmitted.value = true;
