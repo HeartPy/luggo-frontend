@@ -25,6 +25,7 @@
           :luggage-items-data="luggageItemsData"
           :luggage-items-loading="luggageItemsLoading"
           :luggage-items-error="luggageItemsErr"
+          :support-email="businessProfileState?.support_email ?? ''"
           @update:form-data="Object.assign(step2Data, $event)"
         />
         <BookingStep3Form
@@ -135,6 +136,10 @@ const businessProfileState = useState<{
   id?: string;
   service_areas?: string[];
   pricing_rules?: Record<string, Record<string, number>>;
+  operating_days?: string;
+  nth_weekday_holidays?: string[];
+  temporary_closures?: string[];
+  support_email?: string;
 } | null>("businessProfile", () => null);
 
 const allowedDeparturePrefectures = computed<string[]>(
@@ -161,7 +166,7 @@ const fetchLuggageItems = async () => {
       step1Data.value.delivery_postal_code || "",
     );
 
-    const { data, error: fetchErr } = await useFetch<{
+    const data = await $fetch<{
       items: LuggageItemData[];
     }>(
       `${apiBase}/api/bookings/luggage-items?business_owner=${bpId}&delivery_postal_code=${deliveryPostal}`,
@@ -171,23 +176,14 @@ const fetchLuggageItems = async () => {
       },
     );
 
-    if (fetchErr.value) {
-      luggageItemsErr.value = "荷物情報の取得に失敗しました";
-      if (import.meta.dev) {
-        // eslint-disable-next-line no-console
-        console.error("Failed to fetch luggage items:", fetchErr.value);
-      }
+    if (!data?.items) {
       return;
     }
 
-    if (!data.value?.items) {
-      return;
-    }
-
-    luggageItemsData.value = data.value.items;
+    luggageItemsData.value = data.items;
 
     // Step2FormDataを初期化（既存の値は保持）
-    for (const item of data.value.items) {
+    for (const item of data.items) {
       if (!(item.key in step2Data.value)) {
         step2Data.value[item.key] = 0;
       }
@@ -261,6 +257,9 @@ const step1Schema = computed(() =>
   createStep1Schema({
     departurePrefectures: allowedDeparturePrefectures.value,
     deliverablePrefectures: allowedDeliverablePrefectures.value,
+    operatingDays: businessProfileState.value?.operating_days,
+    nthWeekdayHolidays: businessProfileState.value?.nth_weekday_holidays,
+    temporaryClosures: businessProfileState.value?.temporary_closures,
   }),
 );
 
@@ -307,31 +306,32 @@ const createPaymentIntent = async (): Promise<string | null> => {
     const apiBase = config.public.apiBaseUrl;
     await ensureCsrf(apiBase);
 
-    const { data, error: fetchErr } = await useFetch<{
-      client_secret: string;
-    }>(`${apiBase}/api/bookings/create-payment-intent`, {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        ...(getCsrf() ? { "X-CSRFToken": getCsrf() } : {}),
-      },
-      body: {
-        ...completeFormData.value,
-        business_owner_id: businessProfileState.value?.id ?? "",
-      },
-    });
-
-    if (fetchErr.value) {
-      const apiErr = fetchErr.value as unknown as ApiErrRes;
+    let data: { client_secret?: string } | null = null;
+    try {
+      data = await $fetch<{
+        client_secret: string;
+      }>(`${apiBase}/api/bookings/create-payment-intent`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          ...(getCsrf() ? { "X-CSRFToken": getCsrf()! } : {}),
+        },
+        body: {
+          ...completeFormData.value,
+          business_owner_id: businessProfileState.value?.id ?? "",
+        },
+      });
+    } catch (fetchErr: unknown) {
+      const apiErr = fetchErr as unknown as ApiErrRes;
 
       if (import.meta.dev) {
         // eslint-disable-next-line no-console
-        console.error("Payment intent creation error:", fetchErr.value);
+        console.error("Payment intent creation error:", fetchErr);
       }
 
       // バリデーションエラーの場合
-      if (apiErr.data.valid_errs) {
+      if (apiErr?.data?.valid_errs) {
         const validErrs = apiErr.data.valid_errs;
         const errMsgs: string[] = [];
         for (const [path, msgs] of Object.entries(validErrs)) {
@@ -351,20 +351,20 @@ const createPaymentIntent = async (): Promise<string | null> => {
       return null;
     }
 
-    if (!data.value?.client_secret) {
+    if (!data?.client_secret) {
       if (import.meta.dev) {
         // eslint-disable-next-line no-console
         console.error(
           "Payment intent creation error: client_secret is missing",
           "Response data:",
-          data.value,
+          data,
         );
       }
       errMsg.value = "支払い情報の取得に失敗しました";
       return null;
     }
 
-    return data.value.client_secret;
+    return data.client_secret;
   } catch (err: unknown) {
     if (import.meta.dev) {
       // eslint-disable-next-line no-console
@@ -404,12 +404,55 @@ const handleSubmit = async () => {
     });
     setStep2Values(step2Data.value);
     const rslt = await validateStep2Vv();
-    if (rslt.valid) return navigateTo(bookingPath(3));
-    for (const [path, msg] of Object.entries(rslt.errors)) {
-      const key = path || "";
-      errsStep2.value[key] = msg as string;
+    if (!rslt.valid) {
+      for (const [path, msg] of Object.entries(rslt.errors)) {
+        const key = path || "";
+        errsStep2.value[key] = msg as string;
+      }
+      return;
     }
-    return;
+
+    const totalItems = Object.values(step2Data.value).reduce(
+      (sum: number, count: unknown) => sum + (Number(count) || 0),
+      0,
+    );
+    const ownerId = businessProfileState.value?.id;
+    const pickupDate = step1Data.value.pickup_date;
+    const deliveryDate = step1Data.value.delivery_date;
+    if (ownerId && totalItems > 0) {
+      const config = useRuntimeConfig();
+      const apiBase = config.public.apiBaseUrl;
+      const datesToCheck = [
+        { date: pickupDate, label: "集荷日" },
+        { date: deliveryDate, label: "配送日" },
+      ];
+      for (const { date: dt, label } of datesToCheck) {
+        if (!dt) continue;
+        try {
+          const res = await $fetch<{
+            remaining: number;
+          }>(`${apiBase}/api/bookings/daily-remaining`, {
+            method: "GET",
+            params: { business_owner: ownerId, date: dt },
+          });
+          if (res.remaining >= 0 && totalItems > res.remaining) {
+            errMsg.value
+              = `${label}（${dt}）の荷物受付可能数の残りは${res.remaining}個です。予約個数を${res.remaining}個以下にしてください。`;
+            return;
+          }
+        }
+        catch (err: unknown) {
+          // 後段（PaymentIntent作成・予約確定）でも上限を再チェックするため、
+          // ここでは Step2 をブロックせずに進める（フェイルオープン）
+          if (import.meta.dev) {
+            // eslint-disable-next-line no-console
+            console.error("daily-remaining failed:", err);
+          }
+        }
+      }
+    }
+
+    return navigateTo(bookingPath(3));
   }
 
   if (currentStep.value === 3) {

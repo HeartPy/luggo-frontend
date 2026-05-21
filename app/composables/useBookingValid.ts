@@ -192,15 +192,39 @@ export function prefCodeFromPostal(postalCode: string): string | null {
   return POSTAL_PREFIX_TO_PREF[prefix] ?? null;
 }
 
+function isoDateToWeekday(iso: string): number {
+  const match = iso.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!match) return -1;
+  const date = new Date(Date.UTC(Number(match[1]), Number(match[2]) - 1, Number(match[3])));
+  const jsDay = date.getUTCDay();
+  return jsDay === 0 ? 6 : jsDay - 1;
+}
+
+function isoDateToNthWeekdayKey(iso: string): string | null {
+  const match = iso.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!match) return null;
+  const day = Number(match[3]);
+  const nth = Math.floor((day - 1) / 7) + 1;
+  const wd = isoDateToWeekday(iso);
+  if (wd < 0) return null;
+  return `${nth}-${wd}`;
+}
+
 // Step1のバリデーションスキーマを生成
 export const createStep1Schema = (options?: {
   departurePrefectures?: string[];
   deliverablePrefectures?: string[];
+  operatingDays?: string;
+  nthWeekdayHolidays?: string[];
+  temporaryClosures?: string[];
 }) => {
   const minPickup = getMinPickupDate();
   const maxDate = getMaxBookingDate();
   const departurePrefectures = options?.departurePrefectures ?? [];
   const deliverablePrefectures = options?.deliverablePrefectures ?? [];
+  const operatingDays = options?.operatingDays ?? "1111111";
+  const nthWeekdayHolidays = new Set(options?.nthWeekdayHolidays ?? []);
+  const temporaryClosures = new Set(options?.temporaryClosures ?? []);
 
   return object({
     pickup_postal_code: string()
@@ -247,6 +271,29 @@ export const createStep1Schema = (options?: {
         "is-within-max",
         "予約できるのは半年先までです",
         (value) => !!value && value <= maxDate,
+      )
+      .test(
+        "is-not-regular-holiday-pickup",
+        "この日は定休日のため選択できません",
+        (value) => {
+          if (!value) return true;
+          const wd = isoDateToWeekday(value);
+          return wd < 0 || operatingDays[wd] === "1";
+        },
+      )
+      .test(
+        "is-not-nth-weekday-holiday-pickup",
+        "この日は定休日のため選択できません",
+        (value) => {
+          if (!value || nthWeekdayHolidays.size === 0) return true;
+          const key = isoDateToNthWeekdayKey(value);
+          return !key || !nthWeekdayHolidays.has(key);
+        },
+      )
+      .test(
+        "is-not-temp-closure-pickup",
+        "この日は臨時休業日のため選択できません",
+        value => !value || !temporaryClosures.has(value),
       ),
     delivery_postal_code: string()
       .trim()
@@ -297,6 +344,29 @@ export const createStep1Schema = (options?: {
         "is-within-max",
         "予約できるのは半年先までです",
         (value) => !!value && value <= maxDate,
+      )
+      .test(
+        "is-not-regular-holiday-delivery",
+        "この日は定休日のため選択できません",
+        (value) => {
+          if (!value) return true;
+          const wd = isoDateToWeekday(value);
+          return wd < 0 || operatingDays[wd] === "1";
+        },
+      )
+      .test(
+        "is-not-nth-weekday-holiday-delivery",
+        "この日は定休日のため選択できません",
+        (value) => {
+          if (!value || nthWeekdayHolidays.size === 0) return true;
+          const key = isoDateToNthWeekdayKey(value);
+          return !key || !nthWeekdayHolidays.has(key);
+        },
+      )
+      .test(
+        "is-not-temp-closure-delivery",
+        "この日は臨時休業日のため選択できません",
+        value => !value || !temporaryClosures.has(value),
       ),
     notes: string().optional(),
   });

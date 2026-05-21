@@ -96,7 +96,9 @@
         aria-describedby="pickup_postal_code-error"
         @input="handlePickupPostalCode($event)"
       />
-      <p class="mt-1 text-xs text-gray-500">半角数字で入力してください</p>
+      <p class="mt-1 text-xs text-gray-500">
+        半角数字で入力してください（ハイフンなし）
+      </p>
       <div
         v-if="errors.pickup_postal_code"
         id="pickup_postal_code-error"
@@ -160,7 +162,7 @@
           @input="handleInput('pickup_date', $event)"
         />
         <img
-          class="pointer-events-none absolute right-5 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400 transition-colors hover:text-gray-600"
+          class="pointer-events-none absolute right-5 top-1/2 h-5 w-5 -translate-y-1/2"
           src="/img/calendar.svg"
           alt=""
         />
@@ -273,7 +275,9 @@
         aria-describedby="delivery_postal_code-error"
         @input="handleDeliveryPostalCode($event)"
       />
-      <p class="mt-1 text-xs text-gray-500">半角数字で入力してください</p>
+      <p class="mt-1 text-xs text-gray-500">
+        半角数字で入力してください（ハイフンなし）
+      </p>
       <div
         v-if="errors.delivery_postal_code"
         id="delivery_postal_code-error"
@@ -337,7 +341,7 @@
           @input="handleInput('delivery_date', $event)"
         />
         <img
-          class="pointer-events-none absolute right-5 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400 transition-colors hover:text-gray-600"
+          class="pointer-events-none absolute right-5 top-1/2 h-5 w-5 -translate-y-1/2"
           src="/img/calendar.svg"
         />
       </div>
@@ -372,7 +376,10 @@
 <script setup lang="ts">
 import type { Step1FormData } from "~/types/booking";
 import { usePostalCodeSearch } from "~/composables/usePostalCodeSearch";
-import { getMinPickupDate, getMaxBookingDate } from "~/composables/useBookingValid";
+import {
+  getMinPickupDate,
+  getMaxBookingDate,
+} from "~/composables/useBookingValid";
 
 // サジェストの型定義
 type LocationSuggestion = {
@@ -610,18 +617,14 @@ const fetchSuggestions = async (query: string, type: "pickup" | "delivery") => {
         ? `&prefectures=${encodeURIComponent(prefCodes.join(","))}`
         : "";
 
-    const { data, error } = await useFetch<{
+    const data = await $fetch<{
       suggestions: LocationSuggestion[];
     }>(
       `${apiBaseUrl}/api/bookings/location-suggestions?q=${encodeURIComponent(query)}${prefParam}`,
     );
 
-    if (error.value) {
-      return;
-    }
-
-    if (data.value) {
-      suggestions.value[type] = data.value.suggestions || [];
+    if (data) {
+      suggestions.value[type] = data.suggestions || [];
     }
   } catch {
     // サジェスト取得失敗は静かに無視
