@@ -215,7 +215,7 @@
             @input="handlePostalCodeInput($event)"
           >
           <p class="mt-1 text-xs text-gray-500">
-            半角数字で入力してください
+            半角数字で入力してください（ハイフンなし）
           </p>
           <div
             v-if="
