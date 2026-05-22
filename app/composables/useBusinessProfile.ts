@@ -9,6 +9,7 @@ export const useBusinessProfile = () => {
     business_type: "company" | "individual";
     company_name: string;
     company_email: string;
+    phone_number: string;
     subdomain: string;
     tax_id: string;
     rep_last_name_kanji: string;
