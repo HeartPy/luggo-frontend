@@ -173,12 +173,13 @@
               errors?.['rep_dob.day'],
           }"
         >
-          <div>
+          <div class="min-w-0">
             <input
               ref="yearInputRef"
               :value="formData.rep_dob.year || ''"
               type="number"
-              class="px-3 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+              size="4"
+              class="w-14 min-w-0 px-1 text-center [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
               placeholder="年"
               min="1900"
               :max="new Date().getFullYear()"
@@ -188,12 +189,13 @@
             >
           </div>
           <span class="text-sm">/</span>
-          <div>
+          <div class="min-w-0">
             <input
               ref="monthInputRef"
               :value="formData.rep_dob.month || ''"
               type="number"
-              class="px-3 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+              size="2"
+              class="w-10 min-w-0 px-1 text-center [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
               placeholder="月"
               min="1"
               max="12"
@@ -203,12 +205,13 @@
             >
           </div>
           <span class="text-sm">/</span>
-          <div>
+          <div class="min-w-0">
             <input
               ref="dayInputRef"
               :value="formData.rep_dob.day || ''"
               type="number"
-              class="px-3 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+              size="2"
+              class="w-10 min-w-0 px-1 text-center [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
               placeholder="日"
               min="1"
               max="31"
@@ -259,7 +262,7 @@
           @blur="handlePhoneBlur($event)"
         >
         <p class="mt-1 text-xs text-gray-500">
-          半角数字で入力してください
+          半角数字で入力してください（ハイフンなし）
         </p>
         <div
           v-if="errors?.rep_phone"
@@ -317,7 +320,7 @@
             @input="handlePostalCodeInput($event)"
           >
           <p class="mt-1 text-xs text-gray-500">
-            半角数字で入力してください
+            半角数字で入力してください（ハイフンなし）
           </p>
           <div
             v-if="errors?.['address_kanji.postal_code']"
@@ -719,7 +722,7 @@
             @blur="handleDirectorPhoneBlur(index, $event)"
           >
           <p class="mt-1 text-xs text-gray-500">
-            半角数字で入力してください
+            半角数字で入力してください（ハイフンなし）
           </p>
           <div
             v-if="errors?.[`directors.${index}.phone`]"
@@ -742,12 +745,13 @@
                 errors?.[`directors.${index}.dob.day`],
             }"
           >
-            <div>
+            <div class="min-w-0">
               <input
                 :ref="(el) => setDirectorYearInputRef(index, el)"
                 :value="director.dob.year || ''"
                 type="number"
-                class="px-3 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                size="4"
+                class="w-14 min-w-0 px-1 text-center [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                 placeholder="年"
                 min="1900"
                 :max="new Date().getFullYear()"
@@ -756,12 +760,13 @@
               >
             </div>
             <span class="text-sm">/</span>
-            <div>
+            <div class="min-w-0">
               <input
                 :ref="(el) => setDirectorMonthInputRef(index, el)"
                 :value="director.dob.month || ''"
                 type="number"
-                class="px-3 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                size="2"
+                class="w-10 min-w-0 px-1 text-center [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                 placeholder="月"
                 min="1"
                 max="12"
@@ -770,12 +775,13 @@
               >
             </div>
             <span class="text-sm">/</span>
-            <div>
+            <div class="min-w-0">
               <input
                 :ref="(el) => setDirectorDayInputRef(index, el)"
                 :value="director.dob.day || ''"
                 type="number"
-                class="px-3 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                size="2"
+                class="w-10 min-w-0 px-1 text-center [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                 placeholder="日"
                 min="1"
                 max="31"
@@ -825,6 +831,9 @@
               @input="updateDirectorAddressKanji(index, 'postal_code', $event)"
               @blur="handleDirectorPostalCode(index, $event)"
             >
+            <p class="mt-1 text-xs text-gray-500">
+              半角数字で入力してください（ハイフンなし）
+            </p>
             <div
               v-if="errors?.[`directors.${index}.address_kanji.postal_code`]"
               class="mt-1 text-sm text-red-600"

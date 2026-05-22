@@ -142,7 +142,7 @@ const route = useRoute();
 
 definePageMeta({
   layout: "stripe",
-  middleware: "business-owner",
+  middleware: ["business-owner", "stripe-prerequisite"],
   validate: (route) => {
     const n = Number(route.params.step);
     return Number.isFinite(n) && n >= 1 && n <= 5;
@@ -704,27 +704,34 @@ const submit = async (): Promise<void> => {
       requestBody.business_type = businessProfile.value.business_type;
     }
 
-    const { data: body, error: fetchErr } = await useFetch<{
+    let body: {
       error?: string;
       restart?: boolean;
       needs_tos?: boolean;
-    }>(endpoint, {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        ...(getCsrf() ? { "X-CSRFToken": getCsrf() } : {}),
-      },
-      body: requestBody,
-    });
+    } | null = null;
 
-    if (fetchErr.value) {
-      const errData = fetchErr.value.data as
-        | { error?: string; restart?: boolean; needs_tos?: boolean }
-        | undefined;
+    try {
+      body = await $fetch<{
+        error?: string;
+        restart?: boolean;
+        needs_tos?: boolean;
+      }>(endpoint, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          ...(getCsrf() ? { "X-CSRFToken": getCsrf()! } : {}),
+        },
+        body: requestBody,
+      });
+    }
+    catch (fetchErr: unknown) {
+      const errData = (fetchErr as {
+        data?: { error?: string; restart?: boolean; needs_tos?: boolean };
+      })?.data;
       if (import.meta.dev) {
         // eslint-disable-next-line no-console
-        console.log("fetchErr.value.data:", errData);
+        console.log("fetchErr data:", errData);
       }
       if (errData?.needs_tos) {
         needsTos.value = true;
@@ -744,21 +751,21 @@ const submit = async (): Promise<void> => {
       );
     }
 
-    if (body.value?.error) {
+    if (body?.error) {
       if (import.meta.dev) {
         // eslint-disable-next-line no-console
-        console.error("Server error response:", body.value.error);
+        console.error("Server error response:", body.error);
       }
-      if (body.value.needs_tos) {
+      if (body.needs_tos) {
         needsTos.value = true;
         errorsStep1.value.accept_tos = "利用規約に同意してください。";
-        errMsg.value = body.value.error || "利用規約に同意してください。";
+        errMsg.value = body.error || "利用規約に同意してください。";
         if (currentStep.value !== 1) {
           await navigateTo("/stripe/account/1");
         }
         return;
       }
-      if (body.value.restart) {
+      if (body.restart) {
         // セッションが失われた場合、データをクリアして最初のステップに戻る
         clearAllData();
         errMsg.value
