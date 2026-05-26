@@ -4,7 +4,7 @@ import { determineFirstRequiredStep } from "~/composables/useStripeAccount";
 
 definePageMeta({
   layout: "stripe",
-  middleware: "business-owner",
+  middleware: ["business-owner", "stripe-prerequisite"],
 });
 
 const { startSession } = useSession();
