@@ -31,6 +31,23 @@ export const useBusinessProfile = () => {
     created_at: string | null;
     updated_at: string | null;
     has_stripe_account: boolean;
+    public_info_consent_at: string | null;
+    policy: {
+      terms_current_version: string;
+      privacy_current_version: string;
+      terms_agreed_version: string | null;
+      privacy_agreed_version: string | null;
+      terms_agreed_at: string | null;
+      privacy_agreed_at: string | null;
+    };
+    booking_template: {
+      transaction_law_current_version: string;
+      privacy_current_version: string;
+      transaction_law_acknowledged_version: string | null;
+      privacy_acknowledged_version: string | null;
+      transaction_law_acknowledged_at: string | null;
+      privacy_acknowledged_at: string | null;
+    };
   } | null>("currentBusinessProfile", () => null);
 
   const isLoading = ref(false);
