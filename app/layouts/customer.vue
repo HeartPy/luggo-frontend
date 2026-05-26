@@ -1,7 +1,7 @@
 <template>
   <div :key="componentKey">
     <CommonCustomerTheHeader @change-locale="onChangeLocale" />
-    <main>
+    <main class="pb-16">
       <slot />
     </main>
     <CommonCustomerTheFooter />
@@ -33,11 +33,9 @@ if (import.meta.client) {
   watch(locale, (newLocale: string) => {
     if (newLocale === "ja") {
       router.push("/");
-    }
-    else if (newLocale === "en") {
+    } else if (newLocale === "en") {
       router.push("/en/");
-    }
-    else {
+    } else {
       router.push("/");
     }
   });
