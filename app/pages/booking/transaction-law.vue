@@ -13,7 +13,10 @@
             aria-busy="true"
             class="py-8"
           >
-            <CommonAtomsLoadingAnimation size="md" aria-hidden="true" />
+            <CommonAtomsLoadingAnimation
+              size="md"
+              aria-hidden="true"
+            />
             <p class="sr-only">
               特定商取引法に基づく表記を読み込んでいます
             </p>
@@ -48,7 +51,9 @@
                 :key="item.id"
                 role="listitem"
               >
-                <section :aria-labelledby="`transaction-law-item-${item.id}-title`">
+                <section
+                  :aria-labelledby="`transaction-law-item-${item.id}-title`"
+                >
                   <h2
                     :id="`transaction-law-item-${item.id}-title`"
                     class="mb-2 text-sm font-bold"
@@ -251,20 +256,20 @@ const buildScheduleHtml = (
   temporaryClosures: string[],
 ): string => {
   const parts: string[] = [];
-  parts.push('<p class="mb-2">お客様が指定した日に集荷・配送を行います。</p>');
+  parts.push("<p class=\"mb-2\">お客様が指定した日に集荷・配送を行います。</p>");
 
   const holidays = WEEKDAY_LABELS.filter(
     (_, i) => operatingDays.length === 7 && operatingDays[i] === "0",
   );
 
-  const validNwh = (nthWeekdayHolidays ?? []).filter((entry) =>
+  const validNwh = (nthWeekdayHolidays ?? []).filter(entry =>
     /^[1-4]-[0-6]$/.test(entry),
   );
 
   const today = new Date();
   const todayIso = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
   const futureClosures = temporaryClosures
-    .filter((date) => date >= todayIso)
+    .filter(date => date >= todayIso)
     .sort();
 
   const listItems: string[] = [];
@@ -282,7 +287,7 @@ const buildScheduleHtml = (
   }
   if (futureClosures.length > 0) {
     const closureList = futureClosures
-      .map((date) => formatDateJa(date))
+      .map(date => formatDateJa(date))
       .join("、");
     listItems.push(
       `<li><span class="font-semibold">臨時休業日</span><br /><span class="text-gray-600">${closureList}</span></li>`,
@@ -295,11 +300,11 @@ const buildScheduleHtml = (
     );
   }
 
-  const hasAny =
-    holidays.length > 0 || validNwh.length > 0 || futureClosures.length > 0;
+  const hasAny
+    = holidays.length > 0 || validNwh.length > 0 || futureClosures.length > 0;
   if (hasAny) {
     parts.push(
-      '<p class="mt-2 text-xs text-gray-600">※定休日および臨時休業日は、集荷日・配送日として選択できません。</p>',
+      "<p class=\"mt-2 text-xs text-gray-600\">※定休日および臨時休業日は、集荷日・配送日として選択できません。</p>",
     );
   }
 
@@ -393,9 +398,9 @@ const resolveSubdomain = (): string | null => {
   const host = window.location.hostname;
   const parts = host.split(".");
   if (
-    parts.length >= 3 &&
-    !host.includes("localhost") &&
-    !host.includes("127.0.0.1")
+    parts.length >= 3
+    && !host.includes("localhost")
+    && !host.includes("127.0.0.1")
   ) {
     return parts[0] || null;
   }
@@ -425,9 +430,11 @@ onMounted(async () => {
     }
 
     lawData.value = await res.json();
-  } catch {
+  }
+  catch {
     fetchErr.value = "特定商取引法に基づく表記の取得に失敗しました。";
-  } finally {
+  }
+  finally {
     isLoading.value = false;
   }
 });

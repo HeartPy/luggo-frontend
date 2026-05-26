@@ -1,20 +1,35 @@
 <template>
   <div>
-    <CommonAtomsLoadingAnimation v-if="isLoading" size="md" />
+    <CommonAtomsLoadingAnimation
+      v-if="isLoading"
+      size="md"
+    />
 
-    <div v-else-if="error" class="p-8 text-center text-red-600">
+    <div
+      v-else-if="error"
+      class="p-8 text-center text-red-600"
+    >
       {{ error }}
     </div>
 
-    <div v-else-if="!hasStripeAccount" class="p-8 text-sm text-gray-500">
+    <div
+      v-else-if="!hasStripeAccount"
+      class="p-8 text-sm text-gray-500"
+    >
       決済についての設定が未設定です。
     </div>
 
-    <div v-else-if="stripeIsUnderReview" class="p-8 text-sm text-yellow-800">
+    <div
+      v-else-if="stripeIsUnderReview"
+      class="p-8 text-sm text-yellow-800"
+    >
       ただいま決済情報の審査中です。審査完了までお待ちください。
     </div>
 
-    <div v-else-if="stripeHasPastDue" class="p-8 text-sm text-red-700">
+    <div
+      v-else-if="stripeHasPastDue"
+      class="p-8 text-sm text-red-700"
+    >
       <NuxtLink
         to="/stripe/account"
         class="text-blue-600 underline hover:text-blue-800"
@@ -24,7 +39,10 @@
       から再度入力情報をお確かめのうえ、決済の設定を行なってください。
     </div>
 
-    <div v-else-if="account" class="mx-auto max-w-3xl space-y-10 px-6 py-8">
+    <div
+      v-else-if="account"
+      class="mx-auto max-w-3xl space-y-10 px-6 py-8"
+    >
       <!-- アカウント状態 -->
       <section>
         <h2
@@ -100,7 +118,10 @@
               {{ stripeBusinessProfile.product_description }}
             </dd>
           </div>
-          <div v-if="companyAddress" class="flex items-start gap-4">
+          <div
+            v-if="companyAddress"
+            class="flex items-start gap-4"
+          >
             <dt class="w-44 shrink-0 text-sm font-semibold text-gray-600">
               事業所在地
             </dt>
@@ -163,7 +184,10 @@
           代表者情報
         </h2>
         <dl class="space-y-4">
-          <div v-if="repName" class="flex items-start gap-4">
+          <div
+            v-if="repName"
+            class="flex items-start gap-4"
+          >
             <dt class="w-44 shrink-0 text-sm font-semibold text-gray-600">
               氏名
             </dt>
@@ -182,7 +206,10 @@
               {{ representative.relationship.title }}
             </dd>
           </div>
-          <div v-if="representative.email" class="flex items-start gap-4">
+          <div
+            v-if="representative.email"
+            class="flex items-start gap-4"
+          >
             <dt class="w-44 shrink-0 text-sm font-semibold text-gray-600">
               メールアドレス
             </dt>
@@ -190,7 +217,10 @@
               {{ representative.email }}
             </dd>
           </div>
-          <div v-if="representative.phone" class="flex items-start gap-4">
+          <div
+            v-if="representative.phone"
+            class="flex items-start gap-4"
+          >
             <dt class="w-44 shrink-0 text-sm font-semibold text-gray-600">
               電話番号
             </dt>
@@ -198,7 +228,10 @@
               {{ formatPhone(representative.phone) }}
             </dd>
           </div>
-          <div v-if="repDob" class="flex items-start gap-4">
+          <div
+            v-if="repDob"
+            class="flex items-start gap-4"
+          >
             <dt class="w-44 shrink-0 text-sm font-semibold text-gray-600">
               生年月日
             </dt>
@@ -206,7 +239,10 @@
               {{ repDob }}
             </dd>
           </div>
-          <div v-if="repAddress" class="flex items-start gap-4">
+          <div
+            v-if="repAddress"
+            class="flex items-start gap-4"
+          >
             <dt class="w-44 shrink-0 text-sm font-semibold text-gray-600">
               住所
             </dt>
@@ -236,7 +272,10 @@
             取締役 {{ idx + 1 }}
           </h3>
           <dl class="space-y-4">
-            <div v-if="directorName(director)" class="flex items-start gap-4">
+            <div
+              v-if="directorName(director)"
+              class="flex items-start gap-4"
+            >
               <dt class="w-44 shrink-0 text-sm font-semibold text-gray-600">
                 氏名
               </dt>
@@ -255,7 +294,10 @@
                 {{ director.relationship.title }}
               </dd>
             </div>
-            <div v-if="director.email" class="flex items-start gap-4">
+            <div
+              v-if="director.email"
+              class="flex items-start gap-4"
+            >
               <dt class="w-44 shrink-0 text-sm font-semibold text-gray-600">
                 メールアドレス
               </dt>
@@ -263,7 +305,10 @@
                 {{ director.email }}
               </dd>
             </div>
-            <div v-if="director.phone" class="flex items-start gap-4">
+            <div
+              v-if="director.phone"
+              class="flex items-start gap-4"
+            >
               <dt class="w-44 shrink-0 text-sm font-semibold text-gray-600">
                 電話番号
               </dt>
@@ -271,7 +316,10 @@
                 {{ formatPhone(director.phone) }}
               </dd>
             </div>
-            <div v-if="directorDob(director)" class="flex items-start gap-4">
+            <div
+              v-if="directorDob(director)"
+              class="flex items-start gap-4"
+            >
               <dt class="w-44 shrink-0 text-sm font-semibold text-gray-600">
                 生年月日
               </dt>
@@ -302,7 +350,10 @@
           銀行口座情報
         </h2>
         <dl class="space-y-4">
-          <div v-if="bankAccount.bank_name" class="flex items-start gap-4">
+          <div
+            v-if="bankAccount.bank_name"
+            class="flex items-start gap-4"
+          >
             <dt class="w-44 shrink-0 text-sm font-semibold text-gray-600">
               銀行名
             </dt>
@@ -322,7 +373,9 @@
             <dt class="w-44 shrink-0 text-sm font-semibold text-gray-600">
               口座番号（下4桁）
             </dt>
-            <dd class="text-gray-900">****{{ bankAccount.last4 }}</dd>
+            <dd class="text-gray-900">
+              ****{{ bankAccount.last4 }}
+            </dd>
           </div>
           <div
             v-if="bankAccount.account_holder_name"
@@ -389,8 +442,8 @@ type StripePerson = Record<string, any>;
 
 const { businessProfile, fetchBusinessProfile } = useBusinessProfile();
 const { ensureCsrf, getCsrf } = useCsrf();
-const { isUnderReview: stripeIsUnderReview, hasPastDue: stripeHasPastDue } =
-  useOnboardingBar();
+const { isUnderReview: stripeIsUnderReview, hasPastDue: stripeHasPastDue }
+  = useOnboardingBar();
 
 const isLoading = ref(true);
 const error = ref<string | null>(null);
@@ -423,7 +476,8 @@ const fetchAccount = async () => {
     const data = await res.json();
     account.value = data.account ?? null;
     persons.value = data.persons ?? [];
-  } catch {
+  }
+  catch {
     error.value = "決済情報の取得に失敗しました。";
   }
 };
@@ -434,7 +488,8 @@ onMounted(async () => {
     if (hasStripeAccount.value) {
       await fetchAccount();
     }
-  } finally {
+  }
+  finally {
     isLoading.value = false;
   }
 });
@@ -456,7 +511,7 @@ const formatPhone = (phone: string | undefined): string => {
 const toHalfWidthPostal = (value: string): string => {
   if (!value) return "";
   return value
-    .replace(/[０-９]/g, (ch) => String.fromCharCode(ch.charCodeAt(0) - 0xfee0))
+    .replace(/[０-９]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0xfee0))
     .replace(/－/g, "-");
 };
 
@@ -485,8 +540,8 @@ const formatAddressWithPostal = (
 // 法人: company.address_kanji、個人: individual.address_kanji
 const companyAddress = computed(() => {
   const bt = account.value?.business_type;
-  const addr =
-    bt === "company"
+  const addr
+    = bt === "company"
       ? account.value?.company?.address_kanji
       : account.value?.individual?.address_kanji;
   if (!addr) return null;
@@ -499,14 +554,14 @@ const representative = computed(() => {
   const bt = account.value?.business_type;
   if (bt === "individual") return account.value?.individual ?? null;
   return (
-    persons.value.find((person) => person.relationship?.representative) ?? null
+    persons.value.find(person => person.relationship?.representative) ?? null
   );
 });
 
 const directors = computed(() =>
   persons.value
     .filter(
-      (person) =>
+      person =>
         person.relationship?.director && !person.relationship?.representative,
     )
     .sort((a, b) => (a.created ?? 0) - (b.created ?? 0)),
@@ -569,10 +624,10 @@ const isAccountFullyVerified = computed(() => {
   const acc = account.value;
   if (!acc) return false;
   return (
-    acc.charges_enabled === true &&
-    acc.payouts_enabled === true &&
-    (acc.requirements?.currently_due?.length ?? 0) === 0 &&
-    (acc.requirements?.past_due?.length ?? 0) === 0
+    acc.charges_enabled === true
+    && acc.payouts_enabled === true
+    && (acc.requirements?.currently_due?.length ?? 0) === 0
+    && (acc.requirements?.past_due?.length ?? 0) === 0
   );
 });
 
@@ -641,9 +696,9 @@ const hasStatementDescriptor = computed(() => {
   const payments = account.value?.settings?.payments;
   if (!payments) return false;
   return !!(
-    payments.statement_descriptor ||
-    payments.statement_descriptor_kanji ||
-    payments.statement_descriptor_kana
+    payments.statement_descriptor
+    || payments.statement_descriptor_kanji
+    || payments.statement_descriptor_kana
   );
 });
 </script>

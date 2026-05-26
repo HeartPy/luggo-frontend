@@ -811,14 +811,17 @@ const handleRegister = async () => {
       });
     }
     catch (fetchErr: unknown) {
-      const errorData = (fetchErr as {
-        data?: {
-          error?: string;
-          subdomain?: string[];
-          token?: string[];
-          email?: string[];
-        };
-      })?.data ?? {};
+      const errorData
+        = (
+          fetchErr as {
+            data?: {
+              error?: string;
+              subdomain?: string[];
+              token?: string[];
+              email?: string[];
+            };
+          }
+        )?.data ?? {};
 
       if (import.meta.dev) {
         // eslint-disable-next-line no-console

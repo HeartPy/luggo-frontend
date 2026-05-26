@@ -3,7 +3,10 @@
     class="flex flex-col items-center justify-center"
     :class="containerPaddingClass"
   >
-    <div class="relative" :class="spinnerSizeClass">
+    <div
+      class="relative"
+      :class="spinnerSizeClass"
+    >
       <div
         class="absolute inset-0 rounded-full border-gray-200"
         :class="spinnerBorderClass"

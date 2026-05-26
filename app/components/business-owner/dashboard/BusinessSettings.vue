@@ -40,7 +40,10 @@
         :disabled="!canSave || isSaving"
         @click="handleSave"
       >
-        <CommonAtomsLoadingAnimation v-if="isSaving" size="xs" />
+        <CommonAtomsLoadingAnimation
+          v-if="isSaving"
+          size="xs"
+        />
         <span v-else>保存（設定を反映）</span>
       </button>
       <button
@@ -49,7 +52,10 @@
         :disabled="!isDirty || isSavingDraft"
         @click="handleSaveDraft"
       >
-        <CommonAtomsLoadingAnimation v-if="isSavingDraft" size="xs" />
+        <CommonAtomsLoadingAnimation
+          v-if="isSavingDraft"
+          size="xs"
+        />
         <span v-else>一時保存（設定を反映しない）</span>
       </button>
       <button
@@ -58,7 +64,10 @@
         :disabled="!hasDraftSaveSinceLastRealSave || isDiscardingDraft"
         @click="handleDiscardDraftClick"
       >
-        <CommonAtomsLoadingAnimation v-if="isDiscardingDraft" size="xs" />
+        <CommonAtomsLoadingAnimation
+          v-if="isDiscardingDraft"
+          size="xs"
+        />
         <span v-else>一時保存を破棄</span>
       </button>
       <button
@@ -81,14 +90,19 @@
       </div>
 
       <!-- 読み込み中 -->
-      <div v-if="isLoading" class="py-12">
+      <div
+        v-if="isLoading"
+        class="py-12"
+      >
         <CommonAtomsLoadingAnimation size="md" />
       </div>
 
       <template v-else>
         <!-- 1日の最大荷物個数セクション -->
         <section class="mb-10 space-y-4">
-          <h2 class="text-lg font-bold text-gray-800">1日の最大荷物個数</h2>
+          <h2 class="text-lg font-bold text-gray-800">
+            1日の最大荷物個数
+          </h2>
           <p class="text-sm text-gray-600">
             1日あたりに集荷・配送できる荷物の合計個数の上限を設定します。0の場合は予約を受け付けません。
           </p>
@@ -98,7 +112,7 @@
               class="h-4 w-4 rounded border-gray-300 accent-green-600"
               :checked="localDailyMaxLuggage === -1"
               @change="toggleDailyMaxUnlimited"
-            />
+            >
             <span class="text-sm font-medium text-gray-700">制限なし</span>
           </label>
           <div
@@ -110,14 +124,16 @@
               type="number"
               min="0"
               class="w-32 rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-            />
+            >
             <span class="text-sm text-gray-600">個</span>
           </div>
         </section>
 
         <!-- 定休日セクション -->
         <section class="mb-10 space-y-4">
-          <h2 class="text-lg font-bold text-gray-800">定休日</h2>
+          <h2 class="text-lg font-bold text-gray-800">
+            定休日
+          </h2>
           <p class="text-sm text-gray-600">
             チェックした曜日は定休日となり、集荷日・配送日として選択できなくなります。
           </p>
@@ -138,7 +154,7 @@
                   localOperatingDays[apiWeekdayIndex(displayIdx)] === '0'
                 "
                 @change="toggleDay(apiWeekdayIndex(displayIdx))"
-              />
+              >
               <span class="text-sm font-medium text-gray-700">
                 {{ dayLabel }}
               </span>
@@ -148,7 +164,9 @@
 
         <!-- 第N週曜日の定休日セクション -->
         <section class="mb-10">
-          <h2 class="mb-4 text-lg font-bold text-gray-800">週毎の定休日</h2>
+          <h2 class="mb-4 text-lg font-bold text-gray-800">
+            週毎の定休日
+          </h2>
           <p class="mb-4 text-sm text-gray-600">
             毎月の特定の週・曜日を定休日に設定できます（例：第1月曜、第3水曜）。
           </p>
@@ -169,7 +187,10 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="week in 4" :key="week">
+                <tr
+                  v-for="week in 4"
+                  :key="week"
+                >
                   <td
                     class="border border-gray-200 bg-gray-50 px-3 py-2 text-center font-medium text-gray-600"
                   >
@@ -194,7 +215,7 @@
                         @change="
                           toggleNthWeekday(week, apiWeekdayIndex(displayIdx))
                         "
-                      />
+                      >
                     </label>
                   </td>
                 </tr>
@@ -205,7 +226,9 @@
 
         <!-- 臨時休業セクション -->
         <section class="mb-10 space-y-4">
-          <h2 class="text-lg font-bold text-gray-800">臨時休業</h2>
+          <h2 class="text-lg font-bold text-gray-800">
+            臨時休業
+          </h2>
           <p class="text-sm text-gray-600">
             特定の日付を臨時休業日に設定できます。設定した日は集荷日・配送日として選択できなくなります。
           </p>
@@ -230,11 +253,11 @@
                   type="date"
                   class="w-full cursor-pointer appearance-none rounded-md border border-gray-300 px-3 py-2 pr-12 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-clear-button]:hidden [&::-webkit-inner-spin-button]:hidden"
                   :min="todayIso"
-                />
+                >
                 <img
                   class="pointer-events-none absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2"
                   src="/img/calendar.svg"
-                />
+                >
               </div>
             </div>
             <button
@@ -248,7 +271,10 @@
           </div>
 
           <!-- 追加済み臨時休業日リスト -->
-          <div v-if="sortedClosures.length > 0" class="space-y-2">
+          <div
+            v-if="sortedClosures.length > 0"
+            class="space-y-2"
+          >
             <div
               v-for="closureDate in sortedClosures"
               :key="closureDate"
@@ -267,7 +293,10 @@
               </button>
             </div>
           </div>
-          <p v-else class="text-sm text-gray-400">
+          <p
+            v-else
+            class="text-sm text-gray-400"
+          >
             臨時休業日は設定されていません。
           </p>
         </section>
@@ -342,7 +371,8 @@ function openNativeDatePicker(el: HTMLInputElement | undefined) {
   if (typeof el.showPicker === "function") {
     try {
       el.showPicker();
-    } catch {
+    }
+    catch {
       // フォーカスのみにフォールバック
     }
   }
@@ -409,7 +439,7 @@ const canSave = computed(
 
 const sortedClosures = computed(() =>
   [...localClosures.value]
-    .filter((closureDate) => closureDate >= closureDisplayCutoffIso.value)
+    .filter(closureDate => closureDate >= closureDisplayCutoffIso.value)
     .sort(),
 );
 
@@ -424,7 +454,8 @@ function toggleDay(idx: number) {
 function toggleDailyMaxUnlimited() {
   if (localDailyMaxLuggage.value === -1) {
     localDailyMaxLuggage.value = 0;
-  } else {
+  }
+  else {
     localDailyMaxLuggage.value = -1;
   }
 }
@@ -435,7 +466,8 @@ function toggleNthWeekday(week: number, wdIdx: number) {
   const next = new Set(localNthWeekdayHolidays.value);
   if (next.has(key)) {
     next.delete(key);
-  } else {
+  }
+  else {
     next.add(key);
   }
   localNthWeekdayHolidays.value = next;
@@ -451,7 +483,7 @@ function addClosure() {
 
 // 指定した日付を臨時休業日リストから外す
 function removeClosure(closureDate: string) {
-  localClosures.value = localClosures.value.filter((c) => c !== closureDate);
+  localClosures.value = localClosures.value.filter(c => c !== closureDate);
 }
 
 // "YYYY-MM-DD" を「2026年5月19日（火）」のような表示用文字列に整える
@@ -501,15 +533,16 @@ async function loadDraftFromServer(): Promise<boolean> {
     takeSnapshot();
     hasDraftSaveSinceLastRealSave.value = true;
     return true;
-  } catch (err: unknown) {
+  }
+  catch (err: unknown) {
     if (
-      err &&
-      typeof err === "object" &&
-      "status" in err &&
-      (err as { status: number }).status === 401
+      err
+      && typeof err === "object"
+      && "status" in err
+      && (err as { status: number }).status === 401
     ) {
-      saveErr.value =
-        "ログインの有効期限が切れました。再ログインしてください。";
+      saveErr.value
+        = "ログインの有効期限が切れました。再ログインしてください。";
       isNavigatingAfterLeaveConfirm.value = true;
       navigateTo("/account/login");
     }
@@ -534,22 +567,24 @@ async function saveDraftToServer(): Promise<boolean> {
       body: { draft },
     });
     return true;
-  } catch (err: unknown) {
+  }
+  catch (err: unknown) {
     if (
-      err &&
-      typeof err === "object" &&
-      "status" in err &&
-      (err as { status: number }).status === 401
+      err
+      && typeof err === "object"
+      && "status" in err
+      && (err as { status: number }).status === 401
     ) {
-      saveErr.value =
-        "ログインの有効期限が切れました。再ログインしてください。";
+      saveErr.value
+        = "ログインの有効期限が切れました。再ログインしてください。";
       isNavigatingAfterLeaveConfirm.value = true;
       navigateTo("/account/login");
       return false;
     }
     saveErr.value = "一時保存に失敗しました。";
     return false;
-  } finally {
+  }
+  finally {
     isSavingDraft.value = false;
   }
 }
@@ -572,21 +607,23 @@ async function fetchSettings() {
     localDailyMaxLuggage.value = data.daily_max_luggage ?? 0;
     localClosures.value = [...data.temporary_closures];
     takeSnapshot();
-  } catch (err: unknown) {
+  }
+  catch (err: unknown) {
     if (
-      err &&
-      typeof err === "object" &&
-      "status" in err &&
-      (err as { status: number }).status === 401
+      err
+      && typeof err === "object"
+      && "status" in err
+      && (err as { status: number }).status === 401
     ) {
-      saveErr.value =
-        "ログインの有効期限が切れました。再ログインしてください。";
+      saveErr.value
+        = "ログインの有効期限が切れました。再ログインしてください。";
       isNavigatingAfterLeaveConfirm.value = true;
       navigateTo("/account/login");
       return;
     }
     saveErr.value = "設定の取得に失敗しました。";
-  } finally {
+  }
+  finally {
     isLoading.value = false;
   }
 }
@@ -624,21 +661,23 @@ async function handleSave() {
     hasDraftSaveSinceLastRealSave.value = false;
     // ヘッダーの「サイトを表示」ボタンの活性判定で参照する businessProfile を最新化
     await fetchBusinessProfile();
-  } catch (err: unknown) {
+  }
+  catch (err: unknown) {
     if (
-      err &&
-      typeof err === "object" &&
-      "status" in err &&
-      (err as { status: number }).status === 401
+      err
+      && typeof err === "object"
+      && "status" in err
+      && (err as { status: number }).status === 401
     ) {
-      saveErr.value =
-        "ログインの有効期限が切れました。再ログインしてください。";
+      saveErr.value
+        = "ログインの有効期限が切れました。再ログインしてください。";
       isNavigatingAfterLeaveConfirm.value = true;
       navigateTo("/account/login");
       return;
     }
     saveErr.value = "設定の保存に失敗しました。";
-  } finally {
+  }
+  finally {
     isSaving.value = false;
   }
 }
@@ -666,22 +705,24 @@ async function discardDraftFromServer(): Promise<boolean> {
       },
     });
     return true;
-  } catch (err: unknown) {
+  }
+  catch (err: unknown) {
     if (
-      err &&
-      typeof err === "object" &&
-      "status" in err &&
-      (err as { status: number }).status === 401
+      err
+      && typeof err === "object"
+      && "status" in err
+      && (err as { status: number }).status === 401
     ) {
-      saveErr.value =
-        "ログインの有効期限が切れました。再ログインしてください。";
+      saveErr.value
+        = "ログインの有効期限が切れました。再ログインしてください。";
       isNavigatingAfterLeaveConfirm.value = true;
       navigateTo("/account/login");
       return false;
     }
     saveErr.value = "一時保存の破棄に失敗しました。";
     return false;
-  } finally {
+  }
+  finally {
     isDiscardingDraft.value = false;
   }
 }
@@ -753,7 +794,8 @@ onBeforeRouteLeave((to, _from, next) => {
     next(false);
     pendingLeavePath.value = to.fullPath;
     showLeaveConfirm.value = true;
-  } else {
+  }
+  else {
     next();
   }
 });

@@ -92,7 +92,8 @@ export const usePolicyAgreement = () => {
       if (!res.ok) return false;
       await fetchBusinessProfile();
       return true;
-    } catch {
+    }
+    catch {
       return false;
     }
   };

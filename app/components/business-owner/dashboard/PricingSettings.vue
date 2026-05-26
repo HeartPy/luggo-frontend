@@ -40,7 +40,10 @@
         :disabled="!canSave || isSaving"
         @click="handleSave"
       >
-        <CommonAtomsLoadingAnimation v-if="isSaving" size="xs" />
+        <CommonAtomsLoadingAnimation
+          v-if="isSaving"
+          size="xs"
+        />
         <span v-else>保存（設定を反映）</span>
       </button>
       <button
@@ -49,7 +52,10 @@
         :disabled="!isDirty || isSavingDraft"
         @click="handleSaveDraft"
       >
-        <CommonAtomsLoadingAnimation v-if="isSavingDraft" size="xs" />
+        <CommonAtomsLoadingAnimation
+          v-if="isSavingDraft"
+          size="xs"
+        />
         <span v-else>一時保存（設定を反映しない）</span>
       </button>
       <button
@@ -58,7 +64,10 @@
         :disabled="!hasDraftSaveSinceLastRealSave || isDiscardingDraft"
         @click="handleDiscardDraftClick"
       >
-        <CommonAtomsLoadingAnimation v-if="isDiscardingDraft" size="xs" />
+        <CommonAtomsLoadingAnimation
+          v-if="isDiscardingDraft"
+          size="xs"
+        />
         <span v-else>一時保存を破棄</span>
       </button>
       <button
@@ -82,7 +91,9 @@
 
       <!-- 配達可能な荷物（チェックした荷物だけ料金入力欄を表示） -->
       <section class="mb-10">
-        <h2 class="mb-4 text-lg font-bold text-gray-800">配達可能な荷物</h2>
+        <h2 class="mb-4 text-lg font-bold text-gray-800">
+          配達可能な荷物
+        </h2>
         <p class="mb-3 text-sm text-gray-600">
           配達可能な荷物タイプにチェックを入れてください
         </p>
@@ -99,7 +110,7 @@
               :checked="enabledLuggageTypes[luggageType.key]"
               class="h-4 w-4 rounded border-gray-300 accent-green-600"
               @change="toggleLuggageType(luggageType.key)"
-            />
+            >
             <span class="text-sm font-medium text-gray-800">{{
               getLuggageTypeLabel(luggageType.key)
             }}</span>
@@ -109,8 +120,13 @@
 
       <!-- 集荷地域 -->
       <section class="mb-10">
-        <h2 class="mb-4 text-lg font-bold text-gray-800">集荷地域</h2>
-        <div class="relative" data-departure-dropdown>
+        <h2 class="mb-4 text-lg font-bold text-gray-800">
+          集荷地域
+        </h2>
+        <div
+          class="relative"
+          data-departure-dropdown
+        >
           <button
             type="button"
             class="flex w-full items-center justify-between rounded-md border border-gray-300 bg-white px-4 py-3 text-sm transition-colors hover:border-gray-400"
@@ -159,7 +175,7 @@
                 :checked="departurePrefectures.includes(pref.code)"
                 class="mr-3 h-4 w-4 rounded border-gray-300 accent-green-600"
                 @change="toggleDeparturePref(pref.code)"
-              />
+              >
               <span class="text-gray-800">{{ pref.name }}</span>
             </label>
           </div>
@@ -168,7 +184,9 @@
 
       <!-- 配達地域 -->
       <section>
-        <h2 class="mb-4 text-lg font-bold text-gray-800">配達地域</h2>
+        <h2 class="mb-4 text-lg font-bold text-gray-800">
+          配達地域
+        </h2>
 
         <div class="space-y-4">
           <div
@@ -233,7 +251,7 @@
                         @input="
                           handlePriceInput(pref.code, luggageType.key, $event)
                         "
-                      />
+                      >
                       <span
                         class="rounded-r-md border border-l-0 border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-500"
                       >
@@ -315,7 +333,7 @@ const showDepartureDropdown = ref(false);
 const selectedDepartureLabel = computed(() => {
   if (departurePrefectures.value.length === 0) return "";
   const names = departurePrefectures.value.map((code) => {
-    const pref = allPrefectures.find((p) => p.code === code);
+    const pref = allPrefectures.find(p => p.code === code);
     return pref?.name ?? code;
   });
   if (names.length <= 5) return names.join("、");
@@ -327,7 +345,8 @@ const toggleDeparturePref = (code: string) => {
   const idx = departurePrefectures.value.indexOf(code);
   if (idx >= 0) {
     departurePrefectures.value.splice(idx, 1);
-  } else {
+  }
+  else {
     departurePrefectures.value.push(code);
   }
 };
@@ -346,7 +365,7 @@ const handlePriceInput = (
 ) => {
   const target = event.target as HTMLInputElement;
   let raw = target.value;
-  raw = raw.replace(/[０-９]/g, (char) =>
+  raw = raw.replace(/[０-９]/g, char =>
     String.fromCharCode(char.charCodeAt(0) - 0xfee0),
   );
   raw = raw.replace(/\D/g, "");
@@ -437,7 +456,8 @@ onBeforeRouteLeave((to, _from, next) => {
     next(false);
     pendingLeavePath.value = to.fullPath;
     showLeaveConfirm.value = true;
-  } else {
+  }
+  else {
     next();
   }
 });
@@ -479,7 +499,8 @@ onMounted(async () => {
       service_areas: businessProfile.value.service_areas,
       pricing_rules: businessProfile.value.pricing_rules,
     });
-  } else {
+  }
+  else {
     takeSnapshot();
   }
 });

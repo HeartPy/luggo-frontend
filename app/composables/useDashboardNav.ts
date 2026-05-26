@@ -1,11 +1,11 @@
-export type DashboardView =
-  | "reservations"
-  | "drivers"
-  | "revenue"
-  | "pricing-settings"
-  | "business-settings"
-  | "business-info"
-  | "payment-info";
+export type DashboardView
+  = | "reservations"
+    | "drivers"
+    | "revenue"
+    | "pricing-settings"
+    | "business-settings"
+    | "business-info"
+    | "payment-info";
 
 const viewTtls: Record<DashboardView, string> = {
   "reservations": "予約一覧",
@@ -40,7 +40,8 @@ function resolveInitialView(): DashboardView {
     if (view === undefined || view === "") return "reservations";
     const single = Array.isArray(view) ? view[0] : view;
     return isDashboardView(single) ? single : "reservations";
-  } catch {
+  }
+  catch {
     return "reservations";
   }
 }
@@ -66,7 +67,8 @@ export const useDashboardNav = () => {
     const view = route.params.view;
     if (view === undefined || view === "") {
       currentView.value = "reservations";
-    } else {
+    }
+    else {
       const single = Array.isArray(view) ? view[0] : view;
       if (isDashboardView(single)) {
         currentView.value = single;
@@ -78,8 +80,8 @@ export const useDashboardNav = () => {
   // 選択したビューのURLへ遷移
   const navigate = (view: string) => {
     if (!isDashboardView(view)) return;
-    const path =
-      view === "reservations"
+    const path
+      = view === "reservations"
         ? "/business-owner/dashboard"
         : `/business-owner/dashboard/${view}`;
     navigateTo(path, { replace: true });

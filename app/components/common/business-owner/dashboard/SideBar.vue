@@ -9,7 +9,7 @@
             src="/img/luggo.svg"
             alt="LugGo"
             class="h-full w-full object-contain"
-          />
+          >
         </figure>
         <span class="whitespace-nowrap text-xl font-bold text-gray-800">
           LugGo
@@ -18,7 +18,11 @@
       <div class="w-full overflow-y-auto">
         <nav>
           <ul class="flex flex-col items-center">
-            <li v-for="navItem in navItems" :key="navItem.key" class="w-full">
+            <li
+              v-for="navItem in navItems"
+              :key="navItem.key"
+              class="w-full"
+            >
               <button
                 type="button"
                 class="relative flex w-full items-center justify-center py-4 font-semibold hover:opacity-80"
@@ -33,7 +37,7 @@
                   :src="navItem.icon"
                   alt=""
                   class="mr-2 h-4 w-4 object-contain"
-                />
+                >
                 <span>{{ navItem.label }}</span>
               </button>
             </li>

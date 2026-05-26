@@ -726,9 +726,11 @@ const submit = async (): Promise<void> => {
       });
     }
     catch (fetchErr: unknown) {
-      const errData = (fetchErr as {
-        data?: { error?: string; restart?: boolean; needs_tos?: boolean };
-      })?.data;
+      const errData = (
+        fetchErr as {
+          data?: { error?: string; restart?: boolean; needs_tos?: boolean };
+        }
+      )?.data;
       if (import.meta.dev) {
         // eslint-disable-next-line no-console
         console.log("fetchErr data:", errData);

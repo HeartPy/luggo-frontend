@@ -17,12 +17,12 @@
 import { useBusinessProfile } from "~/composables/useBusinessProfile";
 import { useCsrf } from "~/composables/useCsrf";
 
-export type OnboardingStep =
-  | "pricing"
-  | "business-settings"
-  | "consent"
-  | "stripe"
-  | "done";
+export type OnboardingStep
+  = | "pricing"
+    | "business-settings"
+    | "consent"
+    | "stripe"
+    | "done";
 
 export const useOnboardingProgress = () => {
   const { businessProfile, fetchBusinessProfile } = useBusinessProfile();
@@ -34,7 +34,7 @@ export const useOnboardingProgress = () => {
   const pricingHasAnyPrice = computed(() => {
     const rules = businessProfile.value?.pricing_rules ?? {};
     return Object.values(rules).some(
-      (prefRules) => Object.keys(prefRules ?? {}).length > 0,
+      prefRules => Object.keys(prefRules ?? {}).length > 0,
     );
   });
 
@@ -113,7 +113,8 @@ export const useOnboardingProgress = () => {
       // 同意を反映するため最新のプロフィールを再取得
       await fetchBusinessProfile();
       return true;
-    } catch {
+    }
+    catch {
       return false;
     }
   };

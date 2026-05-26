@@ -13,7 +13,10 @@
             aria-busy="true"
             class="py-8"
           >
-            <CommonAtomsLoadingAnimation size="md" aria-hidden="true" />
+            <CommonAtomsLoadingAnimation
+              size="md"
+              aria-hidden="true"
+            />
             <p class="sr-only">
               プライバシーポリシーを読み込んでいます
             </p>
@@ -57,7 +60,9 @@
                 :key="item.id"
                 role="listitem"
               >
-                <section :aria-labelledby="`privacy-policy-item-${item.id}-title`">
+                <section
+                  :aria-labelledby="`privacy-policy-item-${item.id}-title`"
+                >
                   <h2
                     :id="`privacy-policy-item-${item.id}-title`"
                     class="mb-1 text-sm font-bold"
@@ -183,9 +188,9 @@ const resolveSubdomain = (): string | null => {
   const host = window.location.hostname;
   const parts = host.split(".");
   if (
-    parts.length >= 3 &&
-    !host.includes("localhost") &&
-    !host.includes("127.0.0.1")
+    parts.length >= 3
+    && !host.includes("localhost")
+    && !host.includes("127.0.0.1")
   ) {
     return parts[0] || null;
   }
@@ -217,9 +222,11 @@ onMounted(async () => {
     const data = await res.json();
     companyName.value = data.company_name || "";
     supportEmail.value = data.support_email || "";
-  } catch {
+  }
+  catch {
     fetchErr.value = "プライバシーポリシーの取得に失敗しました。";
-  } finally {
+  }
+  finally {
     isLoading.value = false;
   }
 });

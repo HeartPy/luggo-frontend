@@ -35,8 +35,8 @@ export const useBookingTemplateAcknowledge = () => {
     const bookingTemp = bookingTemplate.value;
     if (!bookingTemp) return false;
     return (
-      bookingTemp.transaction_law_acknowledged_version !==
-      bookingTemp.transaction_law_current_version
+      bookingTemp.transaction_law_acknowledged_version
+      !== bookingTemp.transaction_law_current_version
     );
   });
 
@@ -48,8 +48,8 @@ export const useBookingTemplateAcknowledge = () => {
     const bookingTemp = bookingTemplate.value;
     if (!bookingTemp) return false;
     return (
-      bookingTemp.privacy_acknowledged_version !==
-      bookingTemp.privacy_current_version
+      bookingTemp.privacy_acknowledged_version
+      !== bookingTemp.privacy_current_version
     );
   });
 
@@ -85,8 +85,8 @@ export const useBookingTemplateAcknowledge = () => {
 
     const body: Record<string, string> = {};
     if (transactionLawUpdateRequired.value) {
-      body.transaction_law_version =
-        bookingTemp.transaction_law_current_version;
+      body.transaction_law_version
+        = bookingTemp.transaction_law_current_version;
     }
     if (privacyUpdateRequired.value) {
       body.privacy_version = bookingTemp.privacy_current_version;
@@ -114,7 +114,8 @@ export const useBookingTemplateAcknowledge = () => {
       if (!res.ok) return false;
       await fetchBusinessProfile();
       return true;
-    } catch {
+    }
+    catch {
       return false;
     }
   };

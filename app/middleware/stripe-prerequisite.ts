@@ -11,27 +11,28 @@ export default defineNuxtRouteMiddleware(async () => {
   if (!import.meta.client) return;
 
   try {
-    const { useBusinessProfile } =
-      await import("~/composables/useBusinessProfile");
-    const { useOnboardingProgress } =
-      await import("~/composables/useOnboardingProgress");
+    const { useBusinessProfile }
+      = await import("~/composables/useBusinessProfile");
+    const { useOnboardingProgress }
+      = await import("~/composables/useOnboardingProgress");
 
     const { businessProfile, fetchBusinessProfile } = useBusinessProfile();
     if (!businessProfile.value) {
       await fetchBusinessProfile();
     }
 
-    const { pricingCleared, businessSettingsCleared, consentGiven } =
-      useOnboardingProgress();
+    const { pricingCleared, businessSettingsCleared, consentGiven }
+      = useOnboardingProgress();
 
     if (
-      !pricingCleared.value ||
-      !businessSettingsCleared.value ||
-      !consentGiven.value
+      !pricingCleared.value
+      || !businessSettingsCleared.value
+      || !consentGiven.value
     ) {
       return navigateTo("/business-owner/dashboard", { replace: true });
     }
-  } catch (error) {
+  }
+  catch (error) {
     if (import.meta.dev) {
       // eslint-disable-next-line no-console
       console.error("stripe-prerequisite middleware error:", error);

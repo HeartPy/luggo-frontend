@@ -11,7 +11,10 @@
         size="md"
         message="荷物情報を読み込み中..."
       />
-      <div v-else-if="luggageItemsError" class="py-4 text-center text-red-600">
+      <div
+        v-else-if="luggageItemsError"
+        class="py-4 text-center text-red-600"
+      >
         <p>{{ luggageItemsError }}</p>
       </div>
       <div
@@ -29,7 +32,7 @@
                 class="h-full w-full object-contain"
                 :src="getImageUrl(luggageItem.image_src)"
                 alt=""
-              />
+              >
             </figure>
             <p
               class="mb-1 whitespace-pre-line text-sm font-semibold text-gray-700"
@@ -89,15 +92,15 @@
         金額<small>（税込）</small>
       </h2>
       <div class="rounded-md border-2 border-gray-300 p-4 text-center">
-        <span class="text-2xl font-bold text-gray-800"
-          >¥{{ totalAmount.toLocaleString() }}</span
-        >
+        <span class="text-2xl font-bold text-gray-800">¥{{ totalAmount.toLocaleString() }}</span>
       </div>
     </div>
 
     <!-- 注意事項 -->
     <div class="rounded-md border border-pink-200 bg-pink-50 p-6">
-      <h3 class="mb-4 font-semibold text-red-600">注意事項</h3>
+      <h3 class="mb-4 font-semibold text-red-600">
+        注意事項
+      </h3>
 
       <div class="space-y-6 text-sm text-gray-700">
         <div>
@@ -117,7 +120,9 @@
           >
             お届け時間について
           </h4>
-          <p class="ml-3">配送当日の20時までに、お荷物をお届けいたします。</p>
+          <p class="ml-3">
+            配送当日の20時までに、お荷物をお届けいたします。
+          </p>
         </div>
 
         <div>
@@ -131,19 +136,26 @@
               v-for="prohibitedItem in prohibitedItems"
               :key="prohibitedItem.id"
             >
-              <h5 class="mb-1 font-semibold">{{ prohibitedItem.type }}</h5>
-              <p v-if="prohibitedItem.items">{{ prohibitedItem.items }}</p>
+              <h5 class="mb-1 font-semibold">
+                {{ prohibitedItem.type }}
+              </h5>
+              <p v-if="prohibitedItem.items">
+                {{ prohibitedItem.items }}
+              </p>
             </li>
           </ul>
         </div>
 
-        <hr class="border-gray-300" />
+        <hr class="border-gray-300">
 
         <div>
           <p class="mb-2">
             上記以外で不明な点がございましたらお気軽にお問い合わせください
           </p>
-          <div v-if="props.supportEmail" class="font-semibold">
+          <div
+            v-if="props.supportEmail"
+            class="font-semibold"
+          >
             <p>
               メールアドレス：<a
                 class="underline"
@@ -191,7 +203,7 @@ const luggageItems = computed<LuggageItem[]>(() => {
     return [];
   }
 
-  return props.luggageItemsData.map((item) => ({
+  return props.luggageItemsData.map(item => ({
     ...item,
     count: props.formData[item.key] ?? 0,
   }));

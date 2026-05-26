@@ -18,7 +18,7 @@ const _jstFormatter = new Intl.DateTimeFormat("en-CA", {
 const _jstParts = () => {
   const parts = _jstFormatter.formatToParts(new Date());
   const get = (type: Intl.DateTimeFormatPartTypes) =>
-    Number(parts.find((part) => part.type === type)!.value);
+    Number(parts.find(part => part.type === type)!.value);
   return {
     year: get("year"),
     month: get("month"),
@@ -76,9 +76,9 @@ export const isValidIsoDate = (v: string) => {
   const d = Number(m[3]);
   const dt = new Date(Date.UTC(y, mo - 1, d));
   return (
-    dt.getUTCFullYear() === y &&
-    dt.getUTCMonth() + 1 === mo &&
-    dt.getUTCDate() === d
+    dt.getUTCFullYear() === y
+    && dt.getUTCMonth() + 1 === mo
+    && dt.getUTCDate() === d
   );
 };
 
@@ -195,7 +195,9 @@ export function prefCodeFromPostal(postalCode: string): string | null {
 function isoDateToWeekday(iso: string): number {
   const match = iso.match(/^(\d{4})-(\d{2})-(\d{2})$/);
   if (!match) return -1;
-  const date = new Date(Date.UTC(Number(match[1]), Number(match[2]) - 1, Number(match[3])));
+  const date = new Date(
+    Date.UTC(Number(match[1]), Number(match[2]) - 1, Number(match[3])),
+  );
   const jsDay = date.getUTCDay();
   return jsDay === 0 ? 6 : jsDay - 1;
 }
@@ -260,17 +262,17 @@ export const createStep1Schema = (options?: {
       .test(
         "is-valid-date",
         "存在する日付を入力してください",
-        (value) => !!value && isValidIsoDate(value),
+        value => !!value && isValidIsoDate(value),
       )
       .test(
         "is-min-pickup",
         "前日の23時を過ぎているため、この日付は選択できません",
-        (value) => !!value && value >= minPickup,
+        value => !!value && value >= minPickup,
       )
       .test(
         "is-within-max",
         "予約できるのは半年先までです",
-        (value) => !!value && value <= maxDate,
+        value => !!value && value <= maxDate,
       )
       .test(
         "is-not-regular-holiday-pickup",
@@ -330,7 +332,7 @@ export const createStep1Schema = (options?: {
       .test(
         "is-valid-date",
         "存在する日付を入力してください",
-        (value) => !!value && isValidIsoDate(value),
+        value => !!value && isValidIsoDate(value),
       )
       .test(
         "is-after-pickup",
@@ -343,7 +345,7 @@ export const createStep1Schema = (options?: {
       .test(
         "is-within-max",
         "予約できるのは半年先までです",
-        (value) => !!value && value <= maxDate,
+        value => !!value && value <= maxDate,
       )
       .test(
         "is-not-regular-holiday-delivery",
@@ -414,7 +416,7 @@ export const createStep3Schema = () => {
     customer_phone_number: string()
       .trim()
       .required("お電話番号は必須です")
-      .transform((value) =>
+      .transform(value =>
         typeof value === "string" ? value.replace(/[\s-]/g, "") : value,
       )
       .matches(/^(\+\d{7,15}|\d{10,11})$/u, "有効な電話番号を入力してください"),
@@ -422,7 +424,7 @@ export const createStep3Schema = () => {
     guest_name: string()
       .trim()
       .required("宿泊予約者名は必須です")
-      .transform((value) =>
+      .transform(value =>
         typeof value === "string"
           ? value.normalize("NFKC").replace(/\s+/g, " ")
           : value,

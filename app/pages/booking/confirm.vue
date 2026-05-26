@@ -303,8 +303,14 @@ import {
 } from "~/composables/useBookingValid";
 import type { LuggageItemData, ApiErrRes, BookingData } from "~/types/booking";
 
-const { step1Data, step2Data, step3Data, luggageItemsData, completeFormData, clearAllData }
-  = useBookingForm();
+const {
+  step1Data,
+  step2Data,
+  step3Data,
+  luggageItemsData,
+  completeFormData,
+  clearAllData,
+} = useBookingForm();
 
 const { ensureCsrf, getCsrf } = useCsrf();
 const { checkSessionValidity } = useSession();
@@ -762,8 +768,9 @@ const handleConfirm = async () => {
         fetchErr = err;
 
         const apiErr = (err as unknown as ApiErrRes) || { data: {} };
-        const statusCode = (err as { statusCode?: number; status?: number })
-          ?.statusCode ?? (err as { status?: number })?.status;
+        const statusCode
+          = (err as { statusCode?: number; status?: number })?.statusCode
+            ?? (err as { status?: number })?.status;
 
         // 決済が完了していない場合やバリデーションエラーはリトライしない
         if (

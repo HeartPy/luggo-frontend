@@ -1,8 +1,14 @@
 <template>
   <div>
-    <CommonAtomsLoadingAnimation v-if="isLoading" size="md" />
+    <CommonAtomsLoadingAnimation
+      v-if="isLoading"
+      size="md"
+    />
 
-    <div v-else-if="error" class="p-8 text-center text-red-600">
+    <div
+      v-else-if="error"
+      class="p-8 text-center text-red-600"
+    >
       {{ error }}
     </div>
 
@@ -56,7 +62,10 @@
             <dt class="w-40 shrink-0 text-sm font-semibold text-gray-600">
               予約フォームURL
             </dt>
-            <dd v-if="bookingUrl" class="flex items-center gap-2">
+            <dd
+              v-if="bookingUrl"
+              class="flex items-center gap-2"
+            >
               <a
                 v-if="isStripeVerified"
                 :href="bookingUrl"
@@ -66,7 +75,10 @@
               >
                 {{ bookingUrl }}
               </a>
-              <span v-else class="text-gray-900">
+              <span
+                v-else
+                class="text-gray-900"
+              >
                 {{ bookingUrl }}
               </span>
               <button
@@ -77,7 +89,12 @@
                 {{ isCopied ? "コピー済み" : "コピー" }}
               </button>
             </dd>
-            <dd v-else class="text-gray-900">未設定</dd>
+            <dd
+              v-else
+              class="text-gray-900"
+            >
+              未設定
+            </dd>
           </div>
         </dl>
       </section>
@@ -196,8 +213,8 @@
 import { useBusinessProfile } from "~/composables/useBusinessProfile";
 import { useCsrf } from "~/composables/useCsrf";
 
-const { businessProfile, isLoading, error, fetchBusinessProfile } =
-  useBusinessProfile();
+const { businessProfile, isLoading, error, fetchBusinessProfile }
+  = useBusinessProfile();
 const { ensureCsrf, getCsrf } = useCsrf();
 
 const isStripeVerified = ref(false);
@@ -247,7 +264,8 @@ const checkStripeVerification = async () => {
 
     const data = await res.json();
     isStripeVerified.value = data.account?.charges_enabled === true;
-  } catch {
+  }
+  catch {
     isStripeVerified.value = false;
   }
 };
@@ -260,7 +278,8 @@ const copyUrl = async () => {
     setTimeout(() => {
       isCopied.value = false;
     }, 2000);
-  } catch {
+  }
+  catch {
     // コピーに失敗した場合は握りつぶす
   }
 };

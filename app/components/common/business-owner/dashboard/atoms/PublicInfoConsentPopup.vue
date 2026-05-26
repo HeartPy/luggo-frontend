@@ -51,7 +51,10 @@
               特定商取引法に基づく表記を確認する
               <span aria-hidden="true">↗</span>
             </a>
-            <span v-else class="text-sm text-gray-400">
+            <span
+              v-else
+              class="text-sm text-gray-400"
+            >
               特定商取引法に基づく表記（リンク準備中）
             </span>
           </li>
@@ -66,7 +69,10 @@
               プライバシーポリシーを確認する
               <span aria-hidden="true">↗</span>
             </a>
-            <span v-else class="text-sm text-gray-400">
+            <span
+              v-else
+              class="text-sm text-gray-400"
+            >
               プライバシーポリシー（リンク準備中）
             </span>
           </li>
@@ -99,13 +105,16 @@
             v-model="agreed"
             type="checkbox"
             class="mt-0.5 h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-          />
+          >
           <span class="text-sm text-gray-800">
             上記の情報がユーザー（旅行者）に表示されることに同意します
           </span>
         </label>
 
-        <div v-if="submitErr" class="mb-4 text-sm text-red-600">
+        <div
+          v-if="submitErr"
+          class="mb-4 text-sm text-red-600"
+        >
           {{ submitErr }}
         </div>
 
@@ -123,7 +132,10 @@
             :disabled="!agreed || isSubmitting"
             @click="handleAgree"
           >
-            <CommonAtomsLoadingAnimation v-if="isSubmitting" size="xs" />
+            <CommonAtomsLoadingAnimation
+              v-if="isSubmitting"
+              size="xs"
+            />
             <span v-else>同意して決済設定へ進む</span>
           </button>
         </div>
@@ -157,11 +169,11 @@ watch(
   [pricingCleared, businessSettingsCleared, consentGiven],
   ([pricing, business, consent]) => {
     if (
-      pricing &&
-      business &&
-      !consent &&
-      !hasAutoOpenedConsent.value &&
-      import.meta.client
+      pricing
+      && business
+      && !consent
+      && !hasAutoOpenedConsent.value
+      && import.meta.client
     ) {
       openConsentPopup();
       hasAutoOpenedConsent.value = true;
@@ -210,13 +222,14 @@ const handleAgree = async () => {
   try {
     const ok = await submitConsent();
     if (!ok) {
-      submitErr.value =
-        "同意の記録に失敗しました。時間をおいて再度お試しください。";
+      submitErr.value
+        = "同意の記録に失敗しました。時間をおいて再度お試しください。";
       return;
     }
     closeConsentPopup();
     await navigateTo("/stripe/account");
-  } finally {
+  }
+  finally {
     isSubmitting.value = false;
   }
 };

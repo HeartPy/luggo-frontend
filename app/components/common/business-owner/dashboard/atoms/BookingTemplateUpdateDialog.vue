@@ -101,7 +101,10 @@
             本通知は、事業者が直接編集できない静的部分の変更を対象としています。
           </p>
 
-          <div v-if="submitErr" class="mb-3 text-sm text-red-600">
+          <div
+            v-if="submitErr"
+            class="mb-3 text-sm text-red-600"
+          >
             {{ submitErr }}
           </div>
         </div>
@@ -124,7 +127,10 @@
             :disabled="isSubmitting"
             @click="handleAcknowledge"
           >
-            <CommonAtomsLoadingAnimation v-if="isSubmitting" size="xs" />
+            <CommonAtomsLoadingAnimation
+              v-if="isSubmitting"
+              size="xs"
+            />
             <span v-else>確認しました</span>
           </button>
         </div>
@@ -199,12 +205,13 @@ const handleAcknowledge = async () => {
   try {
     const ok = await submitAcknowledge();
     if (!ok) {
-      submitErr.value =
-        "確認の記録に失敗しました。時間をおいて再度お試しください。";
+      submitErr.value
+        = "確認の記録に失敗しました。時間をおいて再度お試しください。";
       return;
     }
     closeBookingTemplateDialog();
-  } finally {
+  }
+  finally {
     isSubmitting.value = false;
   }
 };

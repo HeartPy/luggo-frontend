@@ -33,9 +33,11 @@ if (import.meta.client) {
   watch(locale, (newLocale: string) => {
     if (newLocale === "ja") {
       router.push("/");
-    } else if (newLocale === "en") {
+    }
+    else if (newLocale === "en") {
       router.push("/en/");
-    } else {
+    }
+    else {
       router.push("/");
     }
   });

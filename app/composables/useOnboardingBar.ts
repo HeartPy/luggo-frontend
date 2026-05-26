@@ -8,13 +8,13 @@ type Requirements = {
   past_due: string[];
 };
 
-export type OnboardingBarStep =
-  | "pricing" // 料金の設定が未完了
-  | "business-settings" // 事業の設定が未完了
-  | "consent" // 公開情報の同意が未完了
-  | "stripe-create" // Stripe アカウント未作成
-  | "stripe-review" // Stripe 審査中
-  | "stripe-past-due"; // Stripe 審査不合格 / 再入力要
+export type OnboardingBarStep
+  = | "pricing" // 料金の設定が未完了
+    | "business-settings" // 事業の設定が未完了
+    | "consent" // 公開情報の同意が未完了
+    | "stripe-create" // Stripe アカウント未作成
+    | "stripe-review" // Stripe 審査中
+    | "stripe-past-due"; // Stripe 審査不合格 / 再入力要
 
 let loadPromise: Promise<void> | null = null;
 
@@ -61,7 +61,8 @@ export function useOnboardingBar() {
         eventually_due: data.eventually_due || [],
         past_due: data.past_due || [],
       };
-    } catch {
+    }
+    catch {
       return null;
     }
   };
@@ -87,10 +88,11 @@ export function useOnboardingBar() {
             // past_dueが空でない場合は審査不合格
             hasPastDue.value = requirements.past_due.length > 0;
             // currently_dueが空でない場合は審査中（past_dueがない場合のみ）
-            isUnderReview.value =
-              requirements.currently_due.length > 0 && !hasPastDue.value;
+            isUnderReview.value
+              = requirements.currently_due.length > 0 && !hasPastDue.value;
           }
-        } catch {
+        }
+        catch {
           // エラー時は審査中とみなす
           isUnderReview.value = true;
           hasPastDue.value = false;

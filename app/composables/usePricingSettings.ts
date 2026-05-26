@@ -124,7 +124,7 @@ export const REGIONS: RegionDef[] = [
 ];
 
 export const ALL_PREFECTURES: PrefectureDef[] = REGIONS.flatMap(
-  (r) => r.prefectures,
+  r => r.prefectures,
 );
 
 // 全都道府県について、荷物タイプ別の料金をnullで初期化
@@ -184,14 +184,14 @@ function normalizeDraftLayer(raw: unknown): PricingDraftLayer | null {
     return null;
 
   if (
-    !draftObj.prefecturePricing ||
-    typeof draftObj.prefecturePricing !== "object"
+    !draftObj.prefecturePricing
+    || typeof draftObj.prefecturePricing !== "object"
   )
     return null;
 
   if (
-    !draftObj.enabledLuggageTypes ||
-    typeof draftObj.enabledLuggageTypes !== "object"
+    !draftObj.enabledLuggageTypes
+    || typeof draftObj.enabledLuggageTypes !== "object"
   ) {
     return null;
   }
@@ -316,7 +316,8 @@ export const usePricingSettings = () => {
       takeSnapshot();
       hasDraftSaveSinceLastRealSave.value = true;
       return true;
-    } catch {
+    }
+    catch {
       return false;
     }
   };
@@ -346,9 +347,11 @@ export const usePricingSettings = () => {
         body: { draft },
       });
       return true;
-    } catch {
+    }
+    catch {
       return false;
-    } finally {
+    }
+    finally {
       isSavingDraft.value = false;
     }
   };
@@ -362,8 +365,8 @@ export const usePricingSettings = () => {
         deliveryEnabled: deliveryEnabled.value,
         prefecturePricing: prefecturePricing.value,
         enabledLuggageTypes: enabledLuggageTypes.value,
-      }) !==
-      JSON.stringify({
+      })
+      !== JSON.stringify({
         departurePrefectures: snapshot.value.departurePrefectures,
         deliveryEnabled: snapshot.value.deliveryEnabled,
         prefecturePricing: snapshot.value.prefecturePricing,
@@ -375,7 +378,7 @@ export const usePricingSettings = () => {
   // 配達可能として選択された荷物タイプのみ
   const visibleLuggageTypes = computed(() =>
     LUGGAGE_TYPES.filter(
-      (luggageType) => enabledLuggageTypes.value[luggageType.key],
+      luggageType => enabledLuggageTypes.value[luggageType.key],
     ),
   );
 
@@ -395,12 +398,13 @@ export const usePricingSettings = () => {
       for (const luggageType of visibleLuggageTypes.value) {
         const price = pricing[luggageType.key];
         if (price === null || price === undefined) {
-          validationErrs.value[`${pref.code}_${luggageType.key}`] =
-            "料金を入力してください";
+          validationErrs.value[`${pref.code}_${luggageType.key}`]
+            = "料金を入力してください";
           isValid = false;
-        } else if (price < 100) {
-          validationErrs.value[`${pref.code}_${luggageType.key}`] =
-            "100円以上で設定してください";
+        }
+        else if (price < 100) {
+          validationErrs.value[`${pref.code}_${luggageType.key}`]
+            = "100円以上で設定してください";
           isValid = false;
         }
       }
@@ -421,8 +425,8 @@ export const usePricingSettings = () => {
         oversize: null,
       };
       for (const luggageType of LUGGAGE_TYPES) {
-        const { [`${prefCode}_${luggageType.key}`]: _, ...rest } =
-          validationErrs.value;
+        const { [`${prefCode}_${luggageType.key}`]: _, ...rest }
+          = validationErrs.value;
         validationErrs.value = rest;
       }
     }
@@ -444,7 +448,7 @@ export const usePricingSettings = () => {
 
     // 配達可能な荷物が1つもなくなったら、全地域を配達不可
     const hasAnyEnabled = LUGGAGE_TYPES.some(
-      (luggageType) => enabledLuggageTypes.value[luggageType.key],
+      luggageType => enabledLuggageTypes.value[luggageType.key],
     );
     if (!hasAnyEnabled) {
       for (const pref of ALL_PREFECTURES) {
@@ -469,8 +473,8 @@ export const usePricingSettings = () => {
     prefecturePricing.value[prefCode][luggageType] = value;
 
     if (value !== null && value >= 100) {
-      const { [`${prefCode}_${luggageType}`]: _, ...rest } =
-        validationErrs.value;
+      const { [`${prefCode}_${luggageType}`]: _, ...rest }
+        = validationErrs.value;
       validationErrs.value = rest;
     }
   };
@@ -522,16 +526,17 @@ export const usePricingSettings = () => {
       takeSnapshot();
       hasDraftSaveSinceLastRealSave.value = false;
       return true;
-    } catch (err: unknown) {
+    }
+    catch (err: unknown) {
       // 認証切れ（401）の場合はログインページへリダイレクト
       if (
-        err &&
-        typeof err === "object" &&
-        "status" in err &&
-        (err as { status: number }).status === 401
+        err
+        && typeof err === "object"
+        && "status" in err
+        && (err as { status: number }).status === 401
       ) {
-        saveErr.value =
-          "ログインの有効期限が切れました。再ログインしてください。";
+        saveErr.value
+          = "ログインの有効期限が切れました。再ログインしてください。";
         navigateTo("/account/login");
         return false;
       }
@@ -541,7 +546,8 @@ export const usePricingSettings = () => {
         console.error("Failed to save pricing settings:", err);
       }
       return false;
-    } finally {
+    }
+    finally {
       isSaving.value = false;
     }
   };
@@ -567,7 +573,9 @@ export const usePricingSettings = () => {
 
   // 配達可能な荷物タイプが 1 つ以上選択されているか
   const hasEnabledLuggageType = computed(() =>
-    LUGGAGE_TYPES.some((luggageType) => enabledLuggageTypes.value[luggageType.key]),
+    LUGGAGE_TYPES.some(
+      luggageType => enabledLuggageTypes.value[luggageType.key],
+    ),
   );
 
   // 集荷地域（出発側の都道府県）が 1 つ以上選択されているか
@@ -577,7 +585,7 @@ export const usePricingSettings = () => {
 
   // 配送地域（「配達可」になっている都道府県）が 1 つ以上選択されているか
   const hasDeliveryPrefecture = computed(() =>
-    ALL_PREFECTURES.some((pref) => deliveryEnabled.value[pref.code]),
+    ALL_PREFECTURES.some(pref => deliveryEnabled.value[pref.code]),
   );
 
   // 配送可の各都道府県について、表示中の荷物タイプの料金がすべて入力済みか
@@ -600,11 +608,11 @@ export const usePricingSettings = () => {
   //   - かつ、最低限の設定（配達可能な荷物・集荷地域・配送地域・料金）が揃っている場合のみ
   const canSave = computed(
     () =>
-      (isDirty.value || hasDraftSaveSinceLastRealSave.value) &&
-      hasEnabledLuggageType.value &&
-      hasDeparturePrefecture.value &&
-      hasDeliveryPrefecture.value &&
-      hasAllRequiredPrices.value,
+      (isDirty.value || hasDraftSaveSinceLastRealSave.value)
+      && hasEnabledLuggageType.value
+      && hasDeparturePrefecture.value
+      && hasDeliveryPrefecture.value
+      && hasAllRequiredPrices.value,
   );
 
   // 事業者プロフィール（集荷エリア・料金ルール）から料金設定フォームの状態を初期化
@@ -637,7 +645,7 @@ export const usePricingSettings = () => {
       // 各荷物タイプについて、いずれかの地域に料金が入っていればチェックをオンにする
       for (const luggageType of LUGGAGE_TYPES) {
         const hasAny = Object.values(profile.pricing_rules).some(
-          (prefRules) => prefRules[luggageType.key] != null,
+          prefRules => prefRules[luggageType.key] != null,
         );
         enabledLuggageTypes.value[luggageType.key] = hasAny;
       }
@@ -645,7 +653,7 @@ export const usePricingSettings = () => {
 
     // 配達可能な荷物が1つもない場合は、全地域を配達不可
     const hasAnyLuggageEnabled = LUGGAGE_TYPES.some(
-      (luggageType) => enabledLuggageTypes.value[luggageType.key],
+      luggageType => enabledLuggageTypes.value[luggageType.key],
     );
     if (!hasAnyLuggageEnabled) {
       for (const pref of ALL_PREFECTURES) {
@@ -685,9 +693,11 @@ export const usePricingSettings = () => {
       });
       initFromProfile(profile);
       return true;
-    } catch {
+    }
+    catch {
       return false;
-    } finally {
+    }
+    finally {
       isDiscardingDraft.value = false;
     }
   };

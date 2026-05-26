@@ -1,7 +1,10 @@
 <template>
   <div class="flex min-h-screen items-center justify-center">
     <CommonAtomsLoadingAnimation v-if="isCheckingAuth" />
-    <div v-else class="w-[calc(100%-8vw)] max-w-md bg-white">
+    <div
+      v-else
+      class="w-[calc(100%-8vw)] max-w-md bg-white"
+    >
       <h2 class="mb-8 text-center text-2xl font-bold text-gray-800">
         ログイン
       </h2>
@@ -15,7 +18,10 @@
       >
         <div class="mb-10 space-y-6">
           <div>
-            <label for="email" class="mb-2 block font-semibold text-gray-800">
+            <label
+              for="email"
+              class="mb-2 block font-semibold text-gray-800"
+            >
               メールアドレス
             </label>
             <input
@@ -30,7 +36,7 @@
               autocomplete="email"
               aria-required="true"
               aria-describedby="email-error"
-            />
+            >
             <p
               v-if="errors.email && formTouched"
               id="email-error"
@@ -61,7 +67,7 @@
                 autocomplete="current-password"
                 aria-required="true"
                 aria-describedby="password-error"
-              />
+              >
               <button
                 type="button"
                 class="absolute right-3 top-1/2 -translate-y-1/2 focus:outline-none"
@@ -75,13 +81,13 @@
                   class="h-6 w-6"
                   src="/img/pass-show.svg"
                   alt="パスワードを非表示"
-                />
+                >
                 <img
                   v-else
                   class="h-6 w-6"
                   src="/img/pass-hidden.svg"
                   alt="パスワードを表示"
-                />
+                >
               </button>
             </div>
             <p
@@ -94,7 +100,10 @@
             </p>
           </div>
 
-          <div v-if="errMsg" class="text-center text-sm text-red-600">
+          <div
+            v-if="errMsg"
+            class="text-center text-sm text-red-600"
+          >
             {{ errMsg }}
           </div>
         </div>
@@ -104,20 +113,31 @@
           :disabled="isSubmitting"
           class="mx-auto w-full max-w-[500px] rounded-lg bg-gray-800 px-8 py-3 font-semibold text-white hover:bg-gray-900 disabled:cursor-not-allowed disabled:bg-gray-300"
         >
-          <CommonAtomsLoadingAnimation v-if="isSubmitting" size="sm" />
+          <CommonAtomsLoadingAnimation
+            v-if="isSubmitting"
+            size="sm"
+          />
           <span v-else>ログイン</span>
         </button>
       </form>
 
       <!-- ステップ2: 認証コード入力 -->
-      <form v-else class="mb-6" novalidate @submit.prevent="handleVerifyCode">
+      <form
+        v-else
+        class="mb-6"
+        novalidate
+        @submit.prevent="handleVerifyCode"
+      >
         <div class="mb-10 space-y-6">
           <div>
             <p class="mb-4 text-center text-sm text-gray-600">
-              {{ email }}宛に認証コードを送信しました。<br />
+              {{ email }}宛に認証コードを送信しました。<br>
               メールに記載されている6桁の認証コードを入力してください。
             </p>
-            <label for="code" class="mb-2 block font-semibold text-gray-800">
+            <label
+              for="code"
+              class="mb-2 block font-semibold text-gray-800"
+            >
               認証コード
             </label>
             <input
@@ -136,7 +156,7 @@
               pattern="[0-9]{6}"
               inputmode="numeric"
               @input="handleCodeInput"
-            />
+            >
             <p
               v-if="codeErr"
               id="code-error"
@@ -160,7 +180,10 @@
             </div>
           </div>
 
-          <div v-if="errMsg" class="text-center text-sm text-red-600">
+          <div
+            v-if="errMsg"
+            class="text-center text-sm text-red-600"
+          >
             {{ errMsg }}
           </div>
         </div>
@@ -171,7 +194,10 @@
             :disabled="isSubmitting"
             class="mx-auto w-full max-w-[500px] rounded-lg bg-gray-800 px-8 py-3 font-semibold text-white hover:bg-gray-900 disabled:cursor-not-allowed disabled:bg-gray-300"
           >
-            <CommonAtomsLoadingAnimation v-if="isSubmitting" size="sm" />
+            <CommonAtomsLoadingAnimation
+              v-if="isSubmitting"
+              size="sm"
+            />
             <span v-else>ログイン</span>
           </button>
           <button
@@ -185,7 +211,10 @@
         </div>
       </form>
 
-      <div v-if="!codeSent" class="space-y-2 text-center">
+      <div
+        v-if="!codeSent"
+        class="space-y-2 text-center"
+      >
         <NuxtLink
           to="/account/register/email"
           class="block text-sm text-gray-600 transition-colors duration-200 hover:text-gray-800"
@@ -250,9 +279,11 @@ onMounted(async () => {
       await navigateTo("/business-owner/dashboard", { replace: true });
       return;
     }
-  } catch {
+  }
+  catch {
     // 認証チェック失敗時はログインフォームを表示
-  } finally {
+  }
+  finally {
     isCheckingAuth.value = false;
   }
 });
@@ -286,10 +317,11 @@ const handleLogin = handleSubmit(async (formValues: LoginFormData) => {
         },
         credentials: "include",
       });
-    } catch (fetchErr: unknown) {
+    }
+    catch (fetchErr: unknown) {
       const errData = (fetchErr as { data?: { error?: string } })?.data;
-      errMsg.value =
-        errData?.error || "メールアドレスまたはパスワードが正しくありません。";
+      errMsg.value
+        = errData?.error || "メールアドレスまたはパスワードが正しくありません。";
       return;
     }
 
@@ -299,14 +331,16 @@ const handleLogin = handleSubmit(async (formValues: LoginFormData) => {
     savedPassword.value = formValues.password || "";
     // フォームのパスワードをクリア（セキュリティのため）
     password.value = "";
-  } catch (error: unknown) {
+  }
+  catch (error: unknown) {
     if (import.meta.dev) {
       // eslint-disable-next-line no-console
       console.error("Form submission error:", error);
     }
-    errMsg.value =
-      "予期しないエラーが発生しました。しばらく時間をおいて再度お試しください。";
-  } finally {
+    errMsg.value
+      = "予期しないエラーが発生しました。しばらく時間をおいて再度お試しください。";
+  }
+  finally {
     isSubmitting.value = false;
   }
 });
@@ -341,30 +375,33 @@ const handleVerifyCode = async () => {
         },
         credentials: "include",
       });
-    } catch (fetchErr: unknown) {
+    }
+    catch (fetchErr: unknown) {
       const errData = (fetchErr as { data?: { error?: string } })?.data;
-      codeErr.value =
-        errData?.error || "認証コードが正しくないか、有効期限が切れています。";
+      codeErr.value
+        = errData?.error || "認証コードが正しくないか、有効期限が切れています。";
       return;
     }
 
     await navigateTo("/business-owner/dashboard");
-  } catch (error: unknown) {
+  }
+  catch (error: unknown) {
     if (import.meta.dev) {
       // eslint-disable-next-line no-console
       console.error("Code verification error:", error);
     }
-    errMsg.value =
-      "予期しないエラーが発生しました。しばらく時間をおいて再度お試しください。";
-  } finally {
+    errMsg.value
+      = "予期しないエラーが発生しました。しばらく時間をおいて再度お試しください。";
+  }
+  finally {
     isSubmitting.value = false;
   }
 };
 
 const handleResendCode = async () => {
   if (!email.value || !savedPassword.value) {
-    errMsg.value =
-      "入力情報が失われました。ページを再読み込みして、メールアドレスとパスワードから再度入力してください。";
+    errMsg.value
+      = "入力情報が失われました。ページを再読み込みして、メールアドレスとパスワードから再度入力してください。";
     return;
   }
 
@@ -393,7 +430,8 @@ const handleResendCode = async () => {
         },
         credentials: "include",
       });
-    } catch (fetchErr: unknown) {
+    }
+    catch (fetchErr: unknown) {
       const e = fetchErr as {
         data?: { error?: string };
         status?: number;
@@ -410,9 +448,9 @@ const handleResendCode = async () => {
       }
 
       const errData = e?.data;
-      errMsg.value =
-        errData?.error ||
-        "認証コードの再送信に失敗しました。しばらく時間をおいて再度お試しください。";
+      errMsg.value
+        = errData?.error
+          || "認証コードの再送信に失敗しました。しばらく時間をおいて再度お試しください。";
       return;
     }
 
@@ -421,14 +459,16 @@ const handleResendCode = async () => {
       // eslint-disable-next-line no-console
       console.log("認証コードを再送信しました。");
     }
-  } catch (error: unknown) {
+  }
+  catch (error: unknown) {
     if (import.meta.dev) {
       // eslint-disable-next-line no-console
       console.error("Resend code error:", error);
     }
-    errMsg.value =
-      "予期しないエラーが発生しました。しばらく時間をおいて再度お試しください。";
-  } finally {
+    errMsg.value
+      = "予期しないエラーが発生しました。しばらく時間をおいて再度お試しください。";
+  }
+  finally {
     isResending.value = false;
   }
 };

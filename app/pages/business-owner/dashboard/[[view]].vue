@@ -75,15 +75,16 @@ onBeforeRouteUpdate((to, from, next) => {
     return;
   }
   const fromView = getViewParam(from.params.view);
-  const hasUnsavedChanges =
-    (fromView === "pricing-settings" && pricingCanSaveState.value) ||
-    (fromView === "business-settings" && businessSettingsCanSaveState.value);
+  const hasUnsavedChanges
+    = (fromView === "pricing-settings" && pricingCanSaveState.value)
+      || (fromView === "business-settings" && businessSettingsCanSaveState.value);
 
   if (hasUnsavedChanges) {
     next(false);
     pendingLeaveToPath.value = to.fullPath;
     showLeaveConfirm.value = true;
-  } else {
+  }
+  else {
     next();
   }
 });

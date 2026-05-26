@@ -1,5 +1,8 @@
 <template>
-  <footer class="bg-white" role="contentinfo">
+  <footer
+    class="bg-white"
+    role="contentinfo"
+  >
     <div class="container mx-auto px-4 py-8">
       <nav>
         <ul class="flex flex-wrap items-center">

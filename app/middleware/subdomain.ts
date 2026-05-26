@@ -10,9 +10,9 @@ export default defineNuxtRouteMiddleware(async (_to) => {
       const parts = host.split(".");
       // 開発環境では localhost:3000 のような形式なので、サブドメインを検出しない
       if (
-        parts.length >= 3 &&
-        !host.includes("localhost") &&
-        !host.includes("127.0.0.1")
+        parts.length >= 3
+        && !host.includes("localhost")
+        && !host.includes("127.0.0.1")
       ) {
         subdomain = parts[0] || null;
       }
@@ -25,15 +25,16 @@ export default defineNuxtRouteMiddleware(async (_to) => {
         }
       }
     }
-  } else {
+  }
+  else {
     // クライアントサイド: window.locationから取得
     const host = window.location.hostname;
     const parts = host.split(".");
     // 開発環境では localhost:3000 のような形式なので、サブドメインを検出しない
     if (
-      parts.length >= 3 &&
-      !host.includes("localhost") &&
-      !host.includes("127.0.0.1")
+      parts.length >= 3
+      && !host.includes("localhost")
+      && !host.includes("127.0.0.1")
     ) {
       subdomain = parts[0] || null;
     }
@@ -86,15 +87,16 @@ export default defineNuxtRouteMiddleware(async (_to) => {
 
     const businessProfile = useState("businessProfile", () => data);
     businessProfile.value = data;
-  } catch (err: unknown) {
+  }
+  catch (err: unknown) {
     if (err && typeof err === "object" && "statusCode" in err) {
       throw err;
     }
     if (
-      err &&
-      typeof err === "object" &&
-      "status" in err &&
-      err.status === 404
+      err
+      && typeof err === "object"
+      && "status" in err
+      && err.status === 404
     ) {
       throw createError({
         statusCode: 404,
