@@ -8,39 +8,33 @@
           アカウント登録
         </h1>
 
-        <div
-          v-if="emailSent"
-          class="space-y-6"
-        >
+        <div v-if="emailSent" class="space-y-6">
           <div class="flex flex-col items-center justify-center gap-2">
             <figure class="mx-auto w-20">
               <img
                 src="/img/mail.svg"
                 alt=""
                 class="h-full w-full object-contain"
-              >
+              />
             </figure>
             <p class="block text-center text-lg font-semibold text-gray-800">
               メールを送信しました
             </p>
           </div>
           <p class="mx-auto w-fit">
-            {{ email }} 宛に登録用メールを送信しました。<br>
-            メール内のリンクから登録を行なってください。<br>
+            {{ email }} 宛に登録用メールを送信しました。<br />
+            メール内のリンクから登録を行なってください。<br />
             リンクは30分間のみ有効です。
           </p>
         </div>
 
-        <div
-          v-else
-          class="mx-auto max-w-sm"
-        >
+        <div v-else class="mx-auto max-w-sm">
           <form
             class="mb-4 w-full"
             novalidate
             @submit.prevent="handleFormSubmit"
           >
-            <div class="mb-10 space-y-6">
+            <div class="mb-8 space-y-6">
               <div>
                 <label
                   for="email"
@@ -58,7 +52,7 @@
                   autocomplete="email"
                   aria-required="true"
                   aria-describedby="email-error"
-                >
+                />
                 <p
                   v-if="emailErr"
                   id="email-error"
@@ -69,26 +63,73 @@
                 </p>
               </div>
 
-              <div
-                v-if="errMsg"
-                class="text-sm text-red-600"
-              >
+              <div v-if="errMsg" class="text-sm text-red-600">
                 {{ errMsg }}
+              </div>
+            </div>
+
+            <!-- 利用規約・プライバシーポリシーへの同意 -->
+            <div
+              class="mb-6 space-y-3 rounded-md border border-gray-200 bg-gray-50 p-3"
+            >
+              <div class="flex items-start gap-2">
+                <input
+                  id="agree-terms"
+                  v-model="agreedToTerms"
+                  type="checkbox"
+                  class="mt-0.5 h-4 w-4 cursor-pointer rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                />
+                <label
+                  for="agree-terms"
+                  class="cursor-pointer text-sm text-gray-800"
+                >
+                  <button
+                    type="button"
+                    class="text-blue-600 underline hover:text-blue-800"
+                    @click.prevent.stop="showTermsDialog = true"
+                  >
+                    利用規約
+                  </button>
+                  に同意します
+                </label>
+              </div>
+              <div class="flex items-start gap-2">
+                <input
+                  id="agree-privacy"
+                  v-model="agreedToPrivacy"
+                  type="checkbox"
+                  class="mt-0.5 h-4 w-4 cursor-pointer rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                />
+                <label
+                  for="agree-privacy"
+                  class="cursor-pointer text-sm text-gray-800"
+                >
+                  <a
+                    href="/privacy"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="text-blue-600 underline hover:text-blue-800"
+                    @click.stop
+                  >
+                    プライバシーポリシー
+                  </a>
+                  に同意します
+                </label>
               </div>
             </div>
 
             <button
               type="submit"
-              :disabled="isSubmitting"
+              :disabled="!canSubmit"
               class="mx-auto block w-full max-w-[500px] rounded-lg bg-gray-800 px-8 py-3 font-semibold text-white hover:bg-gray-900 disabled:cursor-not-allowed disabled:bg-gray-300"
             >
-              <CommonAtomsLoadingAnimation
-                v-if="isSubmitting"
-                size="sm"
-              />
+              <CommonAtomsLoadingAnimation v-if="isSubmitting" size="sm" />
               <span v-else>登録用メールを送信</span>
             </button>
           </form>
+
+          <!-- 利用規約ダイアログ -->
+          <AccountRegisterAtomsTermsOfServiceDialog v-model="showTermsDialog" />
 
           <NuxtLink
             to="/account/login"
@@ -130,9 +171,19 @@ const isSubmitting = ref(false);
 const errMsg = ref("");
 const emailSent = ref(false);
 
+// 利用規約・プライバシーポリシーへの同意状態
+const agreedToTerms = ref(false);
+const agreedToPrivacy = ref(false);
+const showTermsDialog = ref(false);
+
+const canSubmit = computed(
+  () => agreedToTerms.value && agreedToPrivacy.value && !isSubmitting.value,
+);
+
 const { ensureCsrf, getCsrf } = useCsrf();
 
 const handleFormSubmit = async () => {
+  if (!canSubmit.value) return;
   await handleSendEmail();
 };
 
@@ -142,7 +193,8 @@ const checkEmailAvailability = async (): Promise<boolean> => {
     const config = useRuntimeConfig();
     const apiBase = config.public.apiBaseUrl;
 
-    const { data: checkData, error: checkErr } = await useFetch<{
+    // エラーチェックに失敗した場合は送信を続行（バックエンドで再チェックされる）
+    const checkData = await $fetch<{
       available: boolean;
       message?: string;
     }>(`${apiBase}/api/business/account/register/check-email`, {
@@ -151,23 +203,17 @@ const checkEmailAvailability = async (): Promise<boolean> => {
       credentials: "include",
     });
 
-    if (checkErr.value) {
-      // エラーチェックに失敗した場合は送信を続行（バックエンドで再チェックされる）
-      return true;
-    }
-
-    if (checkData.value && !checkData.value.available) {
-      if (import.meta.dev && checkData.value.message) {
+    if (!checkData.available) {
+      if (import.meta.dev && checkData.message) {
         // eslint-disable-next-line no-console
-        console.log("Email check message:", checkData.value.message);
+        console.log("Email check message:", checkData.message);
       }
       emailErr.value = "このメールアドレスは既に登録されています。";
       return false;
     }
 
     return true;
-  }
-  catch (error: unknown) {
+  } catch (error: unknown) {
     // エラーチェックに失敗した場合は送信を続行（バックエンドで再チェックされる）
     if (import.meta.dev) {
       // eslint-disable-next-line no-console
@@ -204,24 +250,27 @@ const handleSendEmail = async () => {
 
     await ensureCsrf(apiBase);
 
-    const { data, error } = await useFetch(
-      `${apiBase}/api/business/account/register/request`,
-      {
+    try {
+      await $fetch(`${apiBase}/api/business/account/register/request`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          ...(getCsrf() ? { "X-CSRFToken": getCsrf() } : {}),
+          ...(getCsrf() ? { "X-CSRFToken": getCsrf()! } : {}),
         },
         body: {
           email: email.value.trim().toLowerCase(),
         },
         credentials: "include",
-      },
-    );
-
-    if (error.value) {
-      const errorData = error.value.data as { error?: string };
-      const statusCode = (error.value as { statusCode?: number })?.statusCode;
+      });
+      emailSent.value = true;
+    } catch (fetchErr: unknown) {
+      const err = fetchErr as {
+        data?: { error?: string };
+        status?: number;
+        statusCode?: number;
+      };
+      const errorData = err?.data;
+      const statusCode = err?.statusCode ?? err?.status;
 
       if (import.meta.dev && errorData?.error) {
         // eslint-disable-next-line no-console
@@ -236,30 +285,23 @@ const handleSendEmail = async () => {
       // 429エラー（レート制限）の場合
       if (statusCode === 429 && errorData?.error) {
         errMsg.value = errorData.error;
-      }
-      else if (errorData?.error) {
+      } else if (errorData?.error) {
         // その他のエラーの場合
         errMsg.value = errorData.error;
-      }
-      else {
+      } else {
         // エラーメッセージがない場合のフォールバック
-        errMsg.value
-          = "メールの送信に失敗しました。しばらく時間をおいて再度お試しください。";
+        errMsg.value =
+          "メールの送信に失敗しました。しばらく時間をおいて再度お試しください。";
       }
     }
-    else if (data.value) {
-      emailSent.value = true;
-    }
-  }
-  catch (error: unknown) {
+  } catch (error: unknown) {
     if (import.meta.dev) {
       // eslint-disable-next-line no-console
       console.error("Form submission error:", error);
     }
-    errMsg.value
-      = "予期しないエラーが発生しました。しばらく時間をおいて再度お試しください。";
-  }
-  finally {
+    errMsg.value =
+      "予期しないエラーが発生しました。しばらく時間をおいて再度お試しください。";
+  } finally {
     isSubmitting.value = false;
   }
 };
