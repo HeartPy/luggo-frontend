@@ -9,7 +9,7 @@
             src="/img/luggo.svg"
             alt="LugGo"
             class="h-full w-full object-contain"
-          >
+          />
         </figure>
         <span class="whitespace-nowrap text-xl font-bold text-gray-800">
           LugGo
@@ -18,17 +18,13 @@
       <div class="w-full overflow-y-auto">
         <nav>
           <ul class="flex flex-col items-center">
-            <li
-              v-for="navItem in navItems"
-              :key="navItem.key"
-              class="w-full"
-            >
+            <li v-for="navItem in navItems" :key="navItem.key" class="w-full">
               <button
                 type="button"
                 class="relative flex w-full items-center justify-center py-4 font-semibold hover:opacity-80"
                 :class="{
                   'bg-gray-200 before:absolute before:left-0 before:top-0 before:h-full before:w-1 before:bg-gray-800':
-                    navItem.key === currentView,
+                    isItemActive(navItem),
                 }"
                 @click="emit('select', navItem.key)"
               >
@@ -37,7 +33,7 @@
                   :src="navItem.icon"
                   alt=""
                   class="mr-2 h-4 w-4 object-contain"
-                >
+                />
                 <span>{{ navItem.label }}</span>
               </button>
             </li>
@@ -53,9 +49,10 @@ type NavItem = {
   key: string;
   icon?: string;
   label: string;
+  matchPrefixes?: string[];
 };
 
-defineProps<{
+const props = defineProps<{
   currentView: string;
 }>();
 
@@ -67,7 +64,22 @@ const navItems = ref<NavItem[]>([
   { key: "reservations", label: "予約一覧" },
   { key: "drivers", label: "配達者一覧" },
   { key: "revenue", label: "売上管理" },
-  { key: "pricing-settings", icon: "/img/settings.svg", label: "料金の設定" },
-  { key: "business-settings", icon: "/img/settings.svg", label: "事業の設定" },
+  {
+    key: "settings",
+    icon: "/img/settings.svg",
+    label: "各種設定",
+    matchPrefixes: ["settings-"],
+  },
 ]);
+
+// 「各種設定」のように、自身のキーとは異なる currentView でもアクティブ扱いにできるよう拡張
+const isItemActive = (item: NavItem) => {
+  if (item.key === props.currentView) return true;
+  if (
+    item.matchPrefixes?.some((prefix) => props.currentView.startsWith(prefix))
+  ) {
+    return true;
+  }
+  return false;
+};
 </script>

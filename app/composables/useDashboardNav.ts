@@ -1,47 +1,80 @@
-export type DashboardView
-  = | "reservations"
-    | "drivers"
-    | "revenue"
-    | "pricing-settings"
-    | "business-settings"
-    | "business-info"
-    | "payment-info";
+export type DashboardView =
+  | "reservations"
+  | "drivers"
+  | "revenue"
+  | "settings"
+  | "settings-pricing"
+  | "settings-business"
+  | "business-info"
+  | "payment-info";
 
 const viewTtls: Record<DashboardView, string> = {
   "reservations": "予約一覧",
   "drivers": "配達者一覧",
   "revenue": "売上管理",
-  "pricing-settings": "料金の設定",
-  "business-settings": "事業の設定",
+  "settings": "各種設定",
+  "settings-pricing": "料金設定",
+  "settings-business": "事業設定",
   "business-info": "ユーザー情報",
   "payment-info": "決済設定情報",
 };
 
-const VALID_VIEWS: DashboardView[] = [
+const VALID_TOP_VIEWS: DashboardView[] = [
   "reservations",
   "drivers",
   "revenue",
-  "pricing-settings",
-  "business-settings",
   "business-info",
   "payment-info",
 ];
 
-function isDashboardView(value: unknown): value is DashboardView {
-  return (
-    typeof value === "string" && VALID_VIEWS.includes(value as DashboardView)
-  );
+const DASHBOARD_PREFIX = "/business-owner/dashboard";
+
+// 「各種設定」グループのサブビュー
+const SETTINGS_CHILDREN: Record<string, DashboardView> = {
+  pricing: "settings-pricing",
+  business: "settings-business",
+};
+
+function isTopView(value: string): value is DashboardView {
+  return (VALID_TOP_VIEWS as string[]).includes(value);
+}
+
+// URL パス → 対応するビュー名
+export function pathToView(path: string): DashboardView {
+  if (!path.startsWith(DASHBOARD_PREFIX)) return "reservations";
+  // /business-owner/dashboard 以下の相対パスを取り出す
+  const rest = path.slice(DASHBOARD_PREFIX.length).replace(/^\/+|\/+$/g, "");
+  if (rest === "") return "reservations";
+
+  const segments = rest.split("/").filter((seg) => seg !== "");
+  if (segments.length === 1) {
+    const seg = segments[0]!;
+    if (seg === "settings") return "settings";
+    if (isTopView(seg)) return seg;
+    return "reservations";
+  }
+  if (segments.length === 2 && segments[0] === "settings") {
+    const mapped = SETTINGS_CHILDREN[segments[1]!];
+    if (mapped) return mapped;
+  }
+  return "reservations";
+}
+
+// ビュー名 → 対応する URL パス
+function viewToPath(view: DashboardView): string {
+  if (view === "reservations") return DASHBOARD_PREFIX;
+  if (view === "settings-pricing")
+    return `${DASHBOARD_PREFIX}/settings/pricing`;
+  if (view === "settings-business")
+    return `${DASHBOARD_PREFIX}/settings/business`;
+  return `${DASHBOARD_PREFIX}/${view}`;
 }
 
 function resolveInitialView(): DashboardView {
   try {
     const route = useRoute();
-    const view = route.params.view;
-    if (view === undefined || view === "") return "reservations";
-    const single = Array.isArray(view) ? view[0] : view;
-    return isDashboardView(single) ? single : "reservations";
-  }
-  catch {
+    return pathToView(route.path);
+  } catch {
     return "reservations";
   }
 }
@@ -61,30 +94,23 @@ export const useDashboardNav = () => {
     currentTtl.value = viewTtls[currentView.value];
   };
 
-  // 現在のURL（route.params.view）に合わせて currentView とタイトルを同期
+  // 現在のURLに合わせて currentView とタイトルを同期
   const syncFromRoute = () => {
     const route = useRoute();
-    const view = route.params.view;
-    if (view === undefined || view === "") {
-      currentView.value = "reservations";
-    }
-    else {
-      const single = Array.isArray(view) ? view[0] : view;
-      if (isDashboardView(single)) {
-        currentView.value = single;
-      }
-    }
+    currentView.value = pathToView(route.path);
     updateTtl();
   };
 
   // 選択したビューのURLへ遷移
   const navigate = (view: string) => {
-    if (!isDashboardView(view)) return;
-    const path
-      = view === "reservations"
-        ? "/business-owner/dashboard"
-        : `/business-owner/dashboard/${view}`;
-    navigateTo(path, { replace: true });
+    const allowed: DashboardView[] = [
+      ...VALID_TOP_VIEWS,
+      "settings",
+      "settings-pricing",
+      "settings-business",
+    ];
+    if (!(allowed as string[]).includes(view)) return;
+    navigateTo(viewToPath(view as DashboardView), { replace: true });
   };
 
   return {
