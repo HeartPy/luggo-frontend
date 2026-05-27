@@ -9,8 +9,8 @@ type Requirements = {
 };
 
 export type OnboardingBarStep
-  = | "pricing" // 料金の設定が未完了
-    | "business-settings" // 事業の設定が未完了
+  = | "pricing" // 料金設定が未完了
+    | "business-settings" // 事業設定が未完了
     | "consent" // 公開情報の同意が未完了
     | "stripe-create" // Stripe アカウント未作成
     | "stripe-review" // Stripe 審査中
@@ -135,9 +135,9 @@ export function useOnboardingBar() {
   const messageText = computed(() => {
     switch (currentStep.value) {
       case "pricing":
-        return "まずは料金の設定を行なってください。";
+        return "まずは料金設定を行なってください。";
       case "business-settings":
-        return "次に事業の設定を行なってください。";
+        return "次に事業設定を行なってください。";
       case "consent":
         return "ユーザーへの公開情報の表示について同意してください。";
       case "stripe-create":
@@ -173,9 +173,9 @@ export function useOnboardingBar() {
   const linkTo = computed<string | undefined>(() => {
     switch (currentStep.value) {
       case "pricing":
-        return "/business-owner/dashboard/pricing-settings";
+        return "/business-owner/dashboard/settings/pricing";
       case "business-settings":
-        return "/business-owner/dashboard/business-settings";
+        return "/business-owner/dashboard/settings/business";
       case "stripe-create":
       case "stripe-past-due":
         return "/stripe/account";

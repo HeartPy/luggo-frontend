@@ -2,8 +2,8 @@
  * 事業者ダッシュボードのオンボーディング進捗を一元管理する composable
  *
  * 進捗の順序:
- *   1. 料金の設定（pricing）
- *   2. 事業の設定（business-settings）
+ *   1. 料金設定（pricing）
+ *   2. 事業設定（business-settings）
  *   3. ユーザーへの公開情報表示の同意（consent）
  *   4. 決済情報の設定（stripe）
  *
