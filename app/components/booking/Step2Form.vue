@@ -170,6 +170,7 @@
 </template>
 
 <script setup lang="ts">
+import { computeTotalAmount } from "~/composables/useBookingForm";
 import type { Step2FormData, LuggageItemData } from "../../types/booking";
 
 type Props = {
@@ -214,11 +215,9 @@ const getImageUrl = (src: string) => {
 };
 
 // 金額計算
-const totalAmount = computed(() => {
-  return luggageItems.value.reduce((acc, item) => {
-    return acc + item.price * item.count;
-  }, 0);
-});
+const totalAmount = computed(() =>
+  computeTotalAmount(props.luggageItemsData, props.formData),
+);
 
 const MAX_COUNT = 20;
 const clampCount = (n: number) => Math.max(0, Math.min(MAX_COUNT, n));

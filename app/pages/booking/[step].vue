@@ -12,6 +12,16 @@
         :msg="errMsg"
       />
 
+      <BookingAtomsPriceUpdateDialog
+        v-model="showPriceUpdateDialog"
+        :old-amount="priceUpdateOldAmount"
+        :new-amount="priceUpdateNewAmount"
+        :changed-items="priceUpdateChangedItems"
+        @proceed="onPriceUpdateProceed"
+        @back="onPriceUpdateBack"
+        @cancel="onPriceUpdateCancel"
+      />
+
       <form
         class="space-y-6"
         novalidate
@@ -73,7 +83,10 @@
 <script setup lang="ts">
 import { useForm } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/yup";
-import { useBookingForm } from "~/composables/useBookingForm";
+import {
+  useBookingForm,
+  computeTotalAmount,
+} from "~/composables/useBookingForm";
 import { useCsrf } from "~/composables/useCsrf";
 import { useSession } from "~/composables/useSession";
 import { useBeforeUnload } from "~/composables/useBeforeUnload";
@@ -88,6 +101,7 @@ import type {
   Step2FormData,
   Step3FormData,
   ApiErrRes,
+  PriceUpdateChangedItem,
 } from "~/types/booking";
 
 const route = useRoute();
@@ -125,6 +139,8 @@ const {
   errsStep2,
   errsStep3,
   completeFormData,
+  confirmedTotalAmount,
+  confirmTotalAmount,
   clearAllData,
 } = useBookingForm();
 
@@ -132,6 +148,12 @@ const isSubmitting = ref(false);
 const isSubmitted = ref(false);
 const errMsg = ref("");
 const showErrDialog = ref(false);
+
+// 料金更新検知用ダイアログ（Step3 の「お支払い情報のご入力へ」でサーバー側に料金不整合を検知された場合に表示）
+const showPriceUpdateDialog = ref(false);
+const priceUpdateOldAmount = ref(0);
+const priceUpdateNewAmount = ref(0);
+const priceUpdateChangedItems = ref<PriceUpdateChangedItem[]>([]);
 
 const paymentClientSecret = ref<string | null>(null);
 
@@ -358,8 +380,66 @@ const createPaymentIntent = async (): Promise<string | null> => {
         }
         errMsg.value = `入力内容に誤りがあります。以下の項目をご確認ください。\n${errMsgs.join(", ")}`;
       }
+      else if (
+        typeof apiErr?.data?.server_total_amount === "number"
+        && apiErr.data.server_total_amount > 0
+      ) {
+        // 料金不整合エラー: 最新の単価キャッシュを取り直し、ロック値もサーバー値で更新する
+        const serverTotal = apiErr.data.server_total_amount;
+        const clientTotal
+          = typeof apiErr.data.client_total_amount === "number"
+            ? apiErr.data.client_total_amount
+            : (confirmedTotalAmount.value ?? 0);
+
+        // 再取得で単価が上書きされる前に、現在の単価を荷物タイプ単位で控えておく
+        const oldPriceByKey = new Map(
+          luggageItemsData.value.map(item => [item.key, item.price]),
+        );
+
+        try {
+          await fetchLuggageItems();
+        }
+        catch (refetchErr: unknown) {
+          if (import.meta.dev) {
+            // eslint-disable-next-line no-console
+            console.error(
+              "料金不整合エラー後の荷物情報再取得に失敗:",
+              refetchErr,
+            );
+          }
+        }
+        confirmedTotalAmount.value = serverTotal;
+
+        // 選択済み（個数 > 0）かつ単価が変わった荷物タイプだけを抽出して内訳に渡す
+        priceUpdateChangedItems.value = luggageItemsData.value
+          .map((item): PriceUpdateChangedItem | null => {
+            const count = step2Data.value[item.key] ?? 0;
+            const oldPrice = oldPriceByKey.get(item.key);
+            if (
+              count > 0
+              && oldPrice !== undefined
+              && oldPrice !== item.price
+            ) {
+              return {
+                name: item.name,
+                count,
+                oldPrice,
+                newPrice: item.price,
+              };
+            }
+            return null;
+          })
+          .filter((v): v is PriceUpdateChangedItem => v !== null);
+
+        priceUpdateOldAmount.value = clientTotal;
+        priceUpdateNewAmount.value = serverTotal;
+        showPriceUpdateDialog.value = true;
+      }
+      else if (apiErr?.data?.errMsg) {
+        // その他のサーバー側 400 メッセージ（地域対象外・休業日 等）をそのまま表示
+        errMsg.value = apiErr.data.errMsg;
+      }
       else {
-        // その他のエラー
         errMsg.value = "支払い情報の取得に失敗しました";
       }
 
@@ -396,78 +476,122 @@ const handleSubmit = async () => {
   if (luggageItemsLoading.value) return;
 
   if (currentStep.value === 1) {
-    // 既存エラークリア
-    (Object.keys(errsStep1.value) as Array<keyof Step1FormData>).forEach(
-      (key) => {
-        if (errsStep1.value[key] !== undefined) errsStep1.value[key] = "";
-      },
-    );
-    setStep1Values(step1Data.value);
-    const rslt = await validateStep1Vv();
+    isSubmitting.value = true;
+    try {
+      // 既存エラークリア
+      (Object.keys(errsStep1.value) as Array<keyof Step1FormData>).forEach(
+        (key) => {
+          if (errsStep1.value[key] !== undefined) errsStep1.value[key] = "";
+        },
+      );
+      setStep1Values(step1Data.value);
+      const rslt = await validateStep1Vv();
 
-    if (rslt.valid) return navigateTo(bookingPath(2));
+      if (rslt.valid) {
+        await navigateTo(bookingPath(2));
+        return;
+      }
 
-    for (const [path, msg] of Object.entries(rslt.errors)) {
-      const key = path as keyof Step1FormData;
-      errsStep1.value[key] = msg as string;
+      for (const [path, msg] of Object.entries(rslt.errors)) {
+        const key = path as keyof Step1FormData;
+        errsStep1.value[key] = msg as string;
+      }
+    }
+    finally {
+      isSubmitting.value = false;
     }
     return;
   }
 
   if (currentStep.value === 2) {
-    Object.keys(errsStep2.value).forEach((key) => {
-      if (errsStep2.value[key] !== undefined) errsStep2.value[key] = "";
-    });
-    setStep2Values(step2Data.value);
-    const rslt = await validateStep2Vv();
-    if (!rslt.valid) {
-      for (const [path, msg] of Object.entries(rslt.errors)) {
-        const key = path || "";
-        errsStep2.value[key] = msg as string;
+    isSubmitting.value = true;
+    try {
+      Object.keys(errsStep2.value).forEach((key) => {
+        if (errsStep2.value[key] !== undefined) errsStep2.value[key] = "";
+      });
+      setStep2Values(step2Data.value);
+      const rslt = await validateStep2Vv();
+      if (!rslt.valid) {
+        for (const [path, msg] of Object.entries(rslt.errors)) {
+          const key = path || "";
+          errsStep2.value[key] = msg as string;
+        }
+        return;
       }
-      return;
-    }
 
-    const totalItems = Object.values(step2Data.value).reduce(
-      (sum: number, count: unknown) => sum + (Number(count) || 0),
-      0,
-    );
-    const ownerId = businessProfileState.value?.id;
-    const pickupDate = step1Data.value.pickup_date;
-    const deliveryDate = step1Data.value.delivery_date;
-    if (ownerId && totalItems > 0) {
-      const config = useRuntimeConfig();
-      const apiBase = config.public.apiBaseUrl;
-      const datesToCheck = [
-        { date: pickupDate, label: "集荷日" },
-        { date: deliveryDate, label: "配送日" },
-      ];
-      for (const { date: dt, label } of datesToCheck) {
-        if (!dt) continue;
-        try {
-          const res = await $fetch<{
-            remaining: number;
-          }>(`${apiBase}/api/bookings/daily-remaining`, {
-            method: "GET",
-            params: { business_owner: ownerId, date: dt },
-          });
-          if (res.remaining >= 0 && totalItems > res.remaining) {
-            errMsg.value = `${label}（${dt}）の荷物受付可能数の残りは${res.remaining}個です。予約個数を${res.remaining}個以下にしてください。`;
-            return;
+      const totalItems = Object.values(step2Data.value).reduce(
+        (sum: number, count: unknown) => sum + (Number(count) || 0),
+        0,
+      );
+      const ownerId = businessProfileState.value?.id;
+      const pickupDate = step1Data.value.pickup_date;
+      const deliveryDate = step1Data.value.delivery_date;
+      if (ownerId && totalItems > 0) {
+        const config = useRuntimeConfig();
+        const apiBase = config.public.apiBaseUrl;
+        const datesToCheck = [
+          { date: pickupDate, label: "集荷日" },
+          { date: deliveryDate, label: "配送日" },
+        ];
+        for (const { date: dt, label } of datesToCheck) {
+          if (!dt) continue;
+          try {
+            const res = await $fetch<{
+              remaining: number;
+            }>(`${apiBase}/api/bookings/daily-remaining`, {
+              method: "GET",
+              params: { business_owner: ownerId, date: dt },
+            });
+            if (res.remaining >= 0 && totalItems > res.remaining) {
+              errMsg.value = `${label}（${dt}）の荷物受付可能数の残りは${res.remaining}個です。予約個数を${res.remaining}個以下にしてください。`;
+              return;
+            }
+          }
+          catch (err: unknown) {
+            // 後段（PaymentIntent作成・予約確定）でも上限を再チェックするため、
+            // ここでは Step2 をブロックせずに進める（フェイルオープン）
+            if (import.meta.dev) {
+              // eslint-disable-next-line no-console
+              console.error("daily-remaining failed:", err);
+            }
           }
         }
-        catch (err: unknown) {
-          // 後段（PaymentIntent作成・予約確定）でも上限を再チェックするため、
-          // ここでは Step2 をブロックせずに進める（フェイルオープン）
-          if (import.meta.dev) {
-            // eslint-disable-next-line no-console
-            console.error("daily-remaining failed:", err);
-          }
+      }
+
+      // 事業者側の料金変更を Step2 通過直前に検知するため、最新の単価を取り直す。
+      // 取得前後で合計金額が変わった場合は、ユーザーに最新内容を確認させるため Step2 に留まる。
+      const prevTotalAmount = computeTotalAmount(
+        luggageItemsData.value,
+        step2Data.value,
+      );
+      try {
+        await fetchLuggageItems();
+      }
+      catch (err: unknown) {
+        // 再取得に失敗してもサーバー側で再検証されるため、ここでは進行を止めない（フェイルオープン）
+        if (import.meta.dev) {
+          // eslint-disable-next-line no-console
+          console.error("Step2 通過時の荷物情報再取得に失敗:", err);
         }
       }
-    }
+      const newTotalAmount = computeTotalAmount(
+        luggageItemsData.value,
+        step2Data.value,
+      );
+      if (newTotalAmount !== prevTotalAmount) {
+        errMsg.value = `料金が更新されました。新しい合計金額は ¥${newTotalAmount.toLocaleString()} です。内容をご確認の上、もう一度「次へ」を押してください。`;
+        return;
+      }
 
-    return navigateTo(bookingPath(3));
+      // Step2 通過時点の合計金額を確定して以降の表示・API 送信で固定する
+      confirmTotalAmount();
+
+      await navigateTo(bookingPath(3));
+    }
+    finally {
+      isSubmitting.value = false;
+    }
+    return;
   }
 
   if (currentStep.value === 3) {
@@ -508,6 +632,11 @@ const handleSubmit = async () => {
       }
 
       paymentClientSecret.value = clientSecret;
+      // confirm.vue は sessionStorage 経由で clientSecret を受け取る。
+      // confirm.vue で clearAllData() → Step1 強制送還が発生を防ぐため、ここで明示的に同期書き込みしておく。
+      if (import.meta.client) {
+        sessionStorage.setItem("paymentClientSecret", clientSecret);
+      }
 
       try {
         await router.push({ path: "/booking/confirm", query: route.query });
@@ -539,6 +668,22 @@ const handleSubmit = async () => {
     }
     return;
   }
+};
+
+// 料金更新ダイアログの「お支払い情報のご入力へ」
+const onPriceUpdateProceed = async () => {
+  await handleSubmit();
+};
+
+// 料金更新ダイアログの「戻る」
+const onPriceUpdateBack = async () => {
+  await navigateTo(bookingPath(2));
+};
+
+// 料金更新ダイアログの「キャンセル」: 新料金を確定させず、送信金額を旧クライアント合計に戻す。
+// これにより同じ Step3 から再度進んでも、サーバー側で再び料金不整合が検知されダイアログが再表示される。
+const onPriceUpdateCancel = () => {
+  confirmedTotalAmount.value = priceUpdateOldAmount.value;
 };
 
 // 各ステップへの遷移を制御
