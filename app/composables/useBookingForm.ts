@@ -6,6 +6,13 @@ import type {
   LuggageItemData,
 } from "~/types/booking";
 
+// 荷物リスト（単価）と個数マップから合計金額を算出する純関数
+export const computeTotalAmount = (
+  items: LuggageItemData[],
+  counts: Step2FormData,
+): number =>
+  items.reduce((acc, item) => acc + item.price * (counts[item.key] ?? 0), 0);
+
 export const useBookingForm = () => {
   const TTL_MS = 30 * 60 * 1000; // 30分に設定
 
@@ -72,6 +79,12 @@ export const useBookingForm = () => {
     loadWithExpiry<LuggageItemData[]>("booking.luggageItems", []),
   );
 
+  // Step2 を通過した時点で確定（ロック）した合計金額
+  const confirmedTotalAmount = useState<number | null>(
+    "confirmedTotalAmount",
+    () => loadWithExpiry<number | null>("booking.confirmedTotal", null),
+  );
+
   const errsStep1 = useState<Partial<Record<keyof Step1FormData, string>>>(
     "errsStep1",
     () => ({}),
@@ -85,12 +98,27 @@ export const useBookingForm = () => {
     () => ({}),
   );
 
+  // 荷物個数 × 単価の合計金額（リアルタイム）
+  const totalAmount = computed<number>(() =>
+    computeTotalAmount(luggageItemsData.value, step2Data.value),
+  );
+
+  // 現在の totalAmount を Step2 通過時点の確定金額として保存
+  // 再度 Step2 を通過すれば最新の値で上書きされる。
+  const confirmTotalAmount = () => {
+    confirmedTotalAmount.value = computeTotalAmount(
+      luggageItemsData.value,
+      step2Data.value,
+    );
+  };
+
   const completeFormData = computed<BookingFormData>(
     () =>
       ({
         ...step1Data.value,
         ...step2Data.value,
         ...step3Data.value,
+        total_amount: confirmedTotalAmount.value ?? totalAmount.value,
       }) as BookingFormData,
   );
 
@@ -101,6 +129,7 @@ export const useBookingForm = () => {
       localStorage.removeItem("booking.step2");
       localStorage.removeItem("booking.step3");
       localStorage.removeItem("booking.luggageItems");
+      localStorage.removeItem("booking.confirmedTotal");
       // 状態も初期値にリセット
       step1Data.value = {
         pickup_location_name: "",
@@ -122,6 +151,7 @@ export const useBookingForm = () => {
         customer_nationality: "",
         guest_name: "",
       };
+      confirmedTotalAmount.value = null;
       // エラーオブジェクトもクリア
       errsStep1.value = {};
       errsStep2.value = {};
@@ -198,6 +228,14 @@ export const useBookingForm = () => {
         guest_name: "",
       };
     }
+
+    // 確定金額のチェック
+    if (
+      checkExpired("booking.confirmedTotal")
+      && confirmedTotalAmount.value !== null
+    ) {
+      confirmedTotalAmount.value = null;
+    }
   };
 
   if (import.meta.client) {
@@ -234,6 +272,18 @@ export const useBookingForm = () => {
         deep: true,
       },
     );
+    watch(confirmedTotalAmount, (v) => {
+      if (v === null) {
+        try {
+          localStorage.removeItem("booking.confirmedTotal");
+        }
+        catch {
+          // ストレージ削除失敗は無視
+        }
+        return;
+      }
+      saveWithExpiry<number>("booking.confirmedTotal", v);
+    });
   }
 
   return {
@@ -244,6 +294,9 @@ export const useBookingForm = () => {
     errsStep1,
     errsStep2,
     errsStep3,
+    totalAmount,
+    confirmedTotalAmount,
+    confirmTotalAmount,
     completeFormData,
     clearAllData,
   };

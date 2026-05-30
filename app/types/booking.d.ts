@@ -20,6 +20,14 @@ export type LuggageItemData = {
 
 export type Step2FormData = Record<string, number>;
 
+// 料金更新ダイアログで「どの荷物タイプの単価が変わったか」を表示するための内訳
+export type PriceUpdateChangedItem = {
+  name: string;
+  count: number;
+  oldPrice: number;
+  newPrice: number;
+};
+
 export type Step3FormData = {
   customer_name: string;
   customer_email: string;
@@ -28,7 +36,11 @@ export type Step3FormData = {
   guest_name: string;
 };
 
-export type BookingFormData = Step1FormData & Step2FormData & Step3FormData;
+export type BookingFormData = Step1FormData
+  & Step2FormData
+  & Step3FormData & {
+    total_amount: number;
+  };
 
 export type ApiErrRes = {
   data: {
@@ -40,6 +52,8 @@ export type ApiErrRes = {
     payment_intent_id?: string;
     errMsg?: string;
     details?: string;
+    server_total_amount?: number;
+    client_total_amount?: number;
   };
 };
 

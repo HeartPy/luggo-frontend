@@ -61,10 +61,10 @@
           配達状況の確認・ご予約のキャンセルは、以下のリンクから行なってください。
         </p>
         <NuxtLink
-          to="/booking/status"
+          :to="statusLinkTo"
           class="block text-blue-600 underline hover:opacity-80"
         >
-          http://localhost:3000/booking/status
+          {{ statusLinkDisplayUrl }}
         </NuxtLink>
       </div>
     </div>
@@ -72,9 +72,40 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({
+  layout: "customer",
+  middleware: "subdomain",
+});
+
 const route = useRoute();
 const bookingId = ref<string | null>(null);
 const copied = ref(false);
+
+// 配達状況確認ページへのリンク
+const statusLinkTo = computed(() => ({
+  path: "/booking/status",
+  query: route.query,
+}));
+
+// 表示用のフル URL 文字列
+const statusLinkDisplayUrl = computed(() => {
+  const requestUrl = useRequestURL();
+  const url = new URL("/booking/status", requestUrl.origin);
+  for (const [key, value] of Object.entries(route.query)) {
+    if (value === undefined || value === null) continue;
+    if (Array.isArray(value)) {
+      for (const v of value) {
+        if (v !== undefined && v !== null) {
+          url.searchParams.append(key, String(v));
+        }
+      }
+    }
+    else {
+      url.searchParams.set(key, String(value));
+    }
+  }
+  return url.toString();
+});
 
 // 予約IDをコピーする関数
 const copyBookingId = async () => {

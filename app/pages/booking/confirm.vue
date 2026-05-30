@@ -215,7 +215,7 @@
             <div class="flex items-center justify-between">
               <span class="text-lg font-semibold text-gray-800">合計金額（税込）</span>
               <span class="text-2xl font-bold text-gray-900">
-                ¥{{ totalAmount.toLocaleString() }}
+                ¥{{ displayTotalAmount.toLocaleString() }}
               </span>
             </div>
           </div>
@@ -303,14 +303,39 @@ import {
 } from "~/composables/useBookingValid";
 import type { LuggageItemData, ApiErrRes, BookingData } from "~/types/booking";
 
+definePageMeta({
+  layout: "customer",
+  middleware: "subdomain",
+});
+
 const {
   step1Data,
   step2Data,
   step3Data,
   luggageItemsData,
+  totalAmount,
+  confirmedTotalAmount,
   completeFormData,
   clearAllData,
 } = useBookingForm();
+
+// subdomain ミドルウェアで取得した事業者プロフィール
+const businessProfileState = useState<{
+  id?: string;
+  service_areas?: string[];
+  pricing_rules?: Record<string, Record<string, number>>;
+  operating_days?: string;
+  nth_weekday_holidays?: string[];
+  daily_max_luggage?: number;
+  temporary_closures?: string[];
+  support_email?: string;
+} | null>("businessProfile", () => null);
+
+// 表示用合計金額: Step2 通過時にロックされた値があればそれを使用
+// 未確定の場合はリアルタイム値にフォールバック（onMounted で Step2 へ戻すバリデーションが走るので通常は発生しない）
+const displayTotalAmount = computed<number>(
+  () => confirmedTotalAmount.value ?? totalAmount.value,
+);
 
 const { ensureCsrf, getCsrf } = useCsrf();
 const { checkSessionValidity } = useSession();
@@ -378,12 +403,6 @@ const luggageItems = computed<LuggageItem[]>(() => {
       count: step2Data.value[item.key] ?? 0,
     }))
     .filter(item => item.count > 0);
-});
-
-const totalAmount = computed(() => {
-  return luggageItems.value.reduce((acc, item) => {
-    return acc + item.price * item.count;
-  }, 0);
 });
 
 // paymentClientSecret が存在するが、予約がまだ確定されていない状態をチェック
@@ -903,7 +922,17 @@ onMounted(async () => {
     }
 
     // Step1が完了しているかチェック
-    const isStep1Valid = await createStep1Schema().isValid(step1Data.value);
+    // 注意: [step].vue と同じ context（事業者プロフィール）を渡さないと
+    // 集荷/配達地域テストが空配列で常に失敗し、Step1 へ強制送還ループになる。
+    const isStep1Valid = await createStep1Schema({
+      departurePrefectures: businessProfileState.value?.service_areas ?? [],
+      deliverablePrefectures: Object.keys(
+        businessProfileState.value?.pricing_rules ?? {},
+      ),
+      operatingDays: businessProfileState.value?.operating_days,
+      nthWeekdayHolidays: businessProfileState.value?.nth_weekday_holidays,
+      temporaryClosures: businessProfileState.value?.temporary_closures,
+    }).isValid(step1Data.value);
     if (!isStep1Valid) {
       errMsg.value
         = "入力内容が完了していません。お手数をおかけしますが、入力内容をご確認ください。";
