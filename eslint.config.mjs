@@ -1,6 +1,7 @@
 import { FlatCompat } from "@eslint/eslintrc";
 import withNuxt from "./.nuxt/eslint.config.mjs";
 import stylistic from "@stylistic/eslint-plugin";
+import betterTailwindcss from "eslint-plugin-better-tailwindcss";
 
 const eslintrc = new FlatCompat();
 
@@ -56,4 +57,18 @@ export default withNuxt(
     quotes: "double",
     semi: true,
   }),
+  {
+    files: ["**/*.vue", "**/*.ts", "**/*.js"],
+    plugins: {
+      "better-tailwindcss": betterTailwindcss,
+    },
+    settings: {
+      "better-tailwindcss": {
+        tailwindConfig: "tailwind.config.ts",
+      },
+    },
+    rules: {
+      "better-tailwindcss/enforce-consistent-class-order": "warn",
+    },
+  },
 );
