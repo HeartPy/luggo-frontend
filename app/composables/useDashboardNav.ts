@@ -1,12 +1,12 @@
-export type DashboardView =
-  | "reservations"
-  | "drivers"
-  | "revenue"
-  | "settings"
-  | "settings-pricing"
-  | "settings-business"
-  | "business-info"
-  | "payment-info";
+export type DashboardView
+  = | "reservations"
+    | "drivers"
+    | "revenue"
+    | "settings"
+    | "settings-pricing"
+    | "settings-business"
+    | "business-info"
+    | "payment-info";
 
 const viewTtls: Record<DashboardView, string> = {
   "reservations": "予約一覧",
@@ -46,7 +46,7 @@ export function pathToView(path: string): DashboardView {
   const rest = path.slice(DASHBOARD_PREFIX.length).replace(/^\/+|\/+$/g, "");
   if (rest === "") return "reservations";
 
-  const segments = rest.split("/").filter((seg) => seg !== "");
+  const segments = rest.split("/").filter(seg => seg !== "");
   if (segments.length === 1) {
     const seg = segments[0]!;
     if (seg === "settings") return "settings";
@@ -74,7 +74,8 @@ function resolveInitialView(): DashboardView {
   try {
     const route = useRoute();
     return pathToView(route.path);
-  } catch {
+  }
+  catch {
     return "reservations";
   }
 }
