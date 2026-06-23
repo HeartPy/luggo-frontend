@@ -45,7 +45,7 @@ export type BookingFormData = Step1FormData
 export type ApiErrRes = {
   data: {
     valid_errs?: Record<string, string[]>;
-    message?: string;
+    msg?: string;
     booking?: BookingData["booking"];
     payment_status?: string;
     retry_recommended?: boolean;
@@ -58,10 +58,44 @@ export type ApiErrRes = {
 };
 
 export type BookingData = {
-  message: string;
+  msg: string;
   booking: {
     booking_number: string;
     id: string;
     [key: string]: unknown;
   };
+};
+
+export type OwnerDeliveryStatus = "before_pickup" | "picked_up" | "delivered" | "cancelled";
+
+export type OwnerDriver = {
+  id: string;
+  name: string;
+};
+
+export type OwnerBooking = {
+  id: string;
+  booking_number: string;
+  delivery_status: OwnerDeliveryStatus;
+  delivery_status_label: string;
+  driver: string | null;
+  driver_name: string | null;
+  pickup_location_name: string;
+  pickup_location_address: string;
+  pickup_date: string | null;
+  delivery_location_name: string;
+  delivery_location_address: string;
+  delivery_date: string | null;
+  luggage_items: Record<string, number> | null;
+  total_luggage_count: number;
+  total_amount: number;
+  customer_name: string;
+  customer_email: string;
+  customer_phone_number: string;
+  customer_nationality: string;
+  customer_nationality_label: string;
+  guest_name: string;
+  notes: string;
+  created_at: string | null;
+  can_cancel: boolean;
 };
