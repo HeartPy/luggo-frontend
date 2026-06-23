@@ -16,34 +16,34 @@
           予約が完了しました
         </h1>
         <p class="text-gray-600">
-          この度はご予約いただき、誠にありがとうございます。予約完了の確認メールもお送りしています。予約IDは下記をご確認ください。
+          この度はご予約いただき、誠にありがとうございます。予約完了の確認メールもお送りしています。予約番号は下記をご確認ください。
         </p>
       </div>
 
       <div
-        v-if="bookingId"
+        v-if="bookingNumber"
         class="mb-8 space-y-4 rounded-lg border-2 border-gray-500 bg-gray-50 p-8 text-center"
       >
         <h2 class="text-lg font-semibold text-gray-800">
-          予約ID
+          予約番号
         </h2>
         <div>
           <p
             class="text-2xl font-bold tracking-wider text-gray-800"
-            data-testid="booking-id"
+            data-testid="booking-number"
           >
-            {{ bookingId }}
+            {{ bookingNumber }}
           </p>
         </div>
         <p class="text-sm text-gray-600">
-          この予約IDは予約確認やお問い合わせの際に必要です。<br>メモを取るか、スクリーンショットを保存してください。
+          この予約番号は予約確認やお問い合わせの際に必要です。<br>メモを取るか、スクリーンショットを保存してください。
         </p>
         <button
           type="button"
           class="rounded-md bg-gray-600 px-6 py-2 text-sm font-semibold text-white hover:bg-gray-700"
-          @click="copyBookingId"
+          @click="copyBookingNumber"
         >
-          {{ copied ? "コピーしました" : "予約IDをコピー" }}
+          {{ copied ? "コピーしました" : "予約番号をコピー" }}
         </button>
       </div>
 
@@ -52,7 +52,7 @@
         class="mb-8 rounded-lg border-2 border-yellow-500 bg-yellow-50 p-8 text-center"
       >
         <p class="text-gray-700">
-          予約IDの取得に失敗しました。<br>お手数おかけしますが、お問い合わせの際は、運営にお名前と予約日時をお伝えください。
+          予約番号の取得に失敗しました。<br>お手数おかけしますが、お問い合わせの際は、運営にお名前と予約日時をお伝えください。
         </p>
       </div>
 
@@ -78,7 +78,7 @@ definePageMeta({
 });
 
 const route = useRoute();
-const bookingId = ref<string | null>(null);
+const bookingNumber = ref<string | null>(null);
 const copied = ref(false);
 
 // 配達状況確認ページへのリンク
@@ -107,12 +107,12 @@ const statusLinkDisplayUrl = computed(() => {
   return url.toString();
 });
 
-// 予約IDをコピーする関数
-const copyBookingId = async () => {
-  if (!bookingId.value) return;
+// 予約番号をコピーする関数
+const copyBookingNumber = async () => {
+  if (!bookingNumber.value) return;
 
   try {
-    await navigator.clipboard.writeText(bookingId.value);
+    await navigator.clipboard.writeText(bookingNumber.value);
     copied.value = true;
     setTimeout(() => {
       copied.value = false;
@@ -125,7 +125,7 @@ const copyBookingId = async () => {
     }
     // フォールバック: テキストエリアを使用
     const textarea = document.createElement("textarea");
-    textarea.value = bookingId.value;
+    textarea.value = bookingNumber.value;
     textarea.style.position = "fixed";
     textarea.style.opacity = "0";
     document.body.appendChild(textarea);
@@ -149,13 +149,13 @@ const copyBookingId = async () => {
 
 onMounted(async () => {
   if (import.meta.client) {
-    // sessionStorage から予約IDを取得
-    const storedBookingId = sessionStorage.getItem("bookingId");
-    if (storedBookingId) {
-      bookingId.value = storedBookingId;
+    // sessionStorage から予約番号を取得
+    const storedBookingNumber = sessionStorage.getItem("bookingNumber");
+    if (storedBookingNumber) {
+      bookingNumber.value = storedBookingNumber;
     }
     else {
-      // 予約IDが見つからない場合はトップページにリダイレクト
+      // 予約番号が見つからない場合はトップページにリダイレクト
       // （直接アクセスされた場合など）
       await navigateTo({ path: "/booking/1", query: route.query });
     }
@@ -164,7 +164,7 @@ onMounted(async () => {
 
 onBeforeUnmount(() => {
   if (import.meta.client) {
-    sessionStorage.removeItem("bookingId");
+    sessionStorage.removeItem("bookingNumber");
   }
 });
 

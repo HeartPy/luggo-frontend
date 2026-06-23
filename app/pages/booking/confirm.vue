@@ -874,15 +874,15 @@ const handleConfirm = async () => {
     }
 
     // 予約番号を取得
-    const bookingId = bookingData.booking?.booking_number || null;
+    const bookingNumber = bookingData.booking?.booking_number || null;
 
     clearAllData();
     isSubmitted.value = true;
 
     if (import.meta.client) {
       sessionStorage.removeItem("paymentClientSecret");
-      if (bookingId) {
-        sessionStorage.setItem("bookingId", bookingId);
+      if (bookingNumber) {
+        sessionStorage.setItem("bookingNumber", bookingNumber);
       }
     }
 

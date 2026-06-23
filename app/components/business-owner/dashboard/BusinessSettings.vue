@@ -306,7 +306,6 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeRouteLeave } from "vue-router";
 import { useCsrf } from "~/composables/useCsrf";
 import { useBeforeUnload } from "~/composables/useBeforeUnload";
 import { useBusinessProfile } from "~/composables/useBusinessProfile";
