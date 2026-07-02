@@ -14,11 +14,43 @@
     <CommonAtomsConfirmDialog
       v-model="showCancelConfirm"
       title="予約のキャンセル"
-      :message="`${pendingCancelIds.length}件の予約をキャンセルし、決済を全額返金します。よろしいですか？（集荷前の予約のみキャンセルできます）`"
+      :message="cancelDialogMessage"
       confirm-label="予約をキャンセル"
       cancel-label="戻る"
       @confirm="doCancel"
-    />
+    >
+      <!-- 集荷日前日23時以降の予約が含まれる場合のみ、返金有無を選択できる -->
+      <fieldset
+        v-if="hasPostDeadlinePendingCancel"
+        class="rounded-md border border-gray-200 bg-gray-50 p-3"
+      >
+        <legend class="mb-1 px-1 text-xs font-semibold text-gray-700">
+          集荷日前日23時以降のキャンセルの返金
+        </legend>
+        <div class="flex flex-col gap-2">
+          <label class="flex items-center gap-2 text-sm text-gray-800">
+            <input
+              v-model="refundPostDeadline"
+              type="radio"
+              name="refund-post-deadline"
+              :value="true"
+              class="h-4 w-4"
+            >
+            返金する
+          </label>
+          <label class="flex items-center gap-2 text-sm text-gray-800">
+            <input
+              v-model="refundPostDeadline"
+              type="radio"
+              name="refund-post-deadline"
+              :value="false"
+              class="h-4 w-4"
+            >
+            返金しない
+          </label>
+        </div>
+      </fieldset>
+    </CommonAtomsConfirmDialog>
 
     <!-- ページ離脱確認ダイアログ -->
     <CommonAtomsConfirmDialog
@@ -227,7 +259,7 @@
         <template v-else>
           <span>CSV出力</span>
           <img
-            src="/img/import.svg"
+            src="/img/download.svg"
             alt=""
             class="h-4 w-4 object-contain"
           >
@@ -538,6 +570,10 @@ const statusEdits = ref<Record<string, DeliveryStatus>>({});
 // サーバーに保存済みの配達状況
 const originalStatusById = ref<Record<string, DeliveryStatus>>({});
 
+// 予約ごとの通常返金可否（集荷日前日23時より前なら true）。ページを跨いで保持。
+// false の予約をキャンセルするときは、事業者が返金有無を選択する。
+const refundableById = ref<Record<string, boolean>>({});
+
 // 未保存の配達者の編集。ページを跨いで保持。
 // 表示には反映せず、「保存」成功後の再取得で初めて表示へ反映。
 const driverEdits = ref<Record<string, string>>({});
@@ -562,6 +598,9 @@ const pendingCancelIds = ref<string[]>([]);
 
 // 選択のうちキャンセルできなかった（集荷前以外の）予約の件数。完了後の通知に使う。
 const cancelSkippedCount = ref(0);
+
+// 集荷日前日23時以降の予約をキャンセルする際の返金有無（事業者の選択）
+const refundPostDeadline = ref(true);
 
 const showLeaveConfirm = ref(false);
 
@@ -591,6 +630,7 @@ async function onDetailSaved() {
 function onDetailRequestCancel(id: string) {
   showDetail.value = false;
   pendingCancelIds.value = [id];
+  refundPostDeadline.value = true;
   showCancelConfirm.value = true;
 }
 
@@ -782,6 +822,21 @@ const cancellableSelectedIds = computed(() =>
   [...selectedIds.value].filter(id => isCancellableId(id)),
 );
 
+// キャンセル対象に、集荷日前日23時以降（通常返金対象外）の予約が含まれるか。
+// 含まれる場合のみ、確認ダイアログで返金有無を選択させる。
+const hasPostDeadlinePendingCancel = computed(() =>
+  pendingCancelIds.value.some(id => refundableById.value[id] === false),
+);
+
+// キャンセル確認ダイアログのメッセージ
+const cancelDialogMessage = computed(() => {
+  const count = pendingCancelIds.value.length;
+  if (hasPostDeadlinePendingCancel.value) {
+    return `${count}件の予約をキャンセルします。集荷日前日23時を過ぎた予約が含まれるため、その予約の返金有無を選択してください。（集荷前の予約のみキャンセルできます）`;
+  }
+  return `${count}件の予約をキャンセルし、決済を全額返金します。よろしいですか？（集荷前の予約のみキャンセルできます）`;
+});
+
 // 全選択の判定はキャンセル済みを除いた予約のみを対象とする
 const selectableBookings = computed(() => bookings.value.filter(b => isSelectable(b)));
 
@@ -881,12 +936,15 @@ async function fetchBookings(targetPage: number) {
     // 実際の配達状況・配達者を記録（打ち消し判定用）
     const nextOriginal = { ...originalStatusById.value };
     const nextOriginalDriver = { ...originalDriverById.value };
+    const nextRefundable = { ...refundableById.value };
     for (const booking of data.results) {
       nextOriginal[booking.id] = booking.delivery_status;
       nextOriginalDriver[booking.id] = booking.driver ?? "";
+      nextRefundable[booking.id] = booking.is_refundable_on_cancel;
     }
     originalStatusById.value = nextOriginal;
     originalDriverById.value = nextOriginalDriver;
+    refundableById.value = nextRefundable;
   }
   catch (err: unknown) {
     if (is401(err)) {
@@ -1022,13 +1080,17 @@ function requestCancelSelected() {
   pendingCancelIds.value = cancellable;
   // 集荷前以外でキャンセルできない予約の件数を控え、完了後に通知する
   cancelSkippedCount.value = selectedIds.value.size - cancellable.length;
+  refundPostDeadline.value = true;
   showCancelConfirm.value = true;
 }
 
-// 「予約をキャンセル」: 対象の予約を一括キャンセル（決済を全額返金）
+// 「予約をキャンセル」: 対象の予約を一括キャンセル
+// （集荷日前日23時より前は全額返金。それ以降は事業者が選んだ返金有無に従う）
 async function doCancel() {
   const ids = [...pendingCancelIds.value];
   if (ids.length === 0) return;
+  // 集荷日前日23時以降の予約に対する返金有無の選択（対象がなければ無視される）
+  const refund = refundPostDeadline.value;
   isCancelling.value = true;
   listErr.value = null;
   try {
@@ -1044,7 +1106,7 @@ async function doCancel() {
         "Content-Type": "application/json",
         ...(getCsrf() ? { "X-CSRFToken": getCsrf()! } : {}),
       },
-      body: { ids },
+      body: { ids, refund },
     });
     // キャンセルした予約の編集・選択を解除
     const cancelledIdSet = new Set(ids);
@@ -1084,6 +1146,7 @@ async function doCancel() {
     isCancelling.value = false;
     pendingCancelIds.value = [];
     cancelSkippedCount.value = 0;
+    refundPostDeadline.value = true;
   }
 }
 
