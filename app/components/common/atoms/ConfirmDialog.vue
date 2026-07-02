@@ -21,10 +21,19 @@
         </h2>
         <p
           id="confirm-dialog-message"
-          class="mb-6 text-sm text-gray-700"
+          class="text-sm text-gray-700"
+          :class="$slots.default ? 'mb-4' : 'mb-6'"
         >
           {{ message }}
         </p>
+
+        <!-- 確認内容に追加の入力（選択肢など）を差し込むためのスロット -->
+        <div
+          v-if="$slots.default"
+          class="mb-6"
+        >
+          <slot />
+        </div>
 
         <div class="flex justify-end gap-3">
           <button

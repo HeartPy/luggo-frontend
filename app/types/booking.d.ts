@@ -98,4 +98,5 @@ export type OwnerBooking = {
   notes: string;
   created_at: string | null;
   can_cancel: boolean;
+  is_refundable_on_cancel: boolean;
 };
