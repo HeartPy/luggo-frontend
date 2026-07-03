@@ -5,6 +5,7 @@ export type DashboardView
     | "settings"
     | "settings-pricing"
     | "settings-business"
+    | "settings-invoice"
     | "business-info"
     | "payment-info";
 
@@ -15,6 +16,7 @@ const viewTtls: Record<DashboardView, string> = {
   "settings": "各種設定",
   "settings-pricing": "料金設定",
   "settings-business": "事業設定",
+  "settings-invoice": "インボイス設定",
   "business-info": "ユーザー情報",
   "payment-info": "決済設定情報",
 };
@@ -33,6 +35,7 @@ const DASHBOARD_PREFIX = "/business-owner/dashboard";
 const SETTINGS_CHILDREN: Record<string, DashboardView> = {
   pricing: "settings-pricing",
   business: "settings-business",
+  invoice: "settings-invoice",
 };
 
 function isTopView(value: string): value is DashboardView {
@@ -67,6 +70,8 @@ function viewToPath(view: DashboardView): string {
     return `${DASHBOARD_PREFIX}/settings/pricing`;
   if (view === "settings-business")
     return `${DASHBOARD_PREFIX}/settings/business`;
+  if (view === "settings-invoice")
+    return `${DASHBOARD_PREFIX}/settings/invoice`;
   return `${DASHBOARD_PREFIX}/${view}`;
 }
 
@@ -109,6 +114,7 @@ export const useDashboardNav = () => {
       "settings",
       "settings-pricing",
       "settings-business",
+      "settings-invoice",
     ];
     if (!(allowed as string[]).includes(view)) return;
     navigateTo(viewToPath(view as DashboardView), { replace: true });
