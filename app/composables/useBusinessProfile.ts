@@ -12,6 +12,7 @@ export const useBusinessProfile = () => {
     phone_number: string;
     subdomain: string;
     tax_id: string;
+    invoice_registration_number: string;
     rep_last_name_kanji: string;
     rep_first_name_kanji: string;
     rep_last_name_kana: string;

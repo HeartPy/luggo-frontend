@@ -6,6 +6,9 @@
     <BusinessOwnerDashboardBusinessSettings
       v-else-if="currentView === 'settings-business'"
     />
+    <BusinessOwnerDashboardInvoiceSettings
+      v-else-if="currentView === 'settings-invoice'"
+    />
     <div v-else />
   </div>
 </template>

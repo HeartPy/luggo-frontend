@@ -53,5 +53,12 @@ const settingsItems = [
       "1日の最大荷物個数、定休日、臨時休業日など、事業運営に関する設定を行います。",
     to: "/business-owner/dashboard/settings/business",
   },
+  {
+    key: "invoice",
+    title: "インボイス設定",
+    description:
+      "適格請求書発行事業者登録番号を設定します。設定すると領収書に登録番号が表示されます。任意の設定です。",
+    to: "/business-owner/dashboard/settings/invoice",
+  },
 ];
 </script>
