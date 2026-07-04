@@ -9,6 +9,7 @@ type TransactionLawData = {
   representative_name: string;
   address: string;
   support_email: string;
+  support_phone: string;
   pricing_rules: Record<string, Record<string, number>>;
   operating_days: string;
   nth_weekday_holidays: string[];
@@ -205,6 +206,21 @@ const buildScheduleHtml = (
   return parts.join("");
 };
 
+// お問い合わせ先（メールアドレス・電話番号）を HTML に変換
+const buildContactHtml = (email: string, phone: string): string => {
+  const lines: string[] = [];
+  if (email) {
+    lines.push(
+      `メール：<a class="text-[#0f83fd]" href="mailto:${email}">${email}</a>`,
+    );
+  }
+  if (phone) {
+    lines.push(`電話番号：${phone}`);
+  }
+  if (lines.length === 0) return "―";
+  return lines.join("<br />");
+};
+
 // お取り扱いできないお荷物の固定リストを HTML に変換
 const buildProhibitedHtml = (): string => {
   const items = prohibitedItems
@@ -261,7 +277,7 @@ export const useTransactionLaw = () => {
       {
         id: 4,
         ttl: "お問い合わせ先",
-        txt: data.support_email || "―",
+        txt: buildContactHtml(data.support_email, data.support_phone),
       },
       {
         id: 5,
