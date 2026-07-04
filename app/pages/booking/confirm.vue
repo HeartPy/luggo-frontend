@@ -194,29 +194,36 @@
 
         <!-- 決済情報 -->
         <section class="py-6">
-          <div class="space-y-3">
+          <div
+            class="relative overflow-hidden rounded-lg bg-gradient-to-br from-gray-900 via-gray-900 to-black p-6 text-white shadow-xl ring-1 ring-white/10"
+          >
             <div
-              v-if="luggageItems.length > 0"
-              class="space-y-2 border-b border-gray-200 pb-3"
-            >
+              class="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-white/5 blur-2xl"
+            />
+            <div class="relative space-y-4">
               <div
-                v-for="item in luggageItems"
-                :key="item.key"
-                class="flex items-center justify-between text-sm"
+                v-if="luggageItems.length > 0"
+                class="space-y-2 border-b border-white/15 pb-4"
               >
-                <span class="text-gray-700">
-                  {{ item.name }} × {{ item.count }} 個
-                </span>
-                <span class="font-medium text-gray-900">
-                  ¥{{ (item.price * item.count).toLocaleString() }}
+                <div
+                  v-for="luggageItem in luggageItems"
+                  :key="luggageItem.key"
+                  class="flex items-center justify-between text-sm"
+                >
+                  <span class="text-gray-300">
+                    {{ luggageItem.name }} × {{ luggageItem.count }} 個
+                  </span>
+                  <span class="font-medium text-gray-100">
+                    ¥{{ (luggageItem.price * luggageItem.count).toLocaleString() }}
+                  </span>
+                </div>
+              </div>
+              <div class="flex items-end justify-between">
+                <span class="text-sm font-medium tracking-wide text-gray-400">合計金額（税込）</span>
+                <span class="text-3xl font-bold tracking-tight text-white">
+                  ¥{{ displayTotalAmount.toLocaleString() }}
                 </span>
               </div>
-            </div>
-            <div class="flex items-center justify-between">
-              <span class="text-lg font-semibold text-gray-800">合計金額（税込）</span>
-              <span class="text-2xl font-bold text-gray-900">
-                ¥{{ displayTotalAmount.toLocaleString() }}
-              </span>
             </div>
           </div>
         </section>
