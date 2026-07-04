@@ -718,12 +718,40 @@ const goPrev = () => {
   router.push(bookingPath(3));
 };
 
+// 入力データが有効期限切れ等で失われていないかを確認する
+const isBookingDataComplete = (): boolean => {
+  const s1 = step1Data.value;
+  const hasStep1
+    = !!s1.pickup_location_name
+      && !!s1.pickup_location_address
+      && !!s1.pickup_date
+      && !!s1.delivery_location_name
+      && !!s1.delivery_location_address
+      && !!s1.delivery_date;
+  const hasLuggage
+    = luggageItemsData.value.length > 0
+      && Object.values(step2Data.value).some(count => (count ?? 0) > 0);
+  const s3 = step3Data.value;
+  const hasStep3 = !!s3.customer_name && !!s3.customer_email;
+  return hasStep1 && hasLuggage && hasStep3;
+};
+
 // 予約を確定する
 const handleConfirm = async () => {
   isSubmitting.value = true;
   errMsg.value = "";
 
   try {
+    // 決済前に入力データの有効期限切れを検出
+    if (!isBookingDataComplete()) {
+      errMsg.value
+        = "ご入力内容の保持期限が切れました。お手数をおかけしますが、最初から入力し直してください。";
+      isSubmitting.value = false;
+      clearAllData();
+      await router.push(bookingPath(1));
+      return;
+    }
+
     // セッション有効性をチェック
     const sessionValid = await checkSessionValidity();
     if (!sessionValid) {
@@ -760,142 +788,156 @@ const handleConfirm = async () => {
       return;
     }
 
-    // 予約を確定
-    await ensureCsrf(apiBase);
+    try {
+      // 予約を確定
+      await ensureCsrf(apiBase);
 
-    const maxRetries = 3;
-    let retryCount = 0;
-    let bookingData: BookingData | null = null;
-    let fetchErr: unknown = null;
+      const maxRetries = 3;
+      let retryCount = 0;
+      let bookingData: BookingData | null = null;
+      let fetchErr: unknown = null;
 
-    // リトライループ
-    while (retryCount <= maxRetries) {
-      try {
-        bookingData = await $fetch<BookingData>(`${apiBase}/api/bookings/`, {
-          method: "POST",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-            ...(getCsrf() ? { "X-CSRFToken": getCsrf()! } : {}),
-          },
-          body: {
-            ...completeFormData.value,
-            payment_intent_id: rslt.paymentIntentId,
-          },
-        });
-        fetchErr = null;
+      // リトライループ
+      while (retryCount <= maxRetries) {
+        try {
+          bookingData = await $fetch<BookingData>(`${apiBase}/api/bookings/`, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+              ...(getCsrf() ? { "X-CSRFToken": getCsrf()! } : {}),
+            },
+            body: {
+              ...completeFormData.value,
+              payment_intent_id: rslt.paymentIntentId,
+            },
+          });
+          fetchErr = null;
 
-        // 成功した場合
-        if (bookingData) {
-          break;
-        }
-      }
-      catch (err: unknown) {
-        fetchErr = err;
-
-        const apiErr = (err as unknown as ApiErrRes) || { data: {} };
-        const statusCode
-          = (err as { statusCode?: number; status?: number })?.statusCode
-            ?? (err as { status?: number })?.status;
-
-        // 決済が完了していない場合やバリデーションエラーはリトライしない
-        if (
-          apiErr.data?.payment_status
-          || apiErr.data?.valid_errs
-          || statusCode === 400
-        ) {
-          break;
-        }
-
-        // リトライ可能なエラーの場合（500エラーなど）
-        if (statusCode === 500 && apiErr.data?.retry_recommended) {
-          retryCount++;
-          if (retryCount <= maxRetries) {
-            // 指数バックオフでリトライ
-            const delay = Math.min(1000 * Math.pow(2, retryCount - 1), 5000);
-            if (import.meta.dev) {
-              // eslint-disable-next-line no-console
-              console.log(
-                `予約送信をリトライします (${retryCount}/${maxRetries}): ${delay}ms後に再試行`,
-              );
-            }
-            await new Promise(resolve => setTimeout(resolve, delay));
-            continue;
+          // 成功した場合
+          if (bookingData) {
+            break;
           }
         }
+        catch (err: unknown) {
+          fetchErr = err;
 
-        // その他のエラーはリトライしない
-        break;
-      }
-    }
+          const apiErr = (err as unknown as ApiErrRes) || { data: {} };
+          const statusCode
+            = (err as { statusCode?: number; status?: number })?.statusCode
+              ?? (err as { status?: number })?.status;
 
-    // エラーハンドリング
-    if (fetchErr) {
-      const apiErr = fetchErr as unknown as ApiErrRes;
+          // 決済が完了していない場合やバリデーションエラーはリトライしない
+          if (
+            apiErr.data?.payment_status
+            || apiErr.data?.valid_errs
+            || statusCode === 400
+          ) {
+            break;
+          }
 
-      // 決済が完了していない場合
-      if (apiErr.data?.payment_status) {
-        errMsg.value
-          = "決済処理が完了していません。お支払い情報に問題がないかご確認いただき、再度予約手続きを行ってください。";
-        isSubmitting.value = false;
-        return;
-      }
-      else if (apiErr.data?.valid_errs) {
-        // バリデーションエラーが発生している場合
-        const validErrs = apiErr.data.valid_errs;
-        const errMsgs: string[] = [];
-        for (const [path, msgs] of Object.entries(validErrs)) {
-          const msg = Array.isArray(msgs)
-            ? (msgs[0] ?? "")
-            : typeof msgs === "string"
-              ? msgs
-              : "";
-          errMsgs.push(`${path}: ${msg}`);
+          // リトライ可能なエラーの場合（500エラーなど）
+          if (statusCode === 500 && apiErr.data?.retry_recommended) {
+            retryCount++;
+            if (retryCount <= maxRetries) {
+              // 指数バックオフでリトライ
+              const delay = Math.min(1000 * Math.pow(2, retryCount - 1), 5000);
+              if (import.meta.dev) {
+                // eslint-disable-next-line no-console
+                console.log(
+                  `予約送信をリトライします (${retryCount}/${maxRetries}): ${delay}ms後に再試行`,
+                );
+              }
+              await new Promise(resolve => setTimeout(resolve, delay));
+              continue;
+            }
+          }
+
+          // その他のエラーはリトライしない
+          break;
         }
-        errMsg.value = `入力内容に誤りがあります。以下の項目をご確認ください。\n${errMsgs.join(", ")}`;
-        isSubmitting.value = false;
-        return;
       }
-      else {
-        // 500エラーでリトライを試みたが失敗した場合
-        if (retryCount >= maxRetries) {
+
+      // エラーハンドリング
+      if (fetchErr) {
+        const apiErr = fetchErr as unknown as ApiErrRes;
+
+        // 決済が完了していない場合
+        if (apiErr.data?.payment_status) {
           errMsg.value
-            = "決済は正常に完了していますが、予約情報の保存に失敗しました。お手数をおかけしますが、運営にご連絡ください。";
+            = "決済処理が完了していません。お支払い情報に問題がないかご確認いただき、再度予約手続きを行ってください。";
+          isSubmitting.value = false;
+          return;
+        }
+        else if (apiErr.data?.valid_errs) {
+          // バリデーションエラー
+          if (import.meta.dev) {
+            const validErrs = apiErr.data.valid_errs;
+            const errMsgs: string[] = [];
+            for (const [path, msgs] of Object.entries(validErrs)) {
+              const msg = Array.isArray(msgs)
+                ? (msgs[0] ?? "")
+                : typeof msgs === "string"
+                  ? msgs
+                  : "";
+              errMsgs.push(`${path}: ${msg}`);
+            }
+            // eslint-disable-next-line no-console
+            console.error(
+              `Booking validation error:\n${errMsgs.join("\n")}`,
+              validErrs,
+            );
+          }
+          errMsg.value
+            = "決済は完了しましたが、ご入力内容を確認できず予約情報の保存に失敗しました。お手数をおかけしますが、運営までご連絡ください。";
+          isSubmitting.value = false;
+          return;
         }
         else {
-          // その他のエラーの場合（決済は完了しているが、エラーの種類が不明）
+          // 500エラーでリトライを試みたが失敗した場合、
+          // またはエラーの種類が不明な場合（いずれも決済は完了している）
           errMsg.value
-            = "予約の送信に失敗しました。しばらく時間をおいて再度お試しください。";
+            = "決済は正常に完了していますが、予約情報の保存に失敗しました。お手数をおかけしますが、運営にご連絡ください。";
+          isSubmitting.value = false;
+          return;
         }
+      }
+
+      // bookingData が存在しない場合
+      if (!bookingData) {
+        errMsg.value
+          = "決済は完了していますが、予約情報の取得に失敗しました。お手数をおかけしますが、運営にご連絡ください。";
         isSubmitting.value = false;
         return;
       }
-    }
 
-    // bookingData が存在しない場合
-    if (!bookingData) {
-      errMsg.value
-        = "決済は完了していますが、予約情報の取得に失敗しました。お手数をおかけしますが、運営にご連絡ください。";
-      isSubmitting.value = false;
-      return;
-    }
+      // 予約番号を取得
+      const bookingNumber = bookingData.booking?.booking_number || null;
 
-    // 予約番号を取得
-    const bookingNumber = bookingData.booking?.booking_number || null;
+      clearAllData();
+      isSubmitted.value = true;
 
-    clearAllData();
-    isSubmitted.value = true;
-
-    if (import.meta.client) {
-      sessionStorage.removeItem("paymentClientSecret");
-      if (bookingNumber) {
-        sessionStorage.setItem("bookingNumber", bookingNumber);
+      if (import.meta.client) {
+        sessionStorage.removeItem("paymentClientSecret");
+        if (bookingNumber) {
+          sessionStorage.setItem("bookingNumber", bookingNumber);
+        }
       }
-    }
 
-    await router.push({ path: "/booking/complete", query: route.query });
+      await router.push({ path: "/booking/complete", query: route.query });
+    }
+    catch (err: unknown) {
+      // 決済後の想定外例外。決済は完了しているため再操作は促さない。
+      if (import.meta.dev) {
+        // eslint-disable-next-line no-console
+        console.error("Post-payment booking error:", err);
+      }
+      errMsg.value
+        = "決済は正常に完了していますが、予約情報の保存に失敗しました。お手数をおかけしますが、運営にご連絡ください。";
+    }
   }
   catch (err: unknown) {
+    // 決済前の想定外例外。まだ決済されていないため再試行を促してよい。
     if (import.meta.dev) {
       // eslint-disable-next-line no-console
       console.error("Booking confirmation error:", err);
