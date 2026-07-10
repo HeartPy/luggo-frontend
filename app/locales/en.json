@@ -1,10 +1,474 @@
 {
   "common": {
     "lang": "en",
-    "baseUrl": "/en/",
-    "inLanguage": "en-US"
+    "inLanguage": "en-US",
+    "brand": "LugGo",
+    "next": "Next",
+    "back": "Back",
+    "cancel": "Cancel",
+    "yes": "Yes",
+    "ok": "OK",
+    "error": "Error",
+    "listSeparator": ", ",
+    "dash": "—",
+    "pieces": "{count} pcs",
+    "perItem": "/ item",
+    "taxIncluded": " (tax incl.)"
   },
   "accessibility": {
     "languageMenu": "Language selection menu"
+  },
+  "footer": {
+    "transactionLaw": "Legal Notice (Specified Commercial Transactions Act)",
+    "privacy": "Privacy Policy"
+  },
+  "progress": {
+    "step1": "Luggage &amp;<br>Basic Information",
+    "step2": "Review &amp;<br>Payment Details",
+    "step3": "Booking Complete"
+  },
+  "pages": {
+    "form": {
+      "title": "Luggage Delivery Booking Form",
+      "description": "Booking form for LugGo, a luggage delivery service for travelers. Enter pickup and delivery locations and dates to book easily."
+    },
+    "confirm": {
+      "title": "Booking Confirmation",
+      "description": "Booking confirmation page for the luggage delivery service."
+    },
+    "complete": {
+      "title": "Booking Complete",
+      "description": "Booking completion page for the luggage delivery service."
+    },
+    "status": {
+      "title": "Check Your Booking",
+      "description": "Check or cancel your luggage delivery booking."
+    },
+    "transactionLaw": {
+      "title": "Legal Notice (Specified Commercial Transactions Act)"
+    },
+    "privacy": {
+      "title": "Privacy Policy"
+    }
+  },
+  "luggageTypes": {
+    "cabin": "Carry-on size (total of 3 sides: up to 120 cm)",
+    "checked": "Checked-baggage size (total of 3 sides: up to 160 cm)",
+    "oversize": "Oversize (total of 3 sides: up to 180 cm)",
+    "cabinShort": "Carry-on size",
+    "checkedShort": "Checked-baggage size",
+    "oversizeShort": "Oversize"
+  },
+  "placeTypes": {
+    "lodging": "Accommodation",
+    "airport": "Airport",
+    "trainStation": "Station",
+    "subwayStation": "Subway station",
+    "transitStation": "Transit hub",
+    "other": "Other",
+    "ratingCount": " ({count} reviews)"
+  },
+  "booking": {
+    "title": "Luggage Delivery Booking Form",
+    "toPayment": "Proceed to Payment",
+    "step1": {
+      "pickupNameLabel": "Pickup location name",
+      "pickupPostalLabel": "Pickup postal code",
+      "pickupAddressLabel": "Pickup address",
+      "pickupDateLabel": "Pickup date",
+      "deliveryNameLabel": "Delivery location name",
+      "deliveryPostalLabel": "Delivery postal code",
+      "deliveryAddressLabel": "Delivery address",
+      "deliveryDateLabel": "Delivery date",
+      "notesLabel": "Notes",
+      "namePlaceholder": "Name of hotel, airport, etc.",
+      "postalPlaceholder": "e.g. 1234567",
+      "postalHint": "Enter 7 digits without a hyphen",
+      "addressPlaceholder": "Please enter the full address",
+      "notesPlaceholder": "Enter any additional requests or questions here"
+    },
+    "step2": {
+      "selectCountLabel": "Select the number of bags",
+      "loading": "Loading luggage information...",
+      "amountTitle": "Amount",
+      "noticeTitle": "Important Notes",
+      "handlingTitle": "Dropping off your luggage",
+      "handlingText": "Please leave your luggage at the hotel/ryokan front desk, or at the station or airport counter, by 9:00 AM on the delivery day.",
+      "deliveryTimeTitle": "Delivery time",
+      "deliveryTimeText": "Your luggage will be delivered by 8:00 PM on the delivery day.",
+      "prohibitedTitle": "Items we cannot handle",
+      "contactNote": "If you have any other questions, please feel free to contact us.",
+      "emailLabel": "Email: ",
+      "decrementAria": "Decrease the quantity of {name} by one",
+      "incrementAria": "Increase the quantity of {name} by one"
+    },
+    "step3": {
+      "nameLabel": "Name",
+      "namePlaceholder": "e.g. John Smith",
+      "emailLabel": "Email address",
+      "emailPlaceholder": "e.g. example{'@'}example.com",
+      "phoneLabel": "Phone number",
+      "phonePlaceholder": "e.g. +12025551234",
+      "phoneHint": "Enter in international format starting with your country code and a + (no hyphens)",
+      "nationalityLabel": "Nationality",
+      "nationalityPlaceholder": "Select your nationality",
+      "guestNameLabel": "Guest name on hotel reservation",
+      "guestNamePlaceholder": "e.g. John Smith"
+    },
+    "errors": {
+      "fetchLuggageFailed": "Failed to load luggage information",
+      "validationSummary": "There are errors in your input. Please check the following fields.",
+      "paymentInfoFailed": "Failed to retrieve payment information",
+      "capacity": "Only {remaining} more bags can be accepted on the {label} ({date}). Please reduce your booking to {remaining} bags or fewer.",
+      "priceUpdated": "The prices have been updated. The new total is ¥{amount}. Please review the details and press \"Next\" again.",
+      "sessionExpired": "Your session has expired. We apologize for the inconvenience; please start over from the beginning.",
+      "navigationFailed": "Failed to navigate to the next page"
+    }
+  },
+  "prohibited": {
+    "i1": {
+      "type": "Hazardous materials",
+      "items": "Gas cylinders / spray cans, flammable liquids (gasoline, kerosene), gunpowder / fireworks, batteries (large-capacity lithium batteries, etc.)"
+    },
+    "i2": {
+      "type": "Valuables",
+      "items": "Cash, credit cards, jewelry / precious metals, luxury watches, works of art"
+    },
+    "i3": {
+      "type": "Personal information / important documents",
+      "items": "Passports, contracts, tickets"
+    },
+    "i4": {
+      "type": "Food / perishables",
+      "items": "Fresh food, items requiring refrigeration or freezing, items with strong odors"
+    },
+    "i5": {
+      "type": "Fragile items",
+      "items": "Glass products, precision equipment"
+    },
+    "i6": {
+      "type": "Illegal items",
+      "items": "Illegal drugs, weapons (knives, guns, etc.), counterfeit brand goods"
+    },
+    "i7": {
+      "type": "Liquids that may leak",
+      "items": ""
+    },
+    "i8": {
+      "type": "Items exceeding 30 kg per piece",
+      "items": ""
+    }
+  },
+  "priceDialog": {
+    "title": "Prices Have Been Updated",
+    "updatedByOwner": "The operator has changed the prices, so the total amount has been updated.",
+    "changedItemsTitle": "Items with updated prices",
+    "quantitySuffix": " (×{count})",
+    "before": "Previous total",
+    "afterTotal": "New total",
+    "guidance": "To continue with the new amount, select \"Proceed to Payment\". To review your booking, select \"Back\"."
+  },
+  "confirmPage": {
+    "title": "Payment Details",
+    "pickupSection": "Pickup Information",
+    "pickupPlace": "Pickup location",
+    "pickupAddress": "Pickup address",
+    "pickupDate": "Pickup date",
+    "deliverySection": "Delivery Information",
+    "deliveryPlace": "Delivery location",
+    "deliveryAddress": "Delivery address",
+    "deliveryDate": "Delivery date",
+    "notes": "Notes",
+    "luggageSection": "Luggage",
+    "noLuggage": "No luggage selected",
+    "customerSection": "Customer Information",
+    "name": "Name",
+    "phone": "Phone number",
+    "email": "Email address",
+    "nationality": "Nationality",
+    "guestName": "Guest name",
+    "itemLine": "{name} × {count}",
+    "countSuffix": "{count} pcs",
+    "totalLabel": "Total (tax incl.)",
+    "paymentInputTitle": "Enter your payment details",
+    "confirmButton": "Confirm Booking",
+    "errors": {
+      "stripeLoadFailed": "Failed to load the payment system",
+      "paymentConfirmFailed": "Payment confirmation failed. Please check your card details and try again.",
+      "emailMissing": "No email address entered. Please enter it on the customer information screen.",
+      "nameMissing": "No name entered. Please enter it on the customer information screen.",
+      "paymentNotCompleted": "The payment has not been completed",
+      "paymentProcessFailed": "Payment processing failed",
+      "dataExpired": "Your entered information has expired. We apologize for the inconvenience; please start over from the beginning.",
+      "sessionExpired": "Your session has expired. We apologize for the inconvenience; please start over from the beginning.",
+      "fetchFailedRestart": "Failed to retrieve information. We apologize for the inconvenience; please start over from the beginning.",
+      "paymentFailedCheck": "Payment processing failed. Please check your payment details.",
+      "paymentNotDone": "The payment has not been completed. Please check that there are no issues with your payment details and try booking again.",
+      "saveFailedValidation": "The payment was completed, but we could not verify your input and failed to save the booking. We apologize for the inconvenience; please contact support.",
+      "saveFailedContactOps": "The payment was completed successfully, but saving the booking failed. We apologize for the inconvenience; please contact support.",
+      "bookingDataMissing": "The payment was completed, but retrieving the booking details failed. We apologize for the inconvenience; please contact support.",
+      "submitFailedRetry": "Failed to submit the booking. Please wait a moment and try again.",
+      "luggageMissing": "Luggage information not found. We apologize for the inconvenience; please start over from the beginning.",
+      "incompleteInput": "Your input is incomplete. We apologize for the inconvenience; please review your entries."
+    }
+  },
+  "complete": {
+    "title": "Your Booking Is Complete",
+    "message": "Thank you very much for your booking. A confirmation email has been sent. Please find your booking number below.",
+    "bookingNumber": "Booking Number",
+    "keepNote": "You will need this booking number to check your booking or contact us.<br>Please write it down or take a screenshot.",
+    "copy": "Copy booking number",
+    "copied": "Copied",
+    "numberFailed": "Failed to retrieve your booking number.<br>We apologize for the inconvenience; when contacting support, please provide your name and booking date/time.",
+    "statusGuide": "To check the delivery status or cancel your booking, use the link below."
+  },
+  "status": {
+    "lookupTitle": "Enter Your Booking Number",
+    "lookupHint": "Please enter the booking number from your confirmation email.",
+    "lookupButton": "View Booking",
+    "deliveryStatus": "Delivery Status",
+    "cancelledNote": "This booking has been cancelled.",
+    "statusLabels": {
+      "before_pickup": "Before pickup",
+      "picked_up": "Picked up",
+      "delivered": "Delivered",
+      "cancelled": "Cancelled"
+    },
+    "cancelDone": "Your booking has been cancelled. A confirmation email has been sent to your registered email address.",
+    "confirmationTitle": "Important Information About Your Booking",
+    "cancelButton": "Cancel Booking",
+    "receiptButton": "Download Receipt",
+    "sectionTitle": "Booking Details",
+    "basicInfo": "Basic Information",
+    "bookingNumber": "Booking number",
+    "name": "Name",
+    "email": "Email address",
+    "phone": "Phone number",
+    "nationality": "Nationality",
+    "guestNameRoman": "Guest name on hotel reservation",
+    "deliveryInfo": "Delivery Information",
+    "pickupPlaceName": "Pickup location name",
+    "pickupPlaceAddress": "Pickup address",
+    "pickupDate": "Pickup date",
+    "deliveryPlaceName": "Delivery location name",
+    "deliveryPlaceAddress": "Delivery address",
+    "deliveryDate": "Delivery date",
+    "notes": "Notes",
+    "luggageSection": "Luggage",
+    "luggageType": "Luggage type",
+    "count": "Quantity",
+    "paymentSection": "Payment Information",
+    "paymentMethod": "Payment method",
+    "cardBrand": "Card brand",
+    "paymentDetail": "Payment details",
+    "expiry": "Expiry",
+    "amountLabel": "Amount Paid (tax incl.)",
+    "anotherLookup": "Check another booking number",
+    "onlinePayment": "Online payment",
+    "creditCard": "Credit card",
+    "cancelDialogTitle": "Cancel Booking",
+    "cancelDialogMessage": "This booking will be cancelled. Are you sure? This action cannot be undone.",
+    "cancelDialogConfirm": "Cancel booking",
+    "cancelDialogCancel": "Back",
+    "errors": {
+      "lookupFailed": "Failed to retrieve the booking. Please check the booking number and try again.",
+      "cancelFailed": "Failed to cancel the booking. Please wait a moment and try again.",
+      "receiptFailed": "Failed to download the receipt. Please wait a moment and try again.",
+      "sessionTimeout": "The booking view was closed due to inactivity. Please enter your booking number again."
+    }
+  },
+  "law": {
+    "items": {
+      "business": "Business operator",
+      "representative": "Representative",
+      "address": "Business address",
+      "contact": "Contact",
+      "pricing": "Delivery fees",
+      "handling": "Dropping off your luggage",
+      "deliveryTime": "Delivery time",
+      "prohibited": "Items we cannot handle",
+      "schedule": "Pickup and delivery dates",
+      "payment": "Accepted payment methods",
+      "cancellation": "Cancellation policy"
+    },
+    "handlingText": "Please leave your luggage at the hotel/ryokan front desk, or at the station or airport counter, by 9:00 AM on the delivery day.",
+    "deliveryTimeText": "Your luggage will be delivered by 8:00 PM on the delivery day.",
+    "paymentText": "You can pay with Apple Pay, Google Pay, or credit card.",
+    "cancellationItems": {
+      "i1": "Cancellation by 10:59 PM JST on the day before pickup: 0%",
+      "i2": "Cancellation at or after 11:00 PM JST on the day before pickup: 100%",
+      "i3": "No prior notice: 100%"
+    },
+    "contactEmail": "Email: ",
+    "contactPhone": "Phone: ",
+    "pricingEmpty": "Please contact us.",
+    "pricingTaxNote": "* The delivery fees above include tax.",
+    "scheduleIntro": "Pickup and delivery take place on the dates you specify.",
+    "regularHoliday": "Regular closing days",
+    "tempClosure": "Temporary closures",
+    "scheduleNote": "* Regular closing days and temporary closures cannot be selected as pickup or delivery dates.",
+    "nthWeekday": "{nth} {weekday}",
+    "ordinals": {
+      "1": "1st",
+      "2": "2nd",
+      "3": "3rd",
+      "4": "4th"
+    },
+    "loadFailed": "Failed to load the legal notice.",
+    "businessFetchFailed": "Could not retrieve business information.",
+    "loadingSr": "Loading {title}",
+    "listAria": "List of legal notice items"
+  },
+  "prefectures": {
+    "01": "Hokkaido",
+    "02": "Aomori",
+    "03": "Iwate",
+    "04": "Miyagi",
+    "05": "Akita",
+    "06": "Yamagata",
+    "07": "Fukushima",
+    "08": "Ibaraki",
+    "09": "Tochigi",
+    "10": "Gunma",
+    "11": "Saitama",
+    "12": "Chiba",
+    "13": "Tokyo",
+    "14": "Kanagawa",
+    "15": "Niigata",
+    "16": "Toyama",
+    "17": "Ishikawa",
+    "18": "Fukui",
+    "19": "Yamanashi",
+    "20": "Nagano",
+    "21": "Gifu",
+    "22": "Shizuoka",
+    "23": "Aichi",
+    "24": "Mie",
+    "25": "Shiga",
+    "26": "Kyoto",
+    "27": "Osaka",
+    "28": "Hyogo",
+    "29": "Nara",
+    "30": "Wakayama",
+    "31": "Tottori",
+    "32": "Shimane",
+    "33": "Okayama",
+    "34": "Hiroshima",
+    "35": "Yamaguchi",
+    "36": "Tokushima",
+    "37": "Kagawa",
+    "38": "Ehime",
+    "39": "Kochi",
+    "40": "Fukuoka",
+    "41": "Saga",
+    "42": "Nagasaki",
+    "43": "Kumamoto",
+    "44": "Oita",
+    "45": "Miyazaki",
+    "46": "Kagoshima",
+    "47": "Okinawa"
+  },
+  "privacy": {
+    "intro": "{company} (hereinafter, \"the Operator\") establishes the following privacy policy (hereinafter, \"this Policy\") regarding the handling of users' personal information in the luggage delivery service provided on this website (hereinafter, \"the Service\").",
+    "fetchFailed": "Failed to load the privacy policy.",
+    "loadingSr": "Loading the privacy policy",
+    "listAria": "List of policy articles",
+    "a1": {
+      "ttl": "Article 1 (Definition of Privacy Information)",
+      "txt": "Privacy information refers to personal information, history information, and characteristic information.<br /><br />Of privacy information, \"personal information\" refers to \"personal information\" as defined in the Act on the Protection of Personal Information: information about a living individual that can identify a specific individual by name, contact details, or other descriptions contained in such information.<br /><br />Of privacy information, \"history information and characteristic information\" refers to information other than the \"personal information\" defined above, such as the services used and pages viewed, advertising history, search keywords entered by the user, date and time of use, method of use, usage environment, the user's IP address, cookies, device identifiers, and other information about the user's usage history and characteristics."
+    },
+    "a2": {
+      "ttl": "Article 2 (Personal Information Collected and Collection Methods)",
+      "txt": "The Service collects the following personal information when users make a booking, for the purposes of accepting bookings, arranging delivery, and processing payments.<br /><br /><strong class=\"font-semibold\">(1) Information entered directly by the user</strong><br />- Name<br />- Email address<br />- Phone number<br />- Nationality<br />- Names of accompanying persons<br />- Facility name, postal code, and address of pickup and delivery locations<br />- Pickup and delivery dates<br />- Notes (if entered voluntarily by the user)<br /><br /><strong class=\"font-semibold\">(2) Payment information</strong><br />Payment information such as credit card numbers, expiry dates, and security codes is obtained and processed directly by Stripe Inc., our payment processor. This information is not stored on the Operator's servers. Stripe Inc. manages payment information in an environment compliant with PCI DSS (Payment Card Industry Data Security Standard).<br /><br /><strong class=\"font-semibold\">(3) Automatically collected information</strong><br />To improve convenience, the Service collects history and characteristic information such as the services and software used, pages viewed, date and time of use, method of use, usage environment (including the communication status of mobile devices and various settings), IP address, cookies, and local storage when users use the Service or view its pages."
+    },
+    "a3": {
+      "ttl": "Article 3 (Purposes of Collecting and Using Personal Information)",
+      "txt": "The Operator collects and uses personal information for the following purposes.<br /><br />1. To provide and operate the Service<br />2. To accept bookings and arrange deliveries<br />3. To process payments and handle refunds<br />4. To respond to inquiries from users (including identity verification)<br />5. To send notices and communications to users (including delivery status notifications)<br />6. To prevent unauthorized use of the Service and respond to such incidents<br />7. To conduct surveys and analysis to improve the Service<br />8. Purposes incidental to the above"
+    },
+    "a4": {
+      "ttl": "Article 4 (Changes to the Purpose of Use)",
+      "txt": "The Operator may change the purpose of use of personal information only when the changed purpose is reasonably deemed to be related to the purpose before the change.<br />When the purpose of use is changed, the Operator shall notify users of the changed purpose or publish it on this website by the method prescribed by the Operator."
+    },
+    "a5": {
+      "ttl": "Article 5 (Proper Acquisition of Personal Information)",
+      "txt": "The Operator acquires personal information properly and does not acquire it by deception or other wrongful means."
+    },
+    "a6": {
+      "ttl": "Article 6 (Security Management of Personal Information)",
+      "txt": "The Operator implements appropriate security management of personal information against risks such as loss, destruction, falsification, and leakage. When the Operator entrusts all or part of the handling of personal information, it exercises necessary and appropriate supervision to ensure the security management of personal information at the contractor."
+    },
+    "a7": {
+      "ttl": "Article 7 (Provision to Third Parties and Entrustment)",
+      "txt": "The Operator does not provide personal information to third parties without the prior consent of the user, except in the following cases.<br /><br />1. When required by law<br />2. When necessary to protect a person's life, body, or property and it is difficult to obtain the user's consent<br />3. When particularly necessary to improve public health or promote the sound development of children and it is difficult to obtain the user's consent<br />4. When it is necessary to cooperate with a national agency, local government, or a party entrusted by them in performing duties prescribed by law, and obtaining the user's consent may impede the performance of those duties<br /><br />Notwithstanding the preceding paragraph, the recipient of the information shall not be considered a third party in the following cases.<br /><br />5. When the Operator entrusts all or part of the handling of personal information within the scope necessary to achieve the purpose of use<br />6. When personal information is provided in connection with business succession due to merger or other reasons<br />7. When personal information is jointly used pursuant to the Act on the Protection of Personal Information<br /><br /><strong class=\"font-semibold\">(Entrustment of payment processing)</strong><br />The Service entrusts payment processing to Stripe Inc. (located in the USA). Credit card information and mobile payment information such as Apple Pay and Google Pay are obtained and processed directly by Stripe Inc. in a PCI DSS-compliant environment and are not stored on the Operator's servers. The handling of personal information by Stripe Inc. is governed by <a class='text-[#0f83fd]' href='https://stripe.com/privacy' target='_blank' rel='nofollow noopener noreferrer'>Stripe Inc.'s privacy policy</a>.<br /><br /><strong class=\"font-semibold\">(Entrustment to the platform operator)</strong><br />The Service is operated using a system provided by LugGo (the platform operator). Personal information such as booking and delivery information is stored on the platform operator's servers to the extent necessary for operating the Service. This constitutes entrustment of handling under the Act on the Protection of Personal Information, and the Operator appropriately supervises the platform operator."
+    },
+    "a8": {
+      "ttl": "Article 8 (Provision to Third Parties in Foreign Countries)",
+      "txt": "The Service entrusts the handling of personal information to Stripe Inc. (located in the USA) for payment processing. For information on the personal information protection system in the USA, please refer to the information published by the Personal Information Protection Commission of Japan.<br /><br />Stripe Inc. participates in international personal information protection frameworks such as the EU-US Data Privacy Framework and takes appropriate protective measures."
+    },
+    "a9": {
+      "ttl": "Article 9 (Retention Period of Personal Information)",
+      "txt": "The Operator retains personal information only for the period necessary to achieve the purpose of use. The specific retention periods are as follows.<br /><br />- Booking information (name, contact details, delivery address, etc.): after completion of the service, for the retention period required by law (up to 7 years)<br />- Payment records: for the retention period required by law<br />- Inquiry information: 1 year after the inquiry is resolved<br />- History information such as cookies: up to 1 year from acquisition<br /><br />Personal information that has exceeded the above retention periods will be promptly deleted or anonymized."
+    },
+    "a10": {
+      "ttl": "Article 10 (Use of Cookies and Similar Technologies)",
+      "txt": "The Service uses technologies such as cookies and local storage to improve user convenience and the Service.<br /><br />Users can refuse to accept cookies through their browser settings. However, if cookies are disabled, some features of the Service may become unavailable.<br /><br />For instructions on configuring cookies, please refer to your browser's help function."
+    },
+    "a11": {
+      "ttl": "Article 11 (Disclosure of Personal Information)",
+      "txt": "When the Operator is requested by a user to disclose their personal information, it will disclose it to the user without delay. However, if disclosure falls under any of the following, the Operator may decline to disclose all or part of the information, and if it decides not to disclose, it will notify the user without delay.<br /><br />1. When there is a risk of harming the life, body, property, or other rights or interests of the user or a third party<br />2. When there is a risk of significant hindrance to the proper conduct of the Operator's business<br />3. When disclosure would violate other laws and regulations<br /><br />Notwithstanding the preceding paragraph, information other than personal information, such as history information and characteristic information, will in principle not be disclosed."
+    },
+    "a12": {
+      "ttl": "Article 12 (Correction and Deletion of Personal Information)",
+      "txt": "If a user's personal information held by the Operator is incorrect, the user may request correction, addition, or deletion (hereinafter, \"correction, etc.\") of the personal information.<br />If the Operator receives such a request from a user and determines that it is necessary to respond to the request, it will make the correction, etc. without delay.<br />If the Operator makes a correction, etc. based on the preceding paragraph, or decides not to make a correction, etc. pursuant to the Act on the Protection of Personal Information or other laws, it will notify the user without delay."
+    },
+    "a13": {
+      "ttl": "Article 13 (Suspension of Use of Personal Information)",
+      "txt": "A user may request the suspension of use or deletion (hereinafter, \"suspension of use, etc.\") of their personal information pursuant to the Act on the Protection of Personal Information, on the grounds that it is being handled beyond the scope of the previously published purposes of use, or that it was acquired by deception or other wrongful means. If the Operator receives such a request and finds that there are grounds for the request, it will, after confirming that the request is from the person in question, suspend the use of the personal information without delay and notify the user accordingly. However, this does not apply when the Operator is not obligated to suspend use, etc. under the Act on the Protection of Personal Information or other laws."
+    },
+    "a14": {
+      "ttl": "Article 14 (Continuous Improvement)",
+      "txt": "The Operator will review the operational status of the handling of personal information as appropriate, strive for continuous improvement, and may amend the privacy policy as necessary. Except as otherwise provided by law or in this Policy, the contents of this Policy may be changed without notice to users.<br />The amended privacy policy takes effect when posted on this website."
+    },
+    "a15": {
+      "ttl": "Article 15 (Contact for Inquiries)",
+      "txt": "For requests for disclosure, opinions, questions, complaints, or other inquiries regarding the handling of personal information, please contact us at the following.<br />Email address: <a class=\"text-[#0f83fd]\" href=\"mailto:{email}\">{email}</a>"
+    }
+  },
+  "validation": {
+    "pickupPostalRequired": "Pickup postal code is required",
+    "postalFormat": "Enter the postal code as 7 digits",
+    "notDepartureArea": "This postal code is outside the pickup service area",
+    "departureAreaUnset": "Bookings are unavailable because no pickup area has been configured",
+    "pickupNameRequired": "Pickup location name is required",
+    "pickupAddressRequired": "Pickup address is required",
+    "pickupDateRequired": "Pickup date is required",
+    "dateFormat": "Enter the date in YYYY/MM/DD format",
+    "dateInvalid": "Enter a valid date",
+    "pickupTooSoon": "This date cannot be selected because it is past 11:00 PM JST on the previous day",
+    "maxHalfYear": "Bookings can be made up to six months in advance",
+    "regularHoliday": "This date cannot be selected because it is a regular closing day",
+    "tempClosure": "This date cannot be selected because it is a temporary closure day",
+    "deliveryPostalRequired": "Delivery postal code is required",
+    "notDeliveryArea": "This postal code is outside the delivery service area",
+    "deliveryAreaUnset": "Bookings are unavailable because no delivery area has been configured",
+    "deliveryNameRequired": "Delivery location name is required",
+    "deliveryAddressRequired": "Delivery address is required",
+    "deliveryDateRequired": "Delivery date is required",
+    "deliveryAfterPickup": "Select a delivery date on or after the pickup date",
+    "qtyNumber": "Quantity must be a number",
+    "qtyInteger": "Enter a whole number",
+    "qtyMin": "Quantity must be 0 or more",
+    "qtyMax": "Up to 20 pieces per luggage type",
+    "atLeastOne": "Select at least one piece of luggage",
+    "maxTotal": "The total number of pieces must be 20 or fewer",
+    "nameRequired": "Name is required",
+    "emailRequired": "Email address is required",
+    "emailInvalid": "Enter a valid email address",
+    "phoneRequired": "Phone number is required",
+    "phoneInvalid": "Enter a valid phone number",
+    "phonePlusRequired": "Enter your number in international format starting with your country code and a + (e.g. +12025551234)",
+    "nationalityRequired": "Nationality is required",
+    "guestNameRequired": "Guest name is required",
+    "guestNameRoman": "Please use English letters and spaces only"
   }
 }

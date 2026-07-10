@@ -17,7 +17,7 @@
           id="error-dialog-title"
           class="mb-4 text-lg font-semibold text-gray-900"
         >
-          エラー
+          {{ $t("common.error") }}
         </h2>
         <p
           id="error-dialog-message"

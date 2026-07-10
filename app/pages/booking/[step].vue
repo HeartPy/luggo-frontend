@@ -4,7 +4,7 @@
       <BookingAtomsProgressBar :current-step="1" />
 
       <h1 class="mb-8 text-center text-2xl font-bold text-gray-800 md:mb-12">
-        荷物配送予約フォーム
+        {{ $t("booking.title") }}
       </h1>
 
       <CommonAtomsErrDialog
@@ -63,7 +63,7 @@
               size="sm"
             />
             <span v-else>
-              {{ currentStep === 3 ? "お支払い情報のご入力へ" : "次へ" }}
+              {{ currentStep === 3 ? $t("booking.toPayment") : $t("common.next") }}
             </span>
           </button>
           <button
@@ -72,7 +72,7 @@
             class="rounded-md border-2 border-gray-300 bg-transparent px-8 py-3 font-semibold text-gray-700 hover:opacity-80"
             @click="goPrev()"
           >
-            戻る
+            {{ $t("common.back") }}
           </button>
         </div>
       </form>
@@ -83,6 +83,7 @@
 <script setup lang="ts">
 import { useForm } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/yup";
+import { useI18n } from "vue-i18n";
 import {
   useBookingForm,
   computeTotalAmount,
@@ -105,6 +106,7 @@ import type {
 } from "~/types/booking";
 
 const route = useRoute();
+const { t, locale } = useI18n();
 
 definePageMeta({
   layout: "customer",
@@ -222,7 +224,7 @@ const fetchLuggageItems = async () => {
     }
   }
   catch (err: unknown) {
-    luggageItemsErr.value = "荷物情報の取得に失敗しました";
+    luggageItemsErr.value = t("booking.errors.fetchLuggageFailed");
     if (import.meta.dev) {
       // eslint-disable-next-line no-console
       console.error("Error fetching luggage items:", err);
@@ -289,20 +291,25 @@ watch(paymentClientSecret, (newValue) => {
 });
 
 const step1Schema = computed(() =>
-  createStep1Schema({
-    departurePrefectures: allowedDeparturePrefectures.value,
-    deliverablePrefectures: allowedDeliverablePrefectures.value,
-    operatingDays: businessProfileState.value?.operating_days,
-    nthWeekdayHolidays: businessProfileState.value?.nth_weekday_holidays,
-    temporaryClosures: businessProfileState.value?.temporary_closures,
-  }),
+  createStep1Schema(
+    {
+      departurePrefectures: allowedDeparturePrefectures.value,
+      deliverablePrefectures: allowedDeliverablePrefectures.value,
+      operatingDays: businessProfileState.value?.operating_days,
+      nthWeekdayHolidays: businessProfileState.value?.nth_weekday_holidays,
+      temporaryClosures: businessProfileState.value?.temporary_closures,
+    },
+    t,
+  ),
 );
 
 const step2Schema = computed(() => {
-  return createStep2Schema(luggageItemsData.value);
+  return createStep2Schema(luggageItemsData.value, t);
 });
 
-const step3Schema = computed(() => createStep3Schema());
+const step3Schema = computed(() =>
+  createStep3Schema(t, locale.value !== "ja"),
+);
 
 // vee-validate
 const { validate: validateStep1Vv, setValues: setStep1Values }
@@ -378,7 +385,7 @@ const createPaymentIntent = async (): Promise<string | null> => {
               : "";
           errMsgs.push(`${path}: ${msg}`);
         }
-        errMsg.value = `入力内容に誤りがあります。以下の項目をご確認ください。\n${errMsgs.join(", ")}`;
+        errMsg.value = `${t("booking.errors.validationSummary")}\n${errMsgs.join(", ")}`;
       }
       else if (
         typeof apiErr?.data?.server_total_amount === "number"
@@ -440,7 +447,7 @@ const createPaymentIntent = async (): Promise<string | null> => {
         errMsg.value = apiErr.data.errMsg;
       }
       else {
-        errMsg.value = "支払い情報の取得に失敗しました";
+        errMsg.value = t("booking.errors.paymentInfoFailed");
       }
 
       return null;
@@ -455,7 +462,7 @@ const createPaymentIntent = async (): Promise<string | null> => {
           data,
         );
       }
-      errMsg.value = "支払い情報の取得に失敗しました";
+      errMsg.value = t("booking.errors.paymentInfoFailed");
       return null;
     }
 
@@ -466,7 +473,7 @@ const createPaymentIntent = async (): Promise<string | null> => {
       // eslint-disable-next-line no-console
       console.error("Payment intent creation error:", err);
     }
-    errMsg.value = "支払い情報の取得に失敗しました";
+    errMsg.value = t("booking.errors.paymentInfoFailed");
     return null;
   }
 };
@@ -530,8 +537,8 @@ const handleSubmit = async () => {
         const config = useRuntimeConfig();
         const apiBase = config.public.apiBaseUrl;
         const datesToCheck = [
-          { date: pickupDate, label: "集荷日" },
-          { date: deliveryDate, label: "配送日" },
+          { date: pickupDate, label: t("booking.step1.pickupDateLabel") },
+          { date: deliveryDate, label: t("booking.step1.deliveryDateLabel") },
         ];
         for (const { date: dt, label } of datesToCheck) {
           if (!dt) continue;
@@ -543,7 +550,11 @@ const handleSubmit = async () => {
               params: { business_owner: ownerId, date: dt },
             });
             if (res.remaining >= 0 && totalItems > res.remaining) {
-              errMsg.value = `${label}（${dt}）の荷物受付可能数の残りは${res.remaining}個です。予約個数を${res.remaining}個以下にしてください。`;
+              errMsg.value = t("booking.errors.capacity", {
+                label,
+                date: dt,
+                remaining: res.remaining,
+              });
               return;
             }
           }
@@ -579,7 +590,9 @@ const handleSubmit = async () => {
         step2Data.value,
       );
       if (newTotalAmount !== prevTotalAmount) {
-        errMsg.value = `料金が更新されました。新しい合計金額は ¥${newTotalAmount.toLocaleString()} です。内容をご確認の上、もう一度「次へ」を押してください。`;
+        errMsg.value = t("booking.errors.priceUpdated", {
+          amount: newTotalAmount.toLocaleString(),
+        });
         return;
       }
 
@@ -616,8 +629,7 @@ const handleSubmit = async () => {
     const sessionValid = await checkSessionValidity();
     if (!sessionValid) {
       clearAllData();
-      errMsg.value
-        = "セッションの有効期限が切れています。お手数おかけしますが、最初から入力し直してください。";
+      errMsg.value = t("booking.errors.sessionExpired");
       isSubmitting.value = false;
       await navigateTo(bookingPath(1));
       return;
@@ -651,7 +663,7 @@ const handleSubmit = async () => {
           // eslint-disable-next-line no-console
           console.error("Navigation failed:", err);
         }
-        errMsg.value = "ページの遷移に失敗しました";
+        errMsg.value = t("booking.errors.navigationFailed");
         isSubmitting.value = false;
         return;
       }
@@ -661,7 +673,7 @@ const handleSubmit = async () => {
         // eslint-disable-next-line no-console
         console.error("Payment intent creation error:", err);
       }
-      errMsg.value = "支払い情報の取得に失敗しました";
+      errMsg.value = t("booking.errors.paymentInfoFailed");
     }
     finally {
       isSubmitting.value = false;
@@ -756,31 +768,31 @@ onMounted(async () => {
   }
 });
 
-useHead({
-  title: "荷物配送予約フォーム",
+useHead(() => ({
+  title: t("pages.form.title"),
   meta: [
     {
       name: "description",
-      content:
-        "旅行者向け荷物配送サービス「LugGo」の予約フォーム。集荷・配送の場所と日時を入力して、簡単に予約できます。",
+      content: t("pages.form.description"),
     },
-    { property: "og:title", content: "荷物配送予約フォーム | LugGo(ラグゴー)" },
+    {
+      property: "og:title",
+      content: `${t("pages.form.title")} | ${t("common.brand")}`,
+    },
     {
       property: "og:description",
-      content:
-        "旅行者向け荷物配送サービス「LugGo」の予約フォーム。集荷・配送の場所と日時を入力して、簡単に予約できます。",
+      content: t("pages.form.description"),
     },
     {
       key: "twitter:title",
       name: "twitter:title",
-      content: "荷物配送予約フォーム | LugGo(ラグゴー)",
+      content: `${t("pages.form.title")} | ${t("common.brand")}`,
     },
     {
       key: "twitter:description",
       name: "twitter:description",
-      content:
-        "旅行者向け荷物配送サービス「LugGo」の予約フォーム。集荷・配送の場所と日時を入力して、簡単に予約できます。",
+      content: t("pages.form.description"),
     },
   ],
-});
+}));
 </script>

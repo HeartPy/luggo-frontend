@@ -25,6 +25,10 @@
 </template>
 
 <script setup lang="ts">
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
+
 const buildPath = (base: string): string => {
   if (!import.meta.client) return base;
   const params = new URLSearchParams(window.location.search);
@@ -37,11 +41,11 @@ const buildPath = (base: string): string => {
 
 const footerItems = computed(() => [
   {
-    label: "特定商取引法に基づく表記",
+    label: t("footer.transactionLaw"),
     to: buildPath("/booking/transaction-law"),
   },
   {
-    label: "プライバシーポリシー",
+    label: t("footer.privacy"),
     to: buildPath("/booking/privacy"),
   },
 ]);

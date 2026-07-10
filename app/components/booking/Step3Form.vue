@@ -6,7 +6,7 @@
         for="customerName"
         class="mb-2 block font-semibold text-gray-800"
       >
-        お名前<span class="ml-[0.2em] text-red-600">*</span>
+        {{ $t("booking.step3.nameLabel") }}<span class="ml-[0.2em] text-red-600">*</span>
       </label>
       <input
         id="customerName"
@@ -15,7 +15,7 @@
         name="customerName"
         class="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
         :class="{ 'border-red-500': errors.customer_name }"
-        placeholder="例) 山田 太郎"
+        :placeholder="$t('booking.step3.namePlaceholder')"
         required
         aria-required="true"
         aria-describedby="customer_name-error"
@@ -37,7 +37,7 @@
         for="customerEmail"
         class="mb-2 block font-semibold text-gray-800"
       >
-        メールアドレス<span class="ml-[0.2em] text-red-600">*</span>
+        {{ $t("booking.step3.emailLabel") }}<span class="ml-[0.2em] text-red-600">*</span>
       </label>
       <input
         id="customerEmail"
@@ -46,7 +46,7 @@
         name="customerEmail"
         class="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
         :class="{ 'border-red-500': errors.customer_email }"
-        placeholder="例) example@example.com"
+        :placeholder="$t('booking.step3.emailPlaceholder')"
         required
         aria-required="true"
         aria-describedby="customer_email-error"
@@ -68,7 +68,7 @@
         for="customerPhoneNumber"
         class="mb-2 block font-semibold text-gray-800"
       >
-        電話番号<span class="ml-[0.2em] text-red-600">*</span>
+        {{ $t("booking.step3.phoneLabel") }}<span class="ml-[0.2em] text-red-600">*</span>
       </label>
       <input
         id="customerPhoneNumber"
@@ -80,12 +80,12 @@
         required
         aria-required="true"
         aria-describedby="customer_phone_number-error"
-        placeholder="例) 00000000000"
+        :placeholder="$t('booking.step3.phonePlaceholder')"
         @input="handleInput('customer_phone_number', $event)"
         @blur="handlePhoneBlur($event)"
       >
       <p class="mt-1 text-xs text-gray-500">
-        半角数字で入力してください（ハイフンなし）
+        {{ $t("booking.step3.phoneHint") }}
       </p>
       <div
         v-if="errors.customer_phone_number"
@@ -103,7 +103,7 @@
         for="customerNationality"
         class="mb-2 block font-semibold text-gray-800"
       >
-        国籍<span class="ml-[0.2em] text-red-600">*</span>
+        {{ $t("booking.step3.nationalityLabel") }}<span class="ml-[0.2em] text-red-600">*</span>
       </label>
       <div class="relative">
         <select
@@ -121,7 +121,7 @@
             value=""
             disabled
           >
-            国籍を選択してください
+            {{ $t("booking.step3.nationalityPlaceholder") }}
           </option>
           <option
             v-for="nationalityItem in nationalityItems"
@@ -153,7 +153,7 @@
         for="guestName"
         class="mb-2 block font-semibold text-gray-800"
       >
-        宿泊予約者名（ローマ字）<span class="ml-[0.2em] text-red-600">*</span>
+        {{ $t("booking.step3.guestNameLabel") }}<span class="ml-[0.2em] text-red-600">*</span>
       </label>
       <input
         id="guestName"
@@ -162,7 +162,7 @@
         name="guestName"
         class="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
         :class="{ 'border-red-500': errors.guest_name }"
-        placeholder="例) Taro Yamada"
+        :placeholder="$t('booking.step3.guestNamePlaceholder')"
         required
         aria-required="true"
         aria-describedby="guest_name-error"
@@ -183,6 +183,7 @@
 <script setup lang="ts">
 import countries from "i18n-iso-countries";
 import ja from "i18n-iso-countries/langs/ja.json";
+import { useAppLocale } from "~/composables/useLocale";
 import type { Step3FormData } from "../../types/booking";
 import { useNumericInput } from "../../composables/useNumericInput";
 
@@ -212,11 +213,16 @@ const handlePhoneBlur = (event: Event) => {
 };
 
 // 国籍の選択肢を作成
+// 現在のロケールに合わせる
 countries.registerLocale(ja);
 
-const nationalityItems = Object.entries(countries.getNames("ja"))
-  .map(([code, name]) => ({ value: code, label: name as string }))
-  .sort((a, b) => a.label.localeCompare(b.label, "ja"));
+const { bcp47Locale, countryName } = useAppLocale();
+
+const nationalityItems = computed(() =>
+  Object.keys(countries.getNames("ja"))
+    .map(code => ({ value: code, label: countryName(code) }))
+    .sort((a, b) => a.label.localeCompare(b.label, bcp47Locale.value)),
+);
 
 // 入力ハンドラー
 const handleInput = (key: keyof Step3FormData, event: Event) => {

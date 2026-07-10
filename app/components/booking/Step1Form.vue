@@ -6,7 +6,7 @@
         for="pickupLocationName"
         class="mb-2 block font-semibold text-gray-800"
       >
-        集荷場所の名称<span class="ml-[0.2em] text-red-600">*</span>
+        {{ $t("booking.step1.pickupNameLabel") }}<span class="ml-[0.2em] text-red-600">*</span>
       </label>
       <div class="relative">
         <input
@@ -16,7 +16,7 @@
           name="pickupLocationName"
           class="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
           :class="{ 'border-red-500': errors.pickup_location_name }"
-          placeholder="ホテル・空港等の名称"
+          :placeholder="$t('booking.step1.namePlaceholder')"
           required
           aria-required="true"
           aria-describedby="pickup_location_name-error"
@@ -50,9 +50,7 @@
                     v-if="suggestion.rating"
                     class="text-xs text-gray-500"
                   >
-                    ⭐ {{ suggestion.rating }} ({{
-                      suggestion.user_ratings_total
-                    }}件)
+                    ⭐ {{ suggestion.rating }}{{ $t("placeTypes.ratingCount", { count: suggestion.user_ratings_total }) }}
                   </span>
                   <span
                     class="rounded bg-blue-50 px-2 py-1 text-xs text-blue-600"
@@ -82,7 +80,7 @@
         for="pickupPostalCode"
         class="mb-2 block font-semibold text-gray-800"
       >
-        集荷場所の郵便番号<span class="ml-[0.2em] text-red-600">*</span>
+        {{ $t("booking.step1.pickupPostalLabel") }}<span class="ml-[0.2em] text-red-600">*</span>
       </label>
       <input
         id="pickupPostalCode"
@@ -92,7 +90,7 @@
         name="pickupPostalCode"
         class="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
         :class="{ 'border-red-500': errors.pickup_postal_code }"
-        placeholder="例) 1234567"
+        :placeholder="$t('booking.step1.postalPlaceholder')"
         maxlength="7"
         required
         aria-required="true"
@@ -100,7 +98,7 @@
         @input="handlePickupPostalCode($event)"
       >
       <p class="mt-1 text-xs text-gray-500">
-        半角数字で入力してください（ハイフンなし）
+        {{ $t("booking.step1.postalHint") }}
       </p>
       <div
         v-if="errors.pickup_postal_code"
@@ -118,7 +116,7 @@
         for="pickupLocationAddress"
         class="mb-2 block font-semibold text-gray-800"
       >
-        集荷場所の住所<span class="ml-[0.2em] text-red-600">*</span>
+        {{ $t("booking.step1.pickupAddressLabel") }}<span class="ml-[0.2em] text-red-600">*</span>
       </label>
       <textarea
         id="pickupLocationAddress"
@@ -126,7 +124,7 @@
         name="pickupLocationAddress"
         class="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
         :class="{ 'border-red-500': errors.pickup_location_address }"
-        placeholder="住所を詳しくご入力ください"
+        :placeholder="$t('booking.step1.addressPlaceholder')"
         rows="3"
         required
         aria-required="true"
@@ -149,7 +147,7 @@
         for="pickupDate"
         class="mb-2 block font-semibold text-gray-800"
       >
-        集荷日<span class="ml-[0.2em] text-red-600">*</span>
+        {{ $t("booking.step1.pickupDateLabel") }}<span class="ml-[0.2em] text-red-600">*</span>
       </label>
       <div
         class="relative"
@@ -192,7 +190,7 @@
         for="deliveryLocationName"
         class="mb-2 block font-semibold text-gray-800"
       >
-        配送場所の名称<span class="ml-[0.2em] text-red-600">*</span>
+        {{ $t("booking.step1.deliveryNameLabel") }}<span class="ml-[0.2em] text-red-600">*</span>
       </label>
       <div class="relative">
         <input
@@ -202,7 +200,7 @@
           name="deliveryLocationName"
           class="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
           :class="{ 'border-red-500': errors.delivery_location_name }"
-          placeholder="ホテル・空港等の名称"
+          :placeholder="$t('booking.step1.namePlaceholder')"
           required
           aria-required="true"
           aria-describedby="delivery_location_name-error"
@@ -238,9 +236,7 @@
                     v-if="suggestion.rating"
                     class="text-xs text-gray-500"
                   >
-                    ⭐ {{ suggestion.rating }} ({{
-                      suggestion.user_ratings_total
-                    }}件)
+                    ⭐ {{ suggestion.rating }}{{ $t("placeTypes.ratingCount", { count: suggestion.user_ratings_total }) }}
                   </span>
                   <span
                     class="rounded bg-blue-50 px-2 py-1 text-xs text-blue-600"
@@ -270,7 +266,7 @@
         for="deliveryPostalCode"
         class="mb-2 block font-semibold text-gray-800"
       >
-        配送場所の郵便番号<span class="ml-[0.2em] text-red-600">*</span>
+        {{ $t("booking.step1.deliveryPostalLabel") }}<span class="ml-[0.2em] text-red-600">*</span>
       </label>
       <input
         id="deliveryPostalCode"
@@ -280,7 +276,7 @@
         name="deliveryPostalCode"
         class="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
         :class="{ 'border-red-500': errors.delivery_postal_code }"
-        placeholder="例) 1234567"
+        :placeholder="$t('booking.step1.postalPlaceholder')"
         maxlength="7"
         required
         aria-required="true"
@@ -288,7 +284,7 @@
         @input="handleDeliveryPostalCode($event)"
       >
       <p class="mt-1 text-xs text-gray-500">
-        半角数字で入力してください（ハイフンなし）
+        {{ $t("booking.step1.postalHint") }}
       </p>
       <div
         v-if="errors.delivery_postal_code"
@@ -306,7 +302,7 @@
         for="deliveryLocationAddress"
         class="mb-2 block font-semibold text-gray-800"
       >
-        配送場所の住所<span class="ml-[0.2em] text-red-600">*</span>
+        {{ $t("booking.step1.deliveryAddressLabel") }}<span class="ml-[0.2em] text-red-600">*</span>
       </label>
       <textarea
         id="deliveryLocationAddress"
@@ -314,7 +310,7 @@
         name="deliveryLocationAddress"
         class="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
         :class="{ 'border-red-500': errors.delivery_location_address }"
-        placeholder="住所を詳しくご入力ください"
+        :placeholder="$t('booking.step1.addressPlaceholder')"
         rows="3"
         required
         aria-required="true"
@@ -337,7 +333,7 @@
         for="deliveryDate"
         class="mb-2 block font-semibold text-gray-800"
       >
-        配送日<span class="ml-[0.2em] text-red-600">*</span>
+        {{ $t("booking.step1.deliveryDateLabel") }}<span class="ml-[0.2em] text-red-600">*</span>
       </label>
       <div
         class="relative"
@@ -379,14 +375,14 @@
         for="notes"
         class="mb-2 block font-semibold text-gray-800"
       >
-        備考
+        {{ $t("booking.step1.notesLabel") }}
       </label>
       <textarea
         id="notes"
         :value="formData.notes"
         name="notes"
         class="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
-        placeholder="追加のご要望やご質問がございましたらこちらにご記入ください"
+        :placeholder="$t('booking.step1.notesPlaceholder')"
         rows="5"
         @input="handleInput('notes', $event)"
       />
@@ -395,6 +391,8 @@
 </template>
 
 <script setup lang="ts">
+import { useI18n } from "vue-i18n";
+import { useAppLocale } from "~/composables/useLocale";
 import type { Step1FormData } from "~/types/booking";
 import { usePostalCodeSearch } from "~/composables/usePostalCodeSearch";
 import {
@@ -403,15 +401,21 @@ import {
 } from "~/composables/useBookingValid";
 
 // サジェストの型定義
+// name_ja / address_ja は非日本語ロケールでの検索時のみ返却される日本語表記
 type LocationSuggestion = {
   place_id: string;
   name: string;
   address: string;
+  name_ja?: string;
+  address_ja?: string;
   types: string[];
   rating?: number;
   user_ratings_total?: number;
   geometry: { lat: number; lng: number };
 };
+
+const { t } = useI18n();
+const { googleLangCode, currentLocale } = useAppLocale();
 
 type Props = {
   formData: Step1FormData;
@@ -607,7 +611,20 @@ const handleSearchInput = async (event: Event, type: "pickup" | "delivery") => {
 
   const fieldName
     = type === "pickup" ? "pickup_location_name" : "delivery_location_name";
-  handleInput(fieldName, event);
+  const nameJaField
+    = type === "pickup" ? "pickup_location_name_ja" : "delivery_location_name_ja";
+  const addressJaField
+    = type === "pickup"
+      ? "pickup_location_address_ja"
+      : "delivery_location_address_ja";
+
+  // 手入力された場合は、サジェスト由来の日本語表記が実態と乖離するためクリアする
+  emit("update:form-data", {
+    ...props.formData,
+    [fieldName]: target.value,
+    [nameJaField]: "",
+    [addressJaField]: "",
+  });
 
   // デバウンス処理
   if (searchTimeout.value) {
@@ -643,7 +660,7 @@ const fetchSuggestions = async (query: string, type: "pickup" | "delivery") => {
     const data = await $fetch<{
       suggestions: LocationSuggestion[];
     }>(
-      `${apiBaseUrl}/api/bookings/location-suggestions?q=${encodeURIComponent(query)}${prefParam}`,
+      `${apiBaseUrl}/api/bookings/location-suggestions?q=${encodeURIComponent(query)}${prefParam}&lang=${encodeURIComponent(googleLangCode.value)}`,
     );
 
     if (data) {
@@ -656,7 +673,9 @@ const fetchSuggestions = async (query: string, type: "pickup" | "delivery") => {
 };
 
 // 住所から都道府県コードを抽出
-function extractPrefCodeFromAddress(address: string): string | null {
+// 都道府県名の照合は日本語表記で行うため、非日本語ロケールでは address_ja を優先する
+function extractPrefCodeFromAddress(suggestion: LocationSuggestion): string | null {
+  const address = suggestion.address_ja || suggestion.address;
   for (const [code, name] of Object.entries(PREFECTURE_FULL_NAMES)) {
     if (address.includes(name)) return code;
   }
@@ -667,13 +686,13 @@ function extractPrefCodeFromAddress(address: string): string | null {
 const filteredSuggestions = computed(() => {
   const pickup = suggestions.value.pickup.filter((suggestion) => {
     if (props.departurePrefectures.length === 0) return true;
-    const code = extractPrefCodeFromAddress(suggestion.address);
+    const code = extractPrefCodeFromAddress(suggestion);
     return code !== null && props.departurePrefectures.includes(code);
   });
 
   const delivery = suggestions.value.delivery.filter((suggestion) => {
     if (props.deliverablePrefectures.length === 0) return true;
-    const code = extractPrefCodeFromAddress(suggestion.address);
+    const code = extractPrefCodeFromAddress(suggestion);
     return code !== null && props.deliverablePrefectures.includes(code);
   });
 
@@ -715,13 +734,33 @@ const selectSuggestion = (
     = type === "pickup" ? "pickup_location_address" : "delivery_location_address";
   const postalCodeField
     = type === "pickup" ? "pickup_postal_code" : "delivery_postal_code";
+  const nameJaField
+    = type === "pickup" ? "pickup_location_name_ja" : "delivery_location_name_ja";
+  const addressJaField
+    = type === "pickup"
+      ? "pickup_location_address_ja"
+      : "delivery_location_address_ja";
 
-  const extractedPostalCode = extractPostalCode(suggestion.address);
+  const extractedPostalCode
+    = extractPostalCode(suggestion.address)
+      ?? (suggestion.address_ja ? extractPostalCode(suggestion.address_ja) : null);
+
+  // 事業者の予約一覧用に日本語表記も保持する（日本語ロケール時は不要）
+  const nameJa
+    = currentLocale.value === "ja" ? "" : (suggestion.name_ja ?? "");
+  const addressJa
+    = currentLocale.value === "ja"
+      ? ""
+      : suggestion.address_ja
+        ? stripPostalCode(suggestion.address_ja)
+        : "";
 
   const updatedData = {
     ...props.formData,
     [fieldName]: suggestion.name,
     [addressFieldName]: stripPostalCode(suggestion.address),
+    [nameJaField]: nameJa,
+    [addressJaField]: addressJa,
     // 住所に郵便番号が含まれる場合のみ上書き
     // :value バインドのため @input は発火せず住所検索は走らない
     ...(extractedPostalCode !== null
@@ -743,20 +782,21 @@ const handleBlur = (type: "pickup" | "delivery") => {
 
 // 場所タイプのラベル取得
 const getPlaceTypeLabel = (placeTypes: string[]) => {
-  const typeLabels: Record<string, string> = {
-    lodging: "宿泊施設",
-    hotel: "宿泊施設",
-    airport: "空港",
-    train_station: "駅",
-    subway_station: "地下鉄駅",
-    transit_station: "交通拠点",
+  const typeLabelKeys: Record<string, string> = {
+    lodging: "placeTypes.lodging",
+    hotel: "placeTypes.lodging",
+    airport: "placeTypes.airport",
+    train_station: "placeTypes.trainStation",
+    subway_station: "placeTypes.subwayStation",
+    transit_station: "placeTypes.transitStation",
   };
 
   for (const placeType of placeTypes) {
-    if (typeLabels[placeType]) {
-      return typeLabels[placeType];
+    const key = typeLabelKeys[placeType];
+    if (key) {
+      return t(key);
     }
   }
-  return "その他";
+  return t("placeTypes.other");
 };
 </script>

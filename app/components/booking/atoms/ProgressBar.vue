@@ -30,15 +30,19 @@
 </template>
 
 <script setup lang="ts">
+import { useI18n } from "vue-i18n";
+
 type Step = {
   number: number;
   label: string;
 };
 
-const steps = ref<Step[]>([
-  { number: 1, label: "お荷物情報<br>基本情報のご入力" },
-  { number: 2, label: "入力内容のご確認<br>お支払い情報のご入力" },
-  { number: 3, label: "ご予約完了" },
+const { t } = useI18n();
+
+const steps = computed<Step[]>(() => [
+  { number: 1, label: t("progress.step1") },
+  { number: 2, label: t("progress.step2") },
+  { number: 3, label: t("progress.step3") },
 ]);
 
 defineProps<{

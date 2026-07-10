@@ -4,7 +4,7 @@
       <BookingAtomsProgressBar :current-step="2" />
 
       <h1 class="mb-8 text-center text-2xl font-bold text-gray-800 md:mb-12">
-        お支払い情報のご入力
+        {{ $t("confirmPage.title") }}
       </h1>
 
       <CommonAtomsErrDialog
@@ -24,12 +24,12 @@
           <!-- 集荷情報 -->
           <section class="py-6">
             <h2 class="mb-4 text-xl font-semibold text-gray-800">
-              集荷情報
+              {{ $t("confirmPage.pickupSection") }}
             </h2>
             <dl class="space-y-2">
               <div>
                 <dt class="text-sm font-medium text-gray-600">
-                  集荷場所
+                  {{ $t("confirmPage.pickupPlace") }}
                 </dt>
                 <dd class="text-gray-900">
                   {{ step1Data.pickup_location_name }}
@@ -37,7 +37,7 @@
               </div>
               <div>
                 <dt class="text-sm font-medium text-gray-600">
-                  集荷住所
+                  {{ $t("confirmPage.pickupAddress") }}
                 </dt>
                 <dd class="text-gray-900">
                   {{ step1Data.pickup_location_address }}
@@ -45,7 +45,7 @@
               </div>
               <div>
                 <dt class="text-sm font-medium text-gray-600">
-                  集荷日
+                  {{ $t("confirmPage.pickupDate") }}
                 </dt>
                 <dd class="text-gray-900">
                   {{ formatDate(step1Data.pickup_date) }}
@@ -57,12 +57,12 @@
           <!-- 配送情報 -->
           <section class="py-6">
             <h2 class="mb-4 text-xl font-semibold text-gray-800">
-              配送情報
+              {{ $t("confirmPage.deliverySection") }}
             </h2>
             <dl class="space-y-2">
               <div>
                 <dt class="text-sm font-medium text-gray-600">
-                  配送場所
+                  {{ $t("confirmPage.deliveryPlace") }}
                 </dt>
                 <dd class="text-gray-900">
                   {{ step1Data.delivery_location_name }}
@@ -70,7 +70,7 @@
               </div>
               <div>
                 <dt class="text-sm font-medium text-gray-600">
-                  配送住所
+                  {{ $t("confirmPage.deliveryAddress") }}
                 </dt>
                 <dd class="text-gray-900">
                   {{ step1Data.delivery_location_address }}
@@ -78,7 +78,7 @@
               </div>
               <div>
                 <dt class="text-sm font-medium text-gray-600">
-                  配送日
+                  {{ $t("confirmPage.deliveryDate") }}
                 </dt>
                 <dd class="text-gray-900">
                   {{ formatDate(step1Data.delivery_date) }}
@@ -86,7 +86,7 @@
               </div>
               <div v-if="step1Data.notes">
                 <dt class="text-sm font-medium text-gray-600">
-                  備考
+                  {{ $t("confirmPage.notes") }}
                 </dt>
                 <dd class="whitespace-pre-wrap text-gray-900">
                   {{ step1Data.notes }}
@@ -98,13 +98,13 @@
           <!-- 荷物情報 -->
           <section class="py-6">
             <h2 class="mb-4 text-xl font-semibold text-gray-800">
-              荷物情報
+              {{ $t("confirmPage.luggageSection") }}
             </h2>
             <div
               v-if="luggageItems.length === 0"
               class="text-gray-600"
             >
-              荷物が選択されていません
+              {{ $t("confirmPage.noLuggage") }}
             </div>
             <div
               v-else
@@ -118,21 +118,21 @@
                 <div class="flex items-center gap-3">
                   <img
                     :src="getImageUrl(item.image_src)"
-                    :alt="item.name"
+                    :alt="item.displayName"
                     class="h-12 w-12 object-contain"
                   >
                   <div>
                     <p class="font-medium text-gray-900">
-                      {{ item.name }}
+                      {{ item.displayName }}
                     </p>
                     <p class="text-sm text-gray-600">
-                      ¥{{ item.price.toLocaleString() }} / 個
+                      ¥{{ item.price.toLocaleString() }} {{ $t("common.perItem") }}
                     </p>
                   </div>
                 </div>
                 <div class="text-right">
                   <p class="font-semibold text-gray-900">
-                    {{ item.count }} 個
+                    {{ $t("confirmPage.countSuffix", { count: item.count }) }}
                   </p>
                   <p class="text-sm text-gray-600">
                     ¥{{ (item.price * item.count).toLocaleString() }}
@@ -145,12 +145,12 @@
           <!-- 顧客情報 -->
           <section class="py-6">
             <h2 class="mb-4 text-xl font-semibold text-gray-800">
-              お客様情報
+              {{ $t("confirmPage.customerSection") }}
             </h2>
             <dl class="space-y-2">
               <div>
                 <dt class="text-sm font-medium text-gray-600">
-                  お名前
+                  {{ $t("confirmPage.name") }}
                 </dt>
                 <dd class="text-gray-900">
                   {{ step3Data.customer_name }}
@@ -158,7 +158,7 @@
               </div>
               <div>
                 <dt class="text-sm font-medium text-gray-600">
-                  電話番号
+                  {{ $t("confirmPage.phone") }}
                 </dt>
                 <dd class="text-gray-900">
                   {{ step3Data.customer_phone_number }}
@@ -166,7 +166,7 @@
               </div>
               <div>
                 <dt class="text-sm font-medium text-gray-600">
-                  メールアドレス
+                  {{ $t("confirmPage.email") }}
                 </dt>
                 <dd class="text-gray-900">
                   {{ step3Data.customer_email }}
@@ -174,7 +174,7 @@
               </div>
               <div>
                 <dt class="text-sm font-medium text-gray-600">
-                  国籍
+                  {{ $t("confirmPage.nationality") }}
                 </dt>
                 <dd class="text-gray-900">
                   {{ nationalityLabel }}
@@ -182,7 +182,7 @@
               </div>
               <div>
                 <dt class="text-sm font-medium text-gray-600">
-                  宿泊者名
+                  {{ $t("confirmPage.guestName") }}
                 </dt>
                 <dd class="text-gray-900">
                   {{ step3Data.guest_name }}
@@ -211,7 +211,7 @@
                   class="flex items-center justify-between text-sm"
                 >
                   <span class="text-gray-300">
-                    {{ luggageItem.name }} × {{ luggageItem.count }} 個
+                    {{ $t("confirmPage.itemLine", { name: luggageItem.displayName, count: luggageItem.count }) }}
                   </span>
                   <span class="font-medium text-gray-100">
                     ¥{{ (luggageItem.price * luggageItem.count).toLocaleString() }}
@@ -219,7 +219,7 @@
                 </div>
               </div>
               <div class="flex items-end justify-between">
-                <span class="text-sm font-medium tracking-wide text-gray-400">合計金額（税込）</span>
+                <span class="text-sm font-medium tracking-wide text-gray-400">{{ $t("confirmPage.totalLabel") }}</span>
                 <span class="text-3xl font-bold tracking-tight text-white">
                   ¥{{ displayTotalAmount.toLocaleString() }}
                 </span>
@@ -234,7 +234,7 @@
           class="py-6"
         >
           <h2 class="mb-4 text-sm text-gray-600">
-            お支払い情報のご入力
+            {{ $t("confirmPage.paymentInputTitle") }}
           </h2>
           <div>
             <CommonAtomsLoadingAnimation
@@ -275,14 +275,14 @@
               v-if="isSubmitting"
               size="sm"
             />
-            <span v-else>予約を確定する</span>
+            <span v-else>{{ $t("confirmPage.confirmButton") }}</span>
           </button>
           <button
             type="button"
             class="rounded-md border-2 border-gray-300 bg-transparent px-8 py-3 font-semibold text-gray-700 hover:opacity-80"
             @click="goPrev()"
           >
-            戻る
+            {{ $t("common.back") }}
           </button>
         </div>
       </div>
@@ -295,11 +295,12 @@ import { loadStripe } from "@stripe/stripe-js";
 import type {
   Stripe,
   StripeElements,
+  StripeElementLocale,
   StripePaymentElement,
 } from "@stripe/stripe-js";
-import countries from "i18n-iso-countries";
-import ja from "i18n-iso-countries/langs/ja.json";
+import { useI18n } from "vue-i18n";
 import { useBookingForm } from "~/composables/useBookingForm";
+import { useAppLocale } from "~/composables/useLocale";
 import { useCsrf } from "~/composables/useCsrf";
 import { useSession } from "~/composables/useSession";
 import { useBeforeUnload } from "~/composables/useBeforeUnload";
@@ -314,6 +315,10 @@ definePageMeta({
   layout: "customer",
   middleware: "subdomain",
 });
+
+const { t, te, locale } = useI18n();
+const { formatLocalizedDate, countryName, stripeLocale, bodyFontFamily }
+  = useAppLocale();
 
 const {
   step1Data,
@@ -372,23 +377,14 @@ const elements = ref<StripeElements | null>(null);
 const paymentElement = ref<StripePaymentElement | null>(null);
 const isConfirmingPayment = ref(false);
 
-// 日付をフォーマット
-const formatDate = (dateString: string) => {
-  if (!dateString) return "";
-  const date = new Date(dateString);
-  return new Intl.DateTimeFormat("ja-JP", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  }).format(date);
-};
+// 日付を現在のロケールでフォーマット
+const formatDate = (dateString: string) => formatLocalizedDate(dateString);
 
-// 国籍コードを国名に変換
-countries.registerLocale(ja);
+// 国籍コードを現在のロケールの国名に変換
 const nationalityLabel = computed(() => {
   const code = step3Data.value.customer_nationality;
   if (!code) return "";
-  return countries.getName(code, "ja") || code;
+  return countryName(code);
 });
 
 const getImageUrl = (src: string) => {
@@ -397,6 +393,13 @@ const getImageUrl = (src: string) => {
 
 type LuggageItem = LuggageItemData & {
   count: number;
+  displayName: string;
+};
+
+// 荷物タイプ名を現在のロケールで表示
+const localizedLuggageName = (item: LuggageItemData): string => {
+  const key = `luggageTypes.${item.key}`;
+  return te(key) ? t(key) : item.name;
 };
 
 const luggageItems = computed<LuggageItem[]>(() => {
@@ -408,6 +411,7 @@ const luggageItems = computed<LuggageItem[]>(() => {
     .map(item => ({
       ...item,
       count: step2Data.value[item.key] ?? 0,
+      displayName: localizedLuggageName(item),
     }))
     .filter(item => item.count > 0);
 });
@@ -429,7 +433,7 @@ const initializePaymentElement = async (clientSecret: string) => {
         // eslint-disable-next-line no-console
         console.error("Stripe publishable key is not configured");
       }
-      loadingErr.value = "支払いシステムの読み込みに失敗しました";
+      loadingErr.value = t("confirmPage.errors.stripeLoadFailed");
       paymentLoading.value = false;
       return;
     }
@@ -442,7 +446,7 @@ const initializePaymentElement = async (clientSecret: string) => {
         // eslint-disable-next-line no-console
         console.error("Stripe failed to load");
       }
-      loadingErr.value = "支払いシステムの読み込みに失敗しました";
+      loadingErr.value = t("confirmPage.errors.stripeLoadFailed");
       paymentLoading.value = false;
       return;
     }
@@ -457,12 +461,12 @@ const initializePaymentElement = async (clientSecret: string) => {
           colorBackground: "#f3f4f6",
           colorText: "#1f2937",
           colorDanger: "#dc2626",
-          fontFamily: "\"Noto Sans JP\", system-ui, sans-serif",
+          fontFamily: `"${bodyFontFamily.value}", system-ui, sans-serif`,
           spacingUnit: "4px",
           borderRadius: "6px",
         },
       },
-      locale: "ja" as const,
+      locale: stripeLocale.value as StripeElementLocale,
     };
 
     elements.value = stripe.value.elements(options);
@@ -472,7 +476,7 @@ const initializePaymentElement = async (clientSecret: string) => {
         // eslint-disable-next-line no-console
         console.error("Stripe Elements failed to initialize");
       }
-      loadingErr.value = "支払いシステムの読み込みに失敗しました";
+      loadingErr.value = t("confirmPage.errors.stripeLoadFailed");
       paymentLoading.value = false;
       return;
     }
@@ -502,7 +506,7 @@ const initializePaymentElement = async (clientSecret: string) => {
         // eslint-disable-next-line no-console
         console.error("PaymentElement failed to create");
       }
-      loadingErr.value = "支払いシステムの読み込みに失敗しました";
+      loadingErr.value = t("confirmPage.errors.stripeLoadFailed");
       paymentLoading.value = false;
       return;
     }
@@ -514,7 +518,7 @@ const initializePaymentElement = async (clientSecret: string) => {
         // eslint-disable-next-line no-console
         console.error("Payment element not found in DOM");
       }
-      loadingErr.value = "支払いシステムの読み込みに失敗しました";
+      loadingErr.value = t("confirmPage.errors.stripeLoadFailed");
       paymentLoading.value = false;
       return;
     }
@@ -533,7 +537,7 @@ const initializePaymentElement = async (clientSecret: string) => {
       // eslint-disable-next-line no-console
       console.error("Stripe initialization error:", err);
     }
-    loadingErr.value = "支払いシステムの読み込みに失敗しました";
+    loadingErr.value = t("confirmPage.errors.stripeLoadFailed");
     paymentLoading.value = false;
     return;
   }
@@ -568,7 +572,7 @@ const confirmPayment = async (): Promise<{
           clientSecret: !!paymentClientSecret.value,
         });
       }
-      loadingErr.value = "支払いシステムの読み込みに失敗しました";
+      loadingErr.value = t("confirmPage.errors.stripeLoadFailed");
       return {
         success: false,
       };
@@ -581,8 +585,7 @@ const confirmPayment = async (): Promise<{
         // eslint-disable-next-line no-console
         console.error("Payment element submit error:", submitError);
       }
-      paymentErr.value
-        = "支払い情報の確認に失敗しました。カード情報をご確認の上、再度お試しください。";
+      paymentErr.value = t("confirmPage.errors.paymentConfirmFailed");
       return {
         success: false,
       };
@@ -594,8 +597,7 @@ const confirmPayment = async (): Promise<{
         // eslint-disable-next-line no-console
         console.error("Customer email is required");
       }
-      paymentErr.value
-        = "メールアドレスが入力されていません。顧客情報入力画面で入力してください。";
+      paymentErr.value = t("confirmPage.errors.emailMissing");
       return {
         success: false,
       };
@@ -606,8 +608,7 @@ const confirmPayment = async (): Promise<{
         // eslint-disable-next-line no-console
         console.error("Customer name is required");
       }
-      paymentErr.value
-        = "お名前が入力されていません。顧客情報入力画面で入力してください。";
+      paymentErr.value = t("confirmPage.errors.nameMissing");
       return {
         success: false,
       };
@@ -668,8 +669,7 @@ const confirmPayment = async (): Promise<{
         // eslint-disable-next-line no-console
         console.error("Payment confirmation error:", confirmErr);
       }
-      paymentErr.value
-        = "支払い情報の確認に失敗しました。カード情報をご確認の上、再度お試しください。";
+      paymentErr.value = t("confirmPage.errors.paymentConfirmFailed");
       return {
         success: false,
       };
@@ -692,7 +692,7 @@ const confirmPayment = async (): Promise<{
             : null,
         });
       }
-      paymentErr.value = "支払いが完了していません";
+      paymentErr.value = t("confirmPage.errors.paymentNotCompleted");
       return {
         success: false,
       };
@@ -703,7 +703,7 @@ const confirmPayment = async (): Promise<{
       // eslint-disable-next-line no-console
       console.error("Payment processing error:", err);
     }
-    paymentErr.value = "支払いの処理に失敗しました";
+    paymentErr.value = t("confirmPage.errors.paymentProcessFailed");
     return {
       success: false,
     };
@@ -744,8 +744,7 @@ const handleConfirm = async () => {
   try {
     // 決済前に入力データの有効期限切れを検出
     if (!isBookingDataComplete()) {
-      errMsg.value
-        = "ご入力内容の保持期限が切れました。お手数をおかけしますが、最初から入力し直してください。";
+      errMsg.value = t("confirmPage.errors.dataExpired");
       isSubmitting.value = false;
       clearAllData();
       await router.push(bookingPath(1));
@@ -755,8 +754,7 @@ const handleConfirm = async () => {
     // セッション有効性をチェック
     const sessionValid = await checkSessionValidity();
     if (!sessionValid) {
-      errMsg.value
-        = "セッションの有効期限が切れています。お手数おかけしますが、最初から入力し直してください。";
+      errMsg.value = t("confirmPage.errors.sessionExpired");
       isSubmitting.value = false;
       clearAllData();
       await router.push(bookingPath(1));
@@ -764,8 +762,7 @@ const handleConfirm = async () => {
     }
 
     if (!paymentClientSecret.value) {
-      errMsg.value
-        = "情報の取得に失敗しました。お手数をおかけしますが、最初から入力し直してください。";
+      errMsg.value = t("confirmPage.errors.fetchFailedRestart");
       isSubmitting.value = false;
       clearAllData();
       await router.push(bookingPath(1));
@@ -773,7 +770,7 @@ const handleConfirm = async () => {
     }
 
     if (!stripe.value || !elements.value) {
-      errMsg.value = "支払いシステムの読み込みに失敗しました";
+      errMsg.value = t("confirmPage.errors.stripeLoadFailed");
       isSubmitting.value = false;
       return;
     }
@@ -782,8 +779,7 @@ const handleConfirm = async () => {
     const rslt = await confirmPayment();
 
     if (!rslt.success || !rslt.paymentIntentId) {
-      errMsg.value
-        = "支払いの処理に失敗しました。支払い情報をご確認してください。";
+      errMsg.value = t("confirmPage.errors.paymentFailedCheck");
       isSubmitting.value = false;
       return;
     }
@@ -864,8 +860,7 @@ const handleConfirm = async () => {
 
         // 決済が完了していない場合
         if (apiErr.data?.payment_status) {
-          errMsg.value
-            = "決済処理が完了していません。お支払い情報に問題がないかご確認いただき、再度予約手続きを行ってください。";
+          errMsg.value = t("confirmPage.errors.paymentNotDone");
           isSubmitting.value = false;
           return;
         }
@@ -888,16 +883,14 @@ const handleConfirm = async () => {
               validErrs,
             );
           }
-          errMsg.value
-            = "決済は完了しましたが、ご入力内容を確認できず予約情報の保存に失敗しました。お手数をおかけしますが、運営までご連絡ください。";
+          errMsg.value = t("confirmPage.errors.saveFailedValidation");
           isSubmitting.value = false;
           return;
         }
         else {
           // 500エラーでリトライを試みたが失敗した場合、
           // またはエラーの種類が不明な場合（いずれも決済は完了している）
-          errMsg.value
-            = "決済は正常に完了していますが、予約情報の保存に失敗しました。お手数をおかけしますが、運営にご連絡ください。";
+          errMsg.value = t("confirmPage.errors.saveFailedContactOps");
           isSubmitting.value = false;
           return;
         }
@@ -905,8 +898,7 @@ const handleConfirm = async () => {
 
       // bookingData が存在しない場合
       if (!bookingData) {
-        errMsg.value
-          = "決済は完了していますが、予約情報の取得に失敗しました。お手数をおかけしますが、運営にご連絡ください。";
+        errMsg.value = t("confirmPage.errors.bookingDataMissing");
         isSubmitting.value = false;
         return;
       }
@@ -932,8 +924,7 @@ const handleConfirm = async () => {
         // eslint-disable-next-line no-console
         console.error("Post-payment booking error:", err);
       }
-      errMsg.value
-        = "決済は正常に完了していますが、予約情報の保存に失敗しました。お手数をおかけしますが、運営にご連絡ください。";
+      errMsg.value = t("confirmPage.errors.saveFailedContactOps");
     }
   }
   catch (err: unknown) {
@@ -942,8 +933,7 @@ const handleConfirm = async () => {
       // eslint-disable-next-line no-console
       console.error("Booking confirmation error:", err);
     }
-    errMsg.value
-      = "予約の送信に失敗しました。しばらく時間をおいて再度お試しください。";
+    errMsg.value = t("confirmPage.errors.submitFailedRetry");
   }
   finally {
     isSubmitting.value = false;
@@ -963,8 +953,7 @@ onMounted(async () => {
   if (import.meta.client) {
     // 荷物データが存在しない場合はフローを経由していないため Step1 へ戻す
     if (luggageItemsData.value.length === 0) {
-      errMsg.value
-        = "荷物情報が見つかりません。お手数をおかけしますが、最初から入力し直してください。";
+      errMsg.value = t("confirmPage.errors.luggageMissing");
       loading.value = false;
       await router.push(bookingPath(1));
       return;
@@ -973,18 +962,20 @@ onMounted(async () => {
     // Step1が完了しているかチェック
     // 注意: [step].vue と同じ context（事業者プロフィール）を渡さないと
     // 集荷/配達地域テストが空配列で常に失敗し、Step1 へ強制送還ループになる。
-    const isStep1Valid = await createStep1Schema({
-      departurePrefectures: businessProfileState.value?.service_areas ?? [],
-      deliverablePrefectures: Object.keys(
-        businessProfileState.value?.pricing_rules ?? {},
-      ),
-      operatingDays: businessProfileState.value?.operating_days,
-      nthWeekdayHolidays: businessProfileState.value?.nth_weekday_holidays,
-      temporaryClosures: businessProfileState.value?.temporary_closures,
-    }).isValid(step1Data.value);
+    const isStep1Valid = await createStep1Schema(
+      {
+        departurePrefectures: businessProfileState.value?.service_areas ?? [],
+        deliverablePrefectures: Object.keys(
+          businessProfileState.value?.pricing_rules ?? {},
+        ),
+        operatingDays: businessProfileState.value?.operating_days,
+        nthWeekdayHolidays: businessProfileState.value?.nth_weekday_holidays,
+        temporaryClosures: businessProfileState.value?.temporary_closures,
+      },
+      t,
+    ).isValid(step1Data.value);
     if (!isStep1Valid) {
-      errMsg.value
-        = "入力内容が完了していません。お手数をおかけしますが、入力内容をご確認ください。";
+      errMsg.value = t("confirmPage.errors.incompleteInput");
       loading.value = false;
       await router.push(bookingPath(1));
       return;
@@ -993,20 +984,22 @@ onMounted(async () => {
     // Step2が完了しているかチェック
     const isStep2Valid = await createStep2Schema(
       luggageItemsData.value,
+      t,
     ).isValid(step2Data.value);
     if (!isStep2Valid) {
-      errMsg.value
-        = "入力内容が完了していません。お手数をおかけしますが、入力内容をご確認ください。";
+      errMsg.value = t("confirmPage.errors.incompleteInput");
       loading.value = false;
       await router.push(bookingPath(2));
       return;
     }
 
     // Step3が完了しているかチェック
-    const isStep3Valid = await createStep3Schema().isValid(step3Data.value);
+    const isStep3Valid = await createStep3Schema(
+      t,
+      locale.value !== "ja",
+    ).isValid(step3Data.value);
     if (!isStep3Valid) {
-      errMsg.value
-        = "入力内容が完了していません。お手数をおかけしますが、入力内容をご確認ください。";
+      errMsg.value = t("confirmPage.errors.incompleteInput");
       loading.value = false;
       await router.push(bookingPath(3));
       return;
@@ -1019,8 +1012,7 @@ onMounted(async () => {
     }
     else {
       // paymentClientSecret が存在しない場合は Step1 に戻る
-      errMsg.value
-        = "情報の取得に失敗しました。お手数をおかけしますが、最初から入力し直してください。";
+      errMsg.value = t("confirmPage.errors.fetchFailedRestart");
       loading.value = false;
       clearAllData();
       await router.push(bookingPath(1));
@@ -1061,7 +1053,7 @@ onMounted(async () => {
             hasClientSecret: !!paymentClientSecret.value,
           });
         }
-        loadingErr.value = "支払いシステムの読み込みに失敗しました";
+        loadingErr.value = t("confirmPage.errors.stripeLoadFailed");
         return;
       }
 
@@ -1120,7 +1112,7 @@ watch(
           // eslint-disable-next-line no-console
           console.error("Payment element not found after retries in watch");
         }
-        loadingErr.value = "支払いシステムの読み込みに失敗しました";
+        loadingErr.value = t("confirmPage.errors.stripeLoadFailed");
         return;
       }
 
@@ -1132,28 +1124,31 @@ watch(
   },
 );
 
-useHead({
-  title: "予約確認",
+useHead(() => ({
+  title: t("pages.confirm.title"),
   meta: [
     {
       name: "description",
-      content: "荷物配送サービスの予約確認ページ。",
+      content: t("pages.confirm.description"),
     },
-    { property: "og:title", content: "予約確認 | LugGo(ラグゴー)" },
+    {
+      property: "og:title",
+      content: `${t("pages.confirm.title")} | ${t("common.brand")}`,
+    },
     {
       property: "og:description",
-      content: "荷物配送サービスの予約確認ページ。",
+      content: t("pages.confirm.description"),
     },
     {
       key: "twitter:title",
       name: "twitter:title",
-      content: "予約確認 | LugGo(ラグゴー)",
+      content: `${t("pages.confirm.title")} | ${t("common.brand")}`,
     },
     {
       key: "twitter:description",
       name: "twitter:description",
-      content: "荷物配送サービスの予約確認ページ。",
+      content: t("pages.confirm.description"),
     },
   ],
-});
+}));
 </script>

@@ -5,6 +5,9 @@ import type {
   LuggageItemData,
 } from "~/types/booking";
 
+// バリデーションメッセージの翻訳関数（vue-i18n の t を想定）
+export type ValidationTranslator = (key: string) => string;
+
 // JST基準の年・月・日・時を数値で取得
 const _jstFormatter = new Intl.DateTimeFormat("en-CA", {
   timeZone: "Asia/Tokyo",
@@ -213,13 +216,16 @@ function isoDateToNthWeekdayKey(iso: string): string | null {
 }
 
 // Step1のバリデーションスキーマを生成
-export const createStep1Schema = (options?: {
-  departurePrefectures?: string[];
-  deliverablePrefectures?: string[];
-  operatingDays?: string;
-  nthWeekdayHolidays?: string[];
-  temporaryClosures?: string[];
-}) => {
+export const createStep1Schema = (
+  options?: {
+    departurePrefectures?: string[];
+    deliverablePrefectures?: string[];
+    operatingDays?: string;
+    nthWeekdayHolidays?: string[];
+    temporaryClosures?: string[];
+  },
+  t: ValidationTranslator = key => key,
+) => {
   const minPickup = getMinPickupDate();
   const maxDate = getMaxBookingDate();
   const departurePrefectures = options?.departurePrefectures ?? [];
@@ -231,52 +237,51 @@ export const createStep1Schema = (options?: {
   return object({
     pickup_postal_code: string()
       .trim()
-      .required("集荷場所の郵便番号は必須です")
-      .matches(/^[0-9]{7}$/u, "郵便番号は7桁の半角数字で入力してください")
+      .required(t("validation.pickupPostalRequired"))
+      .matches(/^[0-9]{7}$/u, t("validation.postalFormat"))
       .test(
         "is-departure-area",
-        "この郵便番号は集荷地域の対象外です",
+        t("validation.notDepartureArea"),
         function (value) {
           if (!value) return true;
           if (departurePrefectures.length === 0) {
             return this.createError({
-              message: "集荷地域が設定されていないため予約できません",
+              message: t("validation.departureAreaUnset"),
             });
           }
           const code = prefCodeFromPostal(value);
           return code !== null && departurePrefectures.includes(code);
         },
       ),
-    pickup_location_name: string().trim().required("集荷場所の名称は必須です"),
+    pickup_location_name: string()
+      .trim()
+      .required(t("validation.pickupNameRequired")),
     pickup_location_address: string()
       .trim()
-      .required("集荷場所の住所は必須です"),
+      .required(t("validation.pickupAddressRequired")),
     pickup_date: string()
       .trim()
-      .required("集荷日は必須です")
+      .required(t("validation.pickupDateRequired"))
       .transform(normalizeToIsoDate)
-      .matches(
-        /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/u,
-        "日付はYYYY/MM/DD形式で入力してください",
-      )
+      .matches(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/u, t("validation.dateFormat"))
       .test(
         "is-valid-date",
-        "存在する日付を入力してください",
+        t("validation.dateInvalid"),
         value => !!value && isValidIsoDate(value),
       )
       .test(
         "is-min-pickup",
-        "前日の23時を過ぎているため、この日付は選択できません",
+        t("validation.pickupTooSoon"),
         value => !!value && value >= minPickup,
       )
       .test(
         "is-within-max",
-        "予約できるのは半年先までです",
+        t("validation.maxHalfYear"),
         value => !!value && value <= maxDate,
       )
       .test(
         "is-not-regular-holiday-pickup",
-        "この日は定休日のため選択できません",
+        t("validation.regularHoliday"),
         (value) => {
           if (!value) return true;
           const wd = isoDateToWeekday(value);
@@ -285,7 +290,7 @@ export const createStep1Schema = (options?: {
       )
       .test(
         "is-not-nth-weekday-holiday-pickup",
-        "この日は定休日のため選択できません",
+        t("validation.regularHoliday"),
         (value) => {
           if (!value || nthWeekdayHolidays.size === 0) return true;
           const key = isoDateToNthWeekdayKey(value);
@@ -294,21 +299,21 @@ export const createStep1Schema = (options?: {
       )
       .test(
         "is-not-temp-closure-pickup",
-        "この日は臨時休業日のため選択できません",
+        t("validation.tempClosure"),
         value => !value || !temporaryClosures.has(value),
       ),
     delivery_postal_code: string()
       .trim()
-      .required("配送場所の郵便番号は必須です")
-      .matches(/^[0-9]{7}$/u, "郵便番号は7桁の半角数字で入力してください")
+      .required(t("validation.deliveryPostalRequired"))
+      .matches(/^[0-9]{7}$/u, t("validation.postalFormat"))
       .test(
         "is-deliverable-area",
-        "この郵便番号は配達地域の対象外です",
+        t("validation.notDeliveryArea"),
         function (value) {
           if (!value) return true;
           if (deliverablePrefectures.length === 0) {
             return this.createError({
-              message: "配達地域が設定されていないため予約できません",
+              message: t("validation.deliveryAreaUnset"),
             });
           }
           const code = prefCodeFromPostal(value);
@@ -317,26 +322,23 @@ export const createStep1Schema = (options?: {
       ),
     delivery_location_name: string()
       .trim()
-      .required("配送場所の名称は必須です"),
+      .required(t("validation.deliveryNameRequired")),
     delivery_location_address: string()
       .trim()
-      .required("配送場所の住所は必須です"),
+      .required(t("validation.deliveryAddressRequired")),
     delivery_date: string()
       .trim()
-      .required("配送日は必須です")
+      .required(t("validation.deliveryDateRequired"))
       .transform(normalizeToIsoDate)
-      .matches(
-        /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/u,
-        "日付はYYYY/MM/DD形式で入力してください",
-      )
+      .matches(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/u, t("validation.dateFormat"))
       .test(
         "is-valid-date",
-        "存在する日付を入力してください",
+        t("validation.dateInvalid"),
         value => !!value && isValidIsoDate(value),
       )
       .test(
         "is-after-pickup",
-        "配送日は集荷日以降の日付を選択してください",
+        t("validation.deliveryAfterPickup"),
         function (value) {
           const pickup = (this.parent as Step1FormData).pickup_date;
           return !!value && !!pickup && value >= pickup;
@@ -344,12 +346,12 @@ export const createStep1Schema = (options?: {
       )
       .test(
         "is-within-max",
-        "予約できるのは半年先までです",
+        t("validation.maxHalfYear"),
         value => !!value && value <= maxDate,
       )
       .test(
         "is-not-regular-holiday-delivery",
-        "この日は定休日のため選択できません",
+        t("validation.regularHoliday"),
         (value) => {
           if (!value) return true;
           const wd = isoDateToWeekday(value);
@@ -358,7 +360,7 @@ export const createStep1Schema = (options?: {
       )
       .test(
         "is-not-nth-weekday-holiday-delivery",
-        "この日は定休日のため選択できません",
+        t("validation.regularHoliday"),
         (value) => {
           if (!value || nthWeekdayHolidays.size === 0) return true;
           const key = isoDateToNthWeekdayKey(value);
@@ -367,7 +369,7 @@ export const createStep1Schema = (options?: {
       )
       .test(
         "is-not-temp-closure-delivery",
-        "この日は臨時休業日のため選択できません",
+        t("validation.tempClosure"),
         value => !value || !temporaryClosures.has(value),
       ),
     notes: string().optional(),
@@ -375,26 +377,29 @@ export const createStep1Schema = (options?: {
 };
 
 // Step2のバリデーションスキーマを生成
-export const createStep2Schema = (items: LuggageItemData[]) => {
+export const createStep2Schema = (
+  items: LuggageItemData[],
+  t: ValidationTranslator = key => key,
+) => {
   const schemaShape: Record<string, NumberSchema> = {};
   for (const item of items) {
     schemaShape[item.key] = number()
-      .typeError("数量は数値で指定してください")
-      .integer("整数を指定してください")
-      .min(0, "数量は0以上を指定してください")
-      .max(20, "各荷物の数量は20個までです")
+      .typeError(t("validation.qtyNumber"))
+      .integer(t("validation.qtyInteger"))
+      .min(0, t("validation.qtyMin"))
+      .max(20, t("validation.qtyMax"))
       .required();
   }
 
   return object(schemaShape)
-    .test("at-least-one", "最低1点以上の荷物を選択してください", (values) => {
+    .test("at-least-one", t("validation.atLeastOne"), (values) => {
       if (!values) return false;
       const v = values as Step2FormData;
       return Object.values(v).some(
         (count: unknown) => (Number(count) || 0) > 0,
       );
     })
-    .test("max-total", "すべての荷物の合計は20個までです", (values) => {
+    .test("max-total", t("validation.maxTotal"), (values) => {
       if (!values) return false;
       const v = values as Step2FormData;
       const total = Object.values(v).reduce(
@@ -406,32 +411,40 @@ export const createStep2Schema = (items: LuggageItemData[]) => {
 };
 
 // Step3のバリデーションスキーマを生成
-export const createStep3Schema = () => {
+// 日本語以外のページでは電話番号を国番号（+）付きの国際形式のみ許可
+export const createStep3Schema = (
+  t: ValidationTranslator = key => key,
+  requireInternationalPhone = false,
+) => {
   return object({
-    customer_name: string().trim().required("お名前は必須です"),
+    customer_name: string().trim().required(t("validation.nameRequired")),
     customer_email: string()
       .trim()
-      .required("メールアドレスは必須です")
-      .email("有効なメールアドレスを入力してください"),
+      .required(t("validation.emailRequired"))
+      .email(t("validation.emailInvalid")),
     customer_phone_number: string()
       .trim()
-      .required("お電話番号は必須です")
+      .required(t("validation.phoneRequired"))
       .transform(value =>
         typeof value === "string" ? value.replace(/[\s-]/g, "") : value,
       )
-      .matches(/^(\+\d{7,15}|\d{10,11})$/u, "有効な電話番号を入力してください"),
-    customer_nationality: string().trim().required("国籍は必須です"),
+      .matches(
+        requireInternationalPhone ? /^\+\d{7,15}$/u : /^(\+\d{7,15}|\d{10,11})$/u,
+        requireInternationalPhone
+          ? t("validation.phonePlusRequired")
+          : t("validation.phoneInvalid"),
+      ),
+    customer_nationality: string()
+      .trim()
+      .required(t("validation.nationalityRequired")),
     guest_name: string()
       .trim()
-      .required("宿泊予約者名は必須です")
+      .required(t("validation.guestNameRequired"))
       .transform(value =>
         typeof value === "string"
           ? value.normalize("NFKC").replace(/\s+/g, " ")
           : value,
       )
-      .matches(
-        /^[A-Za-z ]+$/u,
-        "ローマ字（半角英字とスペース）のみで入力してください",
-      ),
+      .matches(/^[A-Za-z ]+$/u, t("validation.guestNameRoman")),
   });
 };

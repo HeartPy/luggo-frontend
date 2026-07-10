@@ -1,0 +1,474 @@
+{
+  "common": {
+    "lang": "zh-Hant",
+    "inLanguage": "zh-TW",
+    "brand": "LugGo",
+    "next": "下一步",
+    "back": "返回",
+    "cancel": "取消",
+    "yes": "是",
+    "ok": "確定",
+    "error": "錯誤",
+    "listSeparator": "、",
+    "dash": "—",
+    "pieces": "{count}件",
+    "perItem": "/ 件",
+    "taxIncluded": "（含稅）"
+  },
+  "accessibility": {
+    "languageMenu": "語言選擇選單"
+  },
+  "footer": {
+    "transactionLaw": "基於特定商業交易法的標示",
+    "privacy": "隱私權政策"
+  },
+  "progress": {
+    "step1": "行李資訊<br>基本資訊填寫",
+    "step2": "確認填寫內容<br>填寫付款資訊",
+    "step3": "預約完成"
+  },
+  "pages": {
+    "form": {
+      "title": "行李配送預約表單",
+      "description": "面向旅客的行李配送服務「LugGo」預約表單。輸入取件和配送的地點與日期，即可輕鬆完成預約。"
+    },
+    "confirm": {
+      "title": "預約確認",
+      "description": "行李配送服務的預約確認頁面。"
+    },
+    "complete": {
+      "title": "預約完成",
+      "description": "行李配送服務的預約完成頁面。"
+    },
+    "status": {
+      "title": "查詢預約內容",
+      "description": "行李配送服務的預約查詢與取消頁面。"
+    },
+    "transactionLaw": {
+      "title": "基於特定商業交易法的標示"
+    },
+    "privacy": {
+      "title": "隱私權政策"
+    }
+  },
+  "luggageTypes": {
+    "cabin": "隨身行李尺寸（三邊合計：120cm以內）",
+    "checked": "託運行李尺寸（三邊合計：160cm以內）",
+    "oversize": "超規格尺寸（三邊合計：180cm以內）",
+    "cabinShort": "隨身行李尺寸",
+    "checkedShort": "託運行李尺寸",
+    "oversizeShort": "超規格尺寸"
+  },
+  "placeTypes": {
+    "lodging": "住宿設施",
+    "airport": "機場",
+    "trainStation": "車站",
+    "subwayStation": "地鐵站",
+    "transitStation": "交通樞紐",
+    "other": "其他",
+    "ratingCount": "（{count}則評價）"
+  },
+  "booking": {
+    "title": "行李配送預約表單",
+    "toPayment": "前往填寫付款資訊",
+    "step1": {
+      "pickupNameLabel": "取件地點名稱",
+      "pickupPostalLabel": "取件地點郵遞區號",
+      "pickupAddressLabel": "取件地點地址",
+      "pickupDateLabel": "取件日期",
+      "deliveryNameLabel": "配送地點名稱",
+      "deliveryPostalLabel": "配送地點郵遞區號",
+      "deliveryAddressLabel": "配送地點地址",
+      "deliveryDateLabel": "配送日期",
+      "notesLabel": "備註",
+      "namePlaceholder": "飯店、機場等的名稱",
+      "postalPlaceholder": "例）1234567",
+      "postalHint": "請輸入7位半形數字（無連字號）",
+      "addressPlaceholder": "請輸入詳細地址",
+      "notesPlaceholder": "如有其他需求或疑問，請在此填寫"
+    },
+    "step2": {
+      "selectCountLabel": "選擇行李件數",
+      "loading": "正在載入行李資訊...",
+      "amountTitle": "金額",
+      "noticeTitle": "注意事項",
+      "handlingTitle": "關於行李寄送手續",
+      "handlingText": "請在配送當天上午9點前，將行李寄放至飯店或旅館的櫃檯，或車站、機場的服務台。",
+      "deliveryTimeTitle": "關於送達時間",
+      "deliveryTimeText": "行李將於配送當天20點前送達。",
+      "prohibitedTitle": "無法受理的行李",
+      "contactNote": "如有上述以外的疑問，請隨時與我們聯繫。",
+      "emailLabel": "電子郵件：",
+      "decrementAria": "將{name}的數量減少一件",
+      "incrementAria": "將{name}的數量增加一件"
+    },
+    "step3": {
+      "nameLabel": "姓名",
+      "namePlaceholder": "例）王小明",
+      "emailLabel": "電子郵件",
+      "emailPlaceholder": "例）example{'@'}example.com",
+      "phoneLabel": "電話號碼",
+      "phonePlaceholder": "例）+886912345678",
+      "phoneHint": "請以國碼和 + 開頭的國際格式輸入（無連字號）",
+      "nationalityLabel": "國籍",
+      "nationalityPlaceholder": "請選擇國籍",
+      "guestNameLabel": "住宿訂房人姓名（拼音，拉丁字母）",
+      "guestNamePlaceholder": "例）Chen Xiaoming"
+    },
+    "errors": {
+      "fetchLuggageFailed": "取得行李資訊失敗",
+      "validationSummary": "填寫內容有誤。請確認以下項目。",
+      "paymentInfoFailed": "取得付款資訊失敗",
+      "capacity": "{label}（{date}）的行李可受理數量僅剩{remaining}件。請將預約件數調整為{remaining}件以內。",
+      "priceUpdated": "價格已更新。新的合計金額為 ¥{amount}。請確認內容後再次點選「下一步」。",
+      "sessionExpired": "工作階段已逾期。造成不便，敬請見諒，請從頭重新填寫。",
+      "navigationFailed": "頁面跳轉失敗"
+    }
+  },
+  "prohibited": {
+    "i1": {
+      "type": "危險物品",
+      "items": "瓦斯罐、噴霧罐、可燃性液體（汽油、煤油）、火藥、煙火、電池（大容量鋰電池等）"
+    },
+    "i2": {
+      "type": "高價物品、貴重物品",
+      "items": "現金、信用卡、珠寶、貴金屬、高級手錶、藝術品"
+    },
+    "i3": {
+      "type": "個人資訊、重要文件",
+      "items": "護照、合約、票券類"
+    },
+    "i4": {
+      "type": "食品、生鮮",
+      "items": "生鮮食品、需要冷藏或冷凍的物品、氣味強烈的物品"
+    },
+    "i5": {
+      "type": "易碎物品",
+      "items": "玻璃製品、精密儀器"
+    },
+    "i6": {
+      "type": "法律上有問題的物品",
+      "items": "非法藥物、武器（刀具、槍枝等）、仿冒名牌商品"
+    },
+    "i7": {
+      "type": "可能滲漏的液體類",
+      "items": ""
+    },
+    "i8": {
+      "type": "單件超過30kg的行李",
+      "items": ""
+    }
+  },
+  "priceDialog": {
+    "title": "價格已更新",
+    "updatedByOwner": "由於業者變更了價格，合計金額已更新。",
+    "changedItemsTitle": "價格有變更的行李",
+    "quantitySuffix": "（×{count}）",
+    "before": "變更前",
+    "afterTotal": "變更後的合計金額",
+    "guidance": "若要以新金額繼續，請選擇「前往填寫付款資訊」；若要重新確認內容，請選擇「返回」。"
+  },
+  "confirmPage": {
+    "title": "填寫付款資訊",
+    "pickupSection": "取件資訊",
+    "pickupPlace": "取件地點",
+    "pickupAddress": "取件地址",
+    "pickupDate": "取件日期",
+    "deliverySection": "配送資訊",
+    "deliveryPlace": "配送地點",
+    "deliveryAddress": "配送地址",
+    "deliveryDate": "配送日期",
+    "notes": "備註",
+    "luggageSection": "行李資訊",
+    "noLuggage": "未選擇行李",
+    "customerSection": "顧客資訊",
+    "name": "姓名",
+    "phone": "電話號碼",
+    "email": "電子郵件",
+    "nationality": "國籍",
+    "guestName": "住宿人姓名",
+    "itemLine": "{name} × {count} 件",
+    "countSuffix": "{count} 件",
+    "totalLabel": "合計金額（含稅）",
+    "paymentInputTitle": "填寫付款資訊",
+    "confirmButton": "確定預約",
+    "errors": {
+      "stripeLoadFailed": "付款系統載入失敗",
+      "paymentConfirmFailed": "付款資訊確認失敗。請核對信用卡資訊後重試。",
+      "emailMissing": "未填寫電子郵件。請在顧客資訊填寫頁面填寫。",
+      "nameMissing": "未填寫姓名。請在顧客資訊填寫頁面填寫。",
+      "paymentNotCompleted": "付款尚未完成",
+      "paymentProcessFailed": "付款處理失敗",
+      "dataExpired": "您填寫的內容保存期限已過。造成不便，敬請見諒，請從頭重新填寫。",
+      "sessionExpired": "工作階段已逾期。造成不便，敬請見諒，請從頭重新填寫。",
+      "fetchFailedRestart": "取得資訊失敗。造成不便，敬請見諒，請從頭重新填寫。",
+      "paymentFailedCheck": "付款處理失敗。請確認您的付款資訊。",
+      "paymentNotDone": "付款處理尚未完成。請確認付款資訊無誤後，重新進行預約手續。",
+      "saveFailedValidation": "付款已完成，但無法確認您填寫的內容，預約資訊儲存失敗。造成不便，敬請見諒，請聯繫營運方。",
+      "saveFailedContactOps": "付款已正常完成，但預約資訊儲存失敗。造成不便，敬請見諒，請聯繫營運方。",
+      "bookingDataMissing": "付款已完成，但取得預約資訊失敗。造成不便，敬請見諒，請聯繫營運方。",
+      "submitFailedRetry": "預約送出失敗。請稍後再試。",
+      "luggageMissing": "找不到行李資訊。造成不便，敬請見諒，請從頭重新填寫。",
+      "incompleteInput": "填寫內容不完整。造成不便，敬請見諒，請確認填寫內容。"
+    }
+  },
+  "complete": {
+    "title": "預約已完成",
+    "message": "感謝您的預約。預約完成的確認郵件已寄出。請確認下方的預約編號。",
+    "bookingNumber": "預約編號",
+    "keepNote": "查詢預約或洽詢時需要此預約編號。<br>請記錄下來或保存截圖。",
+    "copy": "複製預約編號",
+    "copied": "已複製",
+    "numberFailed": "取得預約編號失敗。<br>造成不便，敬請見諒，洽詢時請向營運方提供您的姓名和預約日期時間。",
+    "statusGuide": "查詢配送狀態或取消預約，請點選以下連結。"
+  },
+  "status": {
+    "lookupTitle": "請輸入預約編號",
+    "lookupHint": "請輸入預約完成郵件中記載的預約編號。",
+    "lookupButton": "查看預約內容",
+    "deliveryStatus": "配送狀態",
+    "cancelledNote": "此預約已被取消。",
+    "statusLabels": {
+      "before_pickup": "待取件",
+      "picked_up": "已取件",
+      "delivered": "已送達",
+      "cancelled": "已取消"
+    },
+    "cancelDone": "預約已取消。確認郵件已寄至您登記的電子郵件信箱。",
+    "confirmationTitle": "有關預約的重要事項",
+    "cancelButton": "取消預約",
+    "receiptButton": "下載收據",
+    "sectionTitle": "預約內容確認",
+    "basicInfo": "基本資訊",
+    "bookingNumber": "預約編號",
+    "name": "姓名",
+    "email": "電子郵件",
+    "phone": "電話號碼",
+    "nationality": "國籍",
+    "guestNameRoman": "住宿訂房人姓名（拼音，拉丁字母）",
+    "deliveryInfo": "配送資訊",
+    "pickupPlaceName": "取件地點名稱",
+    "pickupPlaceAddress": "取件地點地址",
+    "pickupDate": "取件日期",
+    "deliveryPlaceName": "配送地點名稱",
+    "deliveryPlaceAddress": "配送地點地址",
+    "deliveryDate": "配送日期",
+    "notes": "備註",
+    "luggageSection": "委託行李",
+    "luggageType": "行李類型",
+    "count": "件數",
+    "paymentSection": "付款資訊",
+    "paymentMethod": "付款方式",
+    "cardBrand": "信用卡類型",
+    "paymentDetail": "付款方式詳情",
+    "expiry": "有效期限",
+    "amountLabel": "付款金額（含稅）",
+    "anotherLookup": "查詢其他預約編號",
+    "onlinePayment": "線上付款",
+    "creditCard": "信用卡",
+    "cancelDialogTitle": "取消預約",
+    "cancelDialogMessage": "即將取消此預約。確定嗎？此操作無法復原。",
+    "cancelDialogConfirm": "取消預約",
+    "cancelDialogCancel": "返回",
+    "errors": {
+      "lookupFailed": "取得預約資訊失敗。請核對預約編號後重試。",
+      "cancelFailed": "取消預約失敗。請稍後再試。",
+      "receiptFailed": "收據下載失敗。請稍後再試。",
+      "sessionTimeout": "由於長時間未操作，預約內容的顯示已結束。請重新輸入預約編號。"
+    }
+  },
+  "law": {
+    "items": {
+      "business": "經營者",
+      "representative": "經營負責人",
+      "address": "經營者所在地",
+      "contact": "聯絡方式",
+      "pricing": "配送費用",
+      "handling": "關於行李寄送手續",
+      "deliveryTime": "關於送達時間",
+      "prohibited": "無法受理的行李",
+      "schedule": "關於取件日、配送日",
+      "payment": "可用的付款方式",
+      "cancellation": "關於取消"
+    },
+    "handlingText": "請在配送當天上午9點前，將行李寄放至飯店或旅館的櫃檯，或車站、機場的服務台。",
+    "deliveryTimeText": "行李將於配送當天20點前送達。",
+    "paymentText": "可使用 Apple Pay、Google Pay、信用卡付款。",
+    "cancellationItems": {
+      "i1": "於取件日前一天22點59分（日本時間）之前聯繫我們：0%",
+      "i2": "於取件日前一天23點（日本時間）之後聯繫我們：100%",
+      "i3": "未事先聯繫：100%"
+    },
+    "contactEmail": "電子郵件：",
+    "contactPhone": "電話號碼：",
+    "pricingEmpty": "請洽詢我們。",
+    "pricingTaxNote": "※上述配送費用為含稅價格。",
+    "scheduleIntro": "我們將於客戶指定的日期進行取件和配送。",
+    "regularHoliday": "定休日",
+    "tempClosure": "臨時休業日",
+    "scheduleNote": "※定休日及臨時休業日無法選擇為取件日或配送日。",
+    "nthWeekday": "第{nth}個{weekday}",
+    "ordinals": {
+      "1": "1",
+      "2": "2",
+      "3": "3",
+      "4": "4"
+    },
+    "loadFailed": "取得基於特定商業交易法的標示失敗。",
+    "businessFetchFailed": "無法取得經營者資訊。",
+    "loadingSr": "正在載入{title}",
+    "listAria": "標示項目一覽"
+  },
+  "prefectures": {
+    "01": "北海道",
+    "02": "青森縣",
+    "03": "岩手縣",
+    "04": "宮城縣",
+    "05": "秋田縣",
+    "06": "山形縣",
+    "07": "福島縣",
+    "08": "茨城縣",
+    "09": "栃木縣",
+    "10": "群馬縣",
+    "11": "埼玉縣",
+    "12": "千葉縣",
+    "13": "東京都",
+    "14": "神奈川縣",
+    "15": "新潟縣",
+    "16": "富山縣",
+    "17": "石川縣",
+    "18": "福井縣",
+    "19": "山梨縣",
+    "20": "長野縣",
+    "21": "岐阜縣",
+    "22": "靜岡縣",
+    "23": "愛知縣",
+    "24": "三重縣",
+    "25": "滋賀縣",
+    "26": "京都府",
+    "27": "大阪府",
+    "28": "兵庫縣",
+    "29": "奈良縣",
+    "30": "和歌山縣",
+    "31": "鳥取縣",
+    "32": "島根縣",
+    "33": "岡山縣",
+    "34": "廣島縣",
+    "35": "山口縣",
+    "36": "德島縣",
+    "37": "香川縣",
+    "38": "愛媛縣",
+    "39": "高知縣",
+    "40": "福岡縣",
+    "41": "佐賀縣",
+    "42": "長崎縣",
+    "43": "熊本縣",
+    "44": "大分縣",
+    "45": "宮崎縣",
+    "46": "鹿兒島縣",
+    "47": "沖繩縣"
+  },
+  "privacy": {
+    "intro": "{company}（以下稱「本經營者」）就本網站提供的行李配送服務（以下稱「本服務」）中使用者個人資訊的處理，制定如下隱私權政策（以下稱「本政策」）。",
+    "fetchFailed": "取得隱私權政策失敗。",
+    "loadingSr": "正在載入隱私權政策",
+    "listAria": "政策條文一覽",
+    "a1": {
+      "ttl": "第1條（隱私資訊的定義）",
+      "txt": "隱私資訊是指個人資訊、歷史資訊及特徵資訊。<br /><br />隱私資訊中的「個人資訊」是指《個人資訊保護法》所稱的「個人資訊」，即與在世個人有關的資訊，透過該資訊中包含的姓名、聯絡方式及其他記述等能夠識別特定個人的資訊。<br /><br />隱私資訊中的「歷史資訊及特徵資訊」是指上述「個人資訊」以外的資訊，包括所使用的服務、瀏覽的頁面、廣告的歷史記錄、使用者搜尋的關鍵字、使用日期時間、使用方法、使用環境、使用者的IP位址、Cookie、終端的個體識別資訊等，使用者使用服務時的歷史相關資訊以及使用者所具有的特徵相關資訊。"
+    },
+    "a2": {
+      "ttl": "第2條（收集的個人資訊項目及收集方法）",
+      "txt": "本服務為受理預約、安排配送及處理付款，在使用者進行預約時收集以下個人資訊。<br /><br /><strong class=\"font-semibold\">（1）使用者直接輸入的資訊</strong><br />・姓名<br />・電子郵件<br />・電話號碼<br />・國籍<br />・同行者姓名<br />・取件地點及配送地點的設施名稱、郵遞區號、地址<br />・取件日期、配送日期<br />・備註（使用者自願填寫時）<br /><br /><strong class=\"font-semibold\">（2）與付款相關的資訊</strong><br />信用卡號、有效期限、安全碼等付款資訊由付款代理服務商Stripe Inc.直接取得和處理。這些資訊不會儲存在本經營者的伺服器上。Stripe Inc.在符合PCI DSS（支付卡產業資料安全標準）的環境中管理付款資訊。<br /><br /><strong class=\"font-semibold\">（3）自動收集的資訊</strong><br />為提升便利性，本服務在使用者使用本服務或瀏覽頁面時，收集使用者使用的服務和軟體、瀏覽的頁面、使用日期時間、使用方法、使用環境（透過行動終端使用時還包括該終端的通訊狀態、使用時的各種設定資訊等）、IP位址、Cookie、本地儲存等歷史資訊及特徵資訊。"
+    },
+    "a3": {
+      "ttl": "第3條（收集和使用個人資訊的目的）",
+      "txt": "本經營者收集和使用個人資訊的目的如下。<br /><br />1. 為提供和營運本服務<br />2. 為受理使用者的預約及安排配送<br />3. 為執行付款處理及退款對應<br />4. 為回覆使用者的洽詢（包括進行本人確認）<br />5. 為向使用者發送通知和聯絡（包括配送狀態的通知）<br />6. 為防止本服務的不當使用及在發生不當使用時進行應對<br />7. 為改善本服務而進行調查和分析<br />8. 與上述使用目的相關聯的目的"
+    },
+    "a4": {
+      "ttl": "第4條（使用目的的變更）",
+      "txt": "本經營者僅在變更後的使用目的與變更前具有合理關聯性的情況下，方可變更個人資訊的使用目的。<br />變更使用目的時，將以本經營者規定的方法，將變更後的目的通知使用者或在本網站上公布。"
+    },
+    "a5": {
+      "ttl": "第5條（個人資訊的正當取得）",
+      "txt": "本經營者正當取得個人資訊，不透過欺騙或其他不正當手段取得。"
+    },
+    "a6": {
+      "ttl": "第6條（個人資訊的安全管理）",
+      "txt": "本經營者針對個人資訊的遺失、破壞、竄改及洩漏等風險，進行適當的個人資訊安全管理。此外，本經營者在委託第三方處理全部或部分個人資訊時，將進行必要且適當的監督，以確保受託方妥善進行個人資訊的安全管理。"
+    },
+    "a7": {
+      "ttl": "第7條（向第三方提供個人資訊及委託）",
+      "txt": "除下列情況外，本經營者不會在未事先取得使用者同意的情況下向第三方提供個人資訊。<br /><br />1. 基於法令的情況<br />2. 為保護人的生命、身體或財產所必需，且難以取得使用者同意的情況<br />3. 為提升公共衛生或促進兒童健全成長特別必要，且難以取得使用者同意的情況<br />4. 需要配合國家機關、地方公共團體或其受託方執行法令規定的事務，且取得使用者同意可能妨礙該事務執行的情況<br /><br />儘管有前項規定，下列情況下資訊的提供對象不視為第三方。<br /><br />5. 本經營者在達成使用目的所必需的範圍內委託第三方處理全部或部分個人資訊的情況<br />6. 因合併或其他事由的事業承繼而提供個人資訊的情況<br />7. 依據《個人資訊保護法》的規定共同使用的情況<br /><br /><strong class=\"font-semibold\">（付款處理的委託）</strong><br />本服務將付款處理委託給Stripe Inc.（所在地：美國）。信用卡資訊、Apple Pay、Google Pay等行動支付資訊由Stripe Inc.在符合PCI DSS的環境中直接取得和處理，不會儲存在本經營者的伺服器上。Stripe Inc.對個人資訊的處理適用<a class='text-[#0f83fd]' href='https://stripe.com/privacy' target='_blank' rel='nofollow noopener noreferrer'>Stripe Inc.的隱私權政策</a>。<br /><br /><strong class=\"font-semibold\">（對平台營運方的委託）</strong><br />本服務使用LugGo（平台營運方）提供的系統營運。預約資訊、配送資訊等個人資訊在服務營運所需的範圍內儲存在平台營運方的伺服器上。這屬於《個人資訊保護法》中的處理委託，本經營者將對平台營運方進行適當的監督。"
+    },
+    "a8": {
+      "ttl": "第8條（向境外第三方提供）",
+      "txt": "本服務為處理付款，將個人資訊的處理委託給Stripe Inc.（所在地：美國）。關於美國的個人資訊保護制度，請參閱日本個人資訊保護委員會公布的資訊。<br /><br />Stripe Inc.參與EU-US資料隱私框架等國際個人資訊保護框架，並採取適當的保護措施。"
+    },
+    "a9": {
+      "ttl": "第9條（個人資訊的保存期限）",
+      "txt": "本經營者僅在達成使用目的所需的期間內保存個人資訊。具體保存期限如下。<br /><br />・與預約相關的資訊（姓名、聯絡方式、配送地址等）：服務提供完成後，依法令規定的保存義務期間（最長7年）<br />・與付款相關的記錄：依法令規定的保存義務期間<br />・與洽詢相關的資訊：處理完成後1年<br />・Cookie等歷史資訊：自取得起最長1年<br /><br />超過上述保存期限的個人資訊將被迅速刪除或匿名化。"
+    },
+    "a10": {
+      "ttl": "第10條（Cookie及類似技術的使用）",
+      "txt": "本服務為提升使用者便利性及改善服務，使用Cookie、本地儲存等技術。<br /><br />使用者可透過瀏覽器設定拒絕接受Cookie。但是，停用Cookie後，本服務的部分功能可能無法使用。<br /><br />Cookie的設定方法請參閱所用瀏覽器的說明功能。"
+    },
+    "a11": {
+      "ttl": "第11條（個人資訊的揭露）",
+      "txt": "當使用者本人要求揭露其個人資訊時，本經營者將不延遲地向使用者本人揭露。但是，揭露可能導致下列任一情況時，可能不揭露其全部或部分內容，決定不揭露時將不延遲地通知使用者。<br /><br />1. 可能損害使用者本人或第三方的生命、身體、財產及其他權利利益的情況<br />2. 可能對本經營者業務的正常執行造成顯著妨礙的情況<br />3. 其他違反法令的情況<br /><br />儘管有前項規定，歷史資訊及特徵資訊等個人資訊以外的資訊原則上不予揭露。"
+    },
+    "a12": {
+      "ttl": "第12條（個人資訊的訂正及刪除）",
+      "txt": "當本經營者持有的使用者個人資訊有誤時，使用者可以請求訂正、追加或刪除個人資訊（以下稱「訂正等」）。<br />本經營者收到使用者的上述請求並判斷有必要回應該請求時，將不延遲地對該個人資訊進行訂正等。<br />本經營者基於前項規定進行了訂正等，或依據《個人資訊保護法》及其他法令決定不進行訂正等時，將不延遲地通知使用者。"
+    },
+    "a13": {
+      "ttl": "第13條（個人資訊的停止使用等）",
+      "txt": "使用者可依據《個人資訊保護法》的規定，以其本人的個人資訊「被超出事先公布的使用目的範圍處理」或「係透過欺騙或其他不正當手段取得」為由，要求停止使用或刪除該資訊（以下稱「停止使用等」）。本經營者收到使用者的上述請求，查明該請求有理由時，將在確認係本人請求後，不延遲地停止使用該個人資訊等，並將此通知使用者。但是，依據《個人資訊保護法》及其他法令，本經營者不負有停止使用等義務的情況除外。"
+    },
+    "a14": {
+      "ttl": "第14條（持續改善）",
+      "txt": "本經營者將適時檢視個人資訊處理的運用狀況，努力持續改善，並視需要變更隱私權政策。除法令及本政策另有規定的事項外，本政策的內容可在不通知使用者的情況下變更。<br />變更後的隱私權政策自登載於本網站時起生效。"
+    },
+    "a15": {
+      "ttl": "第15條（洽詢窗口）",
+      "txt": "有關揭露等的申請、意見、疑問、投訴及其他個人資訊處理的洽詢，請聯繫以下窗口。<br />電子郵件：<a class=\"text-[#0f83fd]\" href=\"mailto:{email}\">{email}</a>"
+    }
+  },
+  "validation": {
+    "pickupPostalRequired": "取件地點的郵遞區號為必填項目",
+    "postalFormat": "請輸入7位半形數字的郵遞區號",
+    "notDepartureArea": "此郵遞區號不在取件服務範圍內",
+    "departureAreaUnset": "未設定取件區域，無法預約",
+    "pickupNameRequired": "取件地點名稱為必填項目",
+    "pickupAddressRequired": "取件地點地址為必填項目",
+    "pickupDateRequired": "取件日期為必填項目",
+    "dateFormat": "請以YYYY/MM/DD格式輸入日期",
+    "dateInvalid": "請輸入存在的日期",
+    "pickupTooSoon": "已過前一天23點（日本時間），無法選擇此日期",
+    "maxHalfYear": "最多可預約半年以內的日期",
+    "regularHoliday": "該日為定休日，無法選擇",
+    "tempClosure": "該日為臨時休業日，無法選擇",
+    "deliveryPostalRequired": "配送地點的郵遞區號為必填項目",
+    "notDeliveryArea": "此郵遞區號不在配送服務範圍內",
+    "deliveryAreaUnset": "未設定配送區域，無法預約",
+    "deliveryNameRequired": "配送地點名稱為必填項目",
+    "deliveryAddressRequired": "配送地點地址為必填項目",
+    "deliveryDateRequired": "配送日期為必填項目",
+    "deliveryAfterPickup": "請選擇取件日期當天或之後的配送日期",
+    "qtyNumber": "數量請填寫數字",
+    "qtyInteger": "請填寫整數",
+    "qtyMin": "數量請填寫0以上",
+    "qtyMax": "每種行李的數量最多為20件",
+    "atLeastOne": "請至少選擇1件行李",
+    "maxTotal": "所有行李的合計最多為20件",
+    "nameRequired": "姓名為必填項目",
+    "emailRequired": "電子郵件為必填項目",
+    "emailInvalid": "請輸入有效的電子郵件",
+    "phoneRequired": "電話號碼為必填項目",
+    "phoneInvalid": "請輸入有效的電話號碼",
+    "phonePlusRequired": "請以國碼和 + 開頭的國際格式輸入（例：+886912345678）",
+    "nationalityRequired": "國籍為必填項目",
+    "guestNameRequired": "住宿訂房人姓名為必填項目",
+    "guestNameRoman": "請僅使用拼音（拉丁字母）和空格輸入"
+  }
+}
