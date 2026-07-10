@@ -17,19 +17,19 @@
           id="price-update-dialog-title"
           class="mb-4 text-lg font-semibold text-gray-900"
         >
-          料金が更新されました
+          {{ $t("priceDialog.title") }}
         </h2>
         <div
           id="price-update-dialog-message"
           class="mb-6 space-y-3 text-sm text-gray-700"
         >
-          <p>事業者により料金が変更されたため、合計金額が更新されました。</p>
+          <p>{{ $t("priceDialog.updatedByOwner") }}</p>
           <div
             v-if="changedItems && changedItems.length > 0"
             class="rounded-md border border-gray-200 bg-gray-50 p-4"
           >
             <p class="mb-2 font-semibold text-gray-800">
-              料金が変更された荷物
+              {{ $t("priceDialog.changedItemsTitle") }}
             </p>
             <ul class="space-y-2">
               <li
@@ -39,7 +39,7 @@
               >
                 <span class="text-gray-700">
                   {{ changedItem.name }}
-                  <span class="text-gray-500">（×{{ changedItem.count }}）</span>
+                  <span class="text-gray-500">{{ $t("priceDialog.quantitySuffix", { count: changedItem.count }) }}</span>
                 </span>
                 <span class="flex items-center gap-2 whitespace-nowrap">
                   <span class="text-gray-500 line-through">¥{{ changedItem.oldPrice.toLocaleString() }}</span>
@@ -56,16 +56,16 @@
             class="space-y-2 rounded-md border border-gray-200 bg-gray-50 p-4"
           >
             <div class="flex items-center justify-between text-gray-500">
-              <span>変更前</span>
+              <span>{{ $t("priceDialog.before") }}</span>
               <span class="font-medium line-through">¥{{ oldAmount.toLocaleString() }}</span>
             </div>
             <div class="flex items-center justify-between">
-              <span class="font-semibold text-gray-800">変更後の合計金額</span>
+              <span class="font-semibold text-gray-800">{{ $t("priceDialog.afterTotal") }}</span>
               <span class="text-xl font-bold text-gray-900">¥{{ newAmount.toLocaleString() }}</span>
             </div>
           </div>
           <p class="text-gray-600">
-            新しい金額で続行する場合は「お支払い情報のご入力へ」、内容を確認しなおす場合は「戻る」を選択してください。
+            {{ $t("priceDialog.guidance") }}
           </p>
         </div>
 
@@ -75,21 +75,21 @@
             class="flex-1 rounded-md bg-gray-800 px-4 py-3 text-sm font-semibold text-white hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-800 focus:ring-offset-2"
             @click="onProceed"
           >
-            お支払い情報のご入力へ
+            {{ $t("booking.toPayment") }}
           </button>
           <button
             type="button"
             class="flex-1 rounded-md border-2 border-gray-300 bg-white px-4 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2"
             @click="onBack"
           >
-            戻る
+            {{ $t("common.back") }}
           </button>
           <button
             type="button"
             class="flex-1 rounded-md bg-transparent px-4 py-3 text-sm font-semibold text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-200 focus:ring-offset-2"
             @click="onCancel"
           >
-            キャンセル
+            {{ $t("common.cancel") }}
           </button>
         </div>
       </div>

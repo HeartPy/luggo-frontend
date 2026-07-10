@@ -32,15 +32,16 @@
         >
           <li
             v-for="language in languages"
-            :key="language.id"
+            :key="language.value"
             class="flex items-center border-b border-gray-300 last:border-b-0"
             role="none"
           >
             <button
               class="block h-full w-full py-2.5 text-center text-xs font-light text-gray-600 hover:opacity-70"
+              :class="{ 'font-semibold text-gray-900': language.value === currentLocale }"
               type="button"
               role="menuitem"
-              @click="emitChangeLocale(language.value)"
+              @click="selectLanguage(language.value)"
             >
               {{ language.ttl }}
             </button>
@@ -52,13 +53,14 @@
 </template>
 
 <script setup lang="ts">
+import { useAppLocale } from "~/composables/useLocale";
+import type { AppLocale } from "~/plugins/i18n";
+
 const emit = defineEmits<{
   (e: "change-locale", localeName: string): void;
 }>();
 
-const emitChangeLocale = (localeName: string): void => {
-  emit("change-locale", localeName);
-};
+const { currentLocale } = useAppLocale();
 
 const active = ref(false);
 
@@ -66,14 +68,20 @@ const click = (): void => {
   active.value = !active.value;
 };
 
-type Language = {
-  id: number;
-  ttl: "日本語" | "English";
-  value: "ja" | "en";
+const selectLanguage = (localeName: AppLocale): void => {
+  emit("change-locale", localeName);
+  active.value = false;
 };
 
-const languages = ref<Language[]>([
-  { id: 1, ttl: "日本語", value: "ja" },
-  { id: 2, ttl: "English", value: "en" },
-]);
+type Language = {
+  ttl: string;
+  value: AppLocale;
+};
+
+const languages: Language[] = [
+  { ttl: "日本語", value: "ja" },
+  { ttl: "English", value: "en" },
+  { ttl: "简体中文", value: "zh-Hans" },
+  { ttl: "繁體中文", value: "zh-Hant" },
+];
 </script>

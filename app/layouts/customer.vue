@@ -1,5 +1,5 @@
 <template>
-  <div :key="componentKey">
+  <div>
     <CommonCustomerTheHeader @change-locale="onChangeLocale" />
     <main class="pb-16">
       <slot />
@@ -9,37 +9,23 @@
 </template>
 
 <script setup lang="ts">
-import { useI18n } from "vue-i18n";
+import { useAppLocale } from "~/composables/useLocale";
 
-const { locale } = useI18n();
-const router = useRouter();
-const componentKey = ref(0);
+const { setLocale, bcp47Locale, bodyFontFamily } = useAppLocale();
 
 const onChangeLocale = (localeName: string): void => {
-  componentKey.value++;
-  switch (localeName) {
-    case "ja":
-      locale.value = "ja";
-      break;
-    case "en":
-      locale.value = "en";
-      break;
-    default:
-      locale.value = "ja";
-  }
+  setLocale(localeName);
 };
 
-if (import.meta.client) {
-  watch(locale, (newLocale: string) => {
-    if (newLocale === "ja") {
-      router.push("/");
-    }
-    else if (newLocale === "en") {
-      router.push("/en/");
-    }
-    else {
-      router.push("/");
-    }
-  });
-}
+useHead(computed(() => ({
+  htmlAttrs: {
+    lang: bcp47Locale.value,
+  },
+  style: [
+    {
+      key: "locale-font-family",
+      innerHTML: `html { font-family: "${bodyFontFamily.value}", sans-serif; }`,
+    },
+  ],
+})));
 </script>

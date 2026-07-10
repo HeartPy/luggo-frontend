@@ -1,0 +1,474 @@
+{
+  "common": {
+    "lang": "zh-Hans",
+    "inLanguage": "zh-CN",
+    "brand": "LugGo",
+    "next": "下一步",
+    "back": "返回",
+    "cancel": "取消",
+    "yes": "是",
+    "ok": "确定",
+    "error": "错误",
+    "listSeparator": "、",
+    "dash": "—",
+    "pieces": "{count}件",
+    "perItem": "/ 件",
+    "taxIncluded": "（含税）"
+  },
+  "accessibility": {
+    "languageMenu": "语言选择菜单"
+  },
+  "footer": {
+    "transactionLaw": "基于特定商业交易法的标示",
+    "privacy": "隐私政策"
+  },
+  "progress": {
+    "step1": "行李信息<br>基本信息填写",
+    "step2": "确认填写内容<br>填写支付信息",
+    "step3": "预约完成"
+  },
+  "pages": {
+    "form": {
+      "title": "行李配送预约表单",
+      "description": "面向游客的行李配送服务「LugGo」预约表单。输入取件和配送的地点与日期，即可轻松完成预约。"
+    },
+    "confirm": {
+      "title": "预约确认",
+      "description": "行李配送服务的预约确认页面。"
+    },
+    "complete": {
+      "title": "预约完成",
+      "description": "行李配送服务的预约完成页面。"
+    },
+    "status": {
+      "title": "查询预约内容",
+      "description": "行李配送服务的预约查询与取消页面。"
+    },
+    "transactionLaw": {
+      "title": "基于特定商业交易法的标示"
+    },
+    "privacy": {
+      "title": "隐私政策"
+    }
+  },
+  "luggageTypes": {
+    "cabin": "随身行李尺寸（三边合计：120cm以内）",
+    "checked": "托运行李尺寸（三边合计：160cm以内）",
+    "oversize": "超规格尺寸（三边合计：180cm以内）",
+    "cabinShort": "随身行李尺寸",
+    "checkedShort": "托运行李尺寸",
+    "oversizeShort": "超规格尺寸"
+  },
+  "placeTypes": {
+    "lodging": "住宿设施",
+    "airport": "机场",
+    "trainStation": "车站",
+    "subwayStation": "地铁站",
+    "transitStation": "交通枢纽",
+    "other": "其他",
+    "ratingCount": "（{count}条评价）"
+  },
+  "booking": {
+    "title": "行李配送预约表单",
+    "toPayment": "前往填写支付信息",
+    "step1": {
+      "pickupNameLabel": "取件地点名称",
+      "pickupPostalLabel": "取件地点邮政编码",
+      "pickupAddressLabel": "取件地点地址",
+      "pickupDateLabel": "取件日期",
+      "deliveryNameLabel": "配送地点名称",
+      "deliveryPostalLabel": "配送地点邮政编码",
+      "deliveryAddressLabel": "配送地点地址",
+      "deliveryDateLabel": "配送日期",
+      "notesLabel": "备注",
+      "namePlaceholder": "酒店、机场等的名称",
+      "postalPlaceholder": "例）1234567",
+      "postalHint": "请输入7位半角数字（无连字符）",
+      "addressPlaceholder": "请输入详细地址",
+      "notesPlaceholder": "如有其他要求或疑问，请在此填写"
+    },
+    "step2": {
+      "selectCountLabel": "选择行李件数",
+      "loading": "正在加载行李信息...",
+      "amountTitle": "金额",
+      "noticeTitle": "注意事项",
+      "handlingTitle": "关于行李寄送手续",
+      "handlingText": "请在配送当天上午9点前，将行李寄存至酒店或旅馆的前台，或车站、机场的柜台。",
+      "deliveryTimeTitle": "关于送达时间",
+      "deliveryTimeText": "行李将于配送当天20点前送达。",
+      "prohibitedTitle": "无法受理的行李",
+      "contactNote": "如有上述以外的疑问，请随时与我们联系。",
+      "emailLabel": "电子邮箱：",
+      "decrementAria": "将{name}的数量减少一件",
+      "incrementAria": "将{name}的数量增加一件"
+    },
+    "step3": {
+      "nameLabel": "姓名",
+      "namePlaceholder": "例）王伟",
+      "emailLabel": "电子邮箱",
+      "emailPlaceholder": "例）example{'@'}example.com",
+      "phoneLabel": "电话号码",
+      "phonePlaceholder": "例）+8613800138000",
+      "phoneHint": "请以国家代码和 + 开头的国际格式输入（无连字符）",
+      "nationalityLabel": "国籍",
+      "nationalityPlaceholder": "请选择国籍",
+      "guestNameLabel": "住宿预订人姓名（拼音，拉丁字母）",
+      "guestNamePlaceholder": "例）Zhang San"
+    },
+    "errors": {
+      "fetchLuggageFailed": "获取行李信息失败",
+      "validationSummary": "填写内容有误。请确认以下项目。",
+      "paymentInfoFailed": "获取支付信息失败",
+      "capacity": "{label}（{date}）的行李可受理数量仅剩{remaining}件。请将预约件数调整为{remaining}件以内。",
+      "priceUpdated": "价格已更新。新的合计金额为 ¥{amount}。请确认内容后再次点击「下一步」。",
+      "sessionExpired": "会话已过期。给您带来不便，敬请谅解，请从头重新填写。",
+      "navigationFailed": "页面跳转失败"
+    }
+  },
+  "prohibited": {
+    "i1": {
+      "type": "危险品",
+      "items": "煤气罐、喷雾罐、可燃性液体（汽油、煤油）、火药、烟花、电池（大容量锂电池等）"
+    },
+    "i2": {
+      "type": "高价物品、贵重物品",
+      "items": "现金、信用卡、珠宝、贵金属、高档手表、艺术品"
+    },
+    "i3": {
+      "type": "个人信息、重要文件",
+      "items": "护照、合同、票券类"
+    },
+    "i4": {
+      "type": "食品、生鲜",
+      "items": "生鲜食品、需要冷藏或冷冻的物品、气味强烈的物品"
+    },
+    "i5": {
+      "type": "易碎物品",
+      "items": "玻璃制品、精密仪器"
+    },
+    "i6": {
+      "type": "法律上有问题的物品",
+      "items": "非法药物、武器（刀具、枪支等）、假冒名牌商品"
+    },
+    "i7": {
+      "type": "可能泄漏的液体类",
+      "items": ""
+    },
+    "i8": {
+      "type": "单件超过30kg的行李",
+      "items": ""
+    }
+  },
+  "priceDialog": {
+    "title": "价格已更新",
+    "updatedByOwner": "由于运营商更改了价格，合计金额已更新。",
+    "changedItemsTitle": "价格有变更的行李",
+    "quantitySuffix": "（×{count}）",
+    "before": "变更前",
+    "afterTotal": "变更后的合计金额",
+    "guidance": "如需按新金额继续，请选择「前往填写支付信息」；如需重新确认内容，请选择「返回」。"
+  },
+  "confirmPage": {
+    "title": "填写支付信息",
+    "pickupSection": "取件信息",
+    "pickupPlace": "取件地点",
+    "pickupAddress": "取件地址",
+    "pickupDate": "取件日期",
+    "deliverySection": "配送信息",
+    "deliveryPlace": "配送地点",
+    "deliveryAddress": "配送地址",
+    "deliveryDate": "配送日期",
+    "notes": "备注",
+    "luggageSection": "行李信息",
+    "noLuggage": "未选择行李",
+    "customerSection": "客户信息",
+    "name": "姓名",
+    "phone": "电话号码",
+    "email": "电子邮箱",
+    "nationality": "国籍",
+    "guestName": "住宿人姓名",
+    "itemLine": "{name} × {count} 件",
+    "countSuffix": "{count} 件",
+    "totalLabel": "合计金额（含税）",
+    "paymentInputTitle": "填写支付信息",
+    "confirmButton": "确定预约",
+    "errors": {
+      "stripeLoadFailed": "支付系统加载失败",
+      "paymentConfirmFailed": "支付信息确认失败。请核对银行卡信息后重试。",
+      "emailMissing": "未填写电子邮箱。请在客户信息填写页面填写。",
+      "nameMissing": "未填写姓名。请在客户信息填写页面填写。",
+      "paymentNotCompleted": "支付尚未完成",
+      "paymentProcessFailed": "支付处理失败",
+      "dataExpired": "您填写的内容保存期限已过。给您带来不便，敬请谅解，请从头重新填写。",
+      "sessionExpired": "会话已过期。给您带来不便，敬请谅解，请从头重新填写。",
+      "fetchFailedRestart": "获取信息失败。给您带来不便，敬请谅解，请从头重新填写。",
+      "paymentFailedCheck": "支付处理失败。请确认您的支付信息。",
+      "paymentNotDone": "支付处理尚未完成。请确认支付信息无误后，重新进行预约手续。",
+      "saveFailedValidation": "支付已完成，但无法确认您填写的内容，预约信息保存失败。给您带来不便，敬请谅解，请联系运营方。",
+      "saveFailedContactOps": "支付已正常完成，但预约信息保存失败。给您带来不便，敬请谅解，请联系运营方。",
+      "bookingDataMissing": "支付已完成，但获取预约信息失败。给您带来不便，敬请谅解，请联系运营方。",
+      "submitFailedRetry": "预约提交失败。请稍后重试。",
+      "luggageMissing": "未找到行李信息。给您带来不便，敬请谅解，请从头重新填写。",
+      "incompleteInput": "填写内容不完整。给您带来不便，敬请谅解，请确认填写内容。"
+    }
+  },
+  "complete": {
+    "title": "预约已完成",
+    "message": "感谢您的预约。预约完成的确认邮件已发送。请查看下方的预约编号。",
+    "bookingNumber": "预约编号",
+    "keepNote": "查询预约或咨询时需要此预约编号。<br>请记录下来或保存截图。",
+    "copy": "复制预约编号",
+    "copied": "已复制",
+    "numberFailed": "获取预约编号失败。<br>给您带来不便，敬请谅解，咨询时请向运营方提供您的姓名和预约日期时间。",
+    "statusGuide": "查询配送状态或取消预约，请点击以下链接。"
+  },
+  "status": {
+    "lookupTitle": "请输入预约编号",
+    "lookupHint": "请输入预约完成邮件中记载的预约编号。",
+    "lookupButton": "查看预约内容",
+    "deliveryStatus": "配送状态",
+    "cancelledNote": "该预约已被取消。",
+    "statusLabels": {
+      "before_pickup": "待取件",
+      "picked_up": "已取件",
+      "delivered": "已送达",
+      "cancelled": "已取消"
+    },
+    "cancelDone": "预约已取消。确认邮件已发送至您登记的电子邮箱。",
+    "confirmationTitle": "有关预约的重要事项",
+    "cancelButton": "取消预约",
+    "receiptButton": "下载收据",
+    "sectionTitle": "预约内容确认",
+    "basicInfo": "基本信息",
+    "bookingNumber": "预约编号",
+    "name": "姓名",
+    "email": "电子邮箱",
+    "phone": "电话号码",
+    "nationality": "国籍",
+    "guestNameRoman": "住宿预订人姓名（拼音，拉丁字母）",
+    "deliveryInfo": "配送信息",
+    "pickupPlaceName": "取件地点名称",
+    "pickupPlaceAddress": "取件地点地址",
+    "pickupDate": "取件日期",
+    "deliveryPlaceName": "配送地点名称",
+    "deliveryPlaceAddress": "配送地点地址",
+    "deliveryDate": "配送日期",
+    "notes": "备注",
+    "luggageSection": "委托行李",
+    "luggageType": "行李类型",
+    "count": "件数",
+    "paymentSection": "支付信息",
+    "paymentMethod": "支付方式",
+    "cardBrand": "银行卡类型",
+    "paymentDetail": "支付方式详情",
+    "expiry": "有效期",
+    "amountLabel": "支付金额（含税）",
+    "anotherLookup": "查询其他预约编号",
+    "onlinePayment": "在线支付",
+    "creditCard": "信用卡",
+    "cancelDialogTitle": "取消预约",
+    "cancelDialogMessage": "即将取消该预约。确定吗？此操作无法撤销。",
+    "cancelDialogConfirm": "取消预约",
+    "cancelDialogCancel": "返回",
+    "errors": {
+      "lookupFailed": "获取预约信息失败。请核对预约编号后重试。",
+      "cancelFailed": "取消预约失败。请稍后重试。",
+      "receiptFailed": "收据下载失败。请稍后重试。",
+      "sessionTimeout": "由于长时间未操作，预约内容的显示已结束。请重新输入预约编号。"
+    }
+  },
+  "law": {
+    "items": {
+      "business": "经营者",
+      "representative": "经营负责人",
+      "address": "经营者所在地",
+      "contact": "联系方式",
+      "pricing": "配送费用",
+      "handling": "关于行李寄送手续",
+      "deliveryTime": "关于送达时间",
+      "prohibited": "无法受理的行李",
+      "schedule": "关于取件日、配送日",
+      "payment": "可用的支付方式",
+      "cancellation": "关于取消"
+    },
+    "handlingText": "请在配送当天上午9点前，将行李寄存至酒店或旅馆的前台，或车站、机场的柜台。",
+    "deliveryTimeText": "行李将于配送当天20点前送达。",
+    "paymentText": "可使用 Apple Pay、Google Pay、信用卡进行支付。",
+    "cancellationItems": {
+      "i1": "在取件日前一天22点59分（日本时间）之前联系我们：0%",
+      "i2": "在取件日前一天23点（日本时间）之后联系我们：100%",
+      "i3": "未提前联系：100%"
+    },
+    "contactEmail": "邮箱：",
+    "contactPhone": "电话号码：",
+    "pricingEmpty": "请咨询我们。",
+    "pricingTaxNote": "※上述配送费用为含税价格。",
+    "scheduleIntro": "我们将在客户指定的日期进行取件和配送。",
+    "regularHoliday": "定休日",
+    "tempClosure": "临时休业日",
+    "scheduleNote": "※定休日及临时休业日无法选择为取件日或配送日。",
+    "nthWeekday": "第{nth}个{weekday}",
+    "ordinals": {
+      "1": "1",
+      "2": "2",
+      "3": "3",
+      "4": "4"
+    },
+    "loadFailed": "获取基于特定商业交易法的标示失败。",
+    "businessFetchFailed": "无法获取经营者信息。",
+    "loadingSr": "正在加载{title}",
+    "listAria": "标示项目一览"
+  },
+  "prefectures": {
+    "01": "北海道",
+    "02": "青森县",
+    "03": "岩手县",
+    "04": "宫城县",
+    "05": "秋田县",
+    "06": "山形县",
+    "07": "福岛县",
+    "08": "茨城县",
+    "09": "栃木县",
+    "10": "群马县",
+    "11": "埼玉县",
+    "12": "千叶县",
+    "13": "东京都",
+    "14": "神奈川县",
+    "15": "新潟县",
+    "16": "富山县",
+    "17": "石川县",
+    "18": "福井县",
+    "19": "山梨县",
+    "20": "长野县",
+    "21": "岐阜县",
+    "22": "静冈县",
+    "23": "爱知县",
+    "24": "三重县",
+    "25": "滋贺县",
+    "26": "京都府",
+    "27": "大阪府",
+    "28": "兵库县",
+    "29": "奈良县",
+    "30": "和歌山县",
+    "31": "鸟取县",
+    "32": "岛根县",
+    "33": "冈山县",
+    "34": "广岛县",
+    "35": "山口县",
+    "36": "德岛县",
+    "37": "香川县",
+    "38": "爱媛县",
+    "39": "高知县",
+    "40": "福冈县",
+    "41": "佐贺县",
+    "42": "长崎县",
+    "43": "熊本县",
+    "44": "大分县",
+    "45": "宫崎县",
+    "46": "鹿儿岛县",
+    "47": "冲绳县"
+  },
+  "privacy": {
+    "intro": "{company}（以下称「本经营者」）就本网站提供的行李配送服务（以下称「本服务」）中用户个人信息的处理，制定如下隐私政策（以下称「本政策」）。",
+    "fetchFailed": "获取隐私政策失败。",
+    "loadingSr": "正在加载隐私政策",
+    "listAria": "政策条文一览",
+    "a1": {
+      "ttl": "第1条（隐私信息的定义）",
+      "txt": "隐私信息是指个人信息、历史信息及特征信息。<br /><br />隐私信息中的「个人信息」是指《个人信息保护法》所称的「个人信息」，即与在世个人有关的信息，通过该信息中包含的姓名、联系方式及其他记述等能够识别特定个人的信息。<br /><br />隐私信息中的「历史信息及特征信息」是指上述「个人信息」以外的信息，包括所使用的服务、浏览的页面、广告的历史记录、用户搜索的关键词、使用日期时间、使用方法、使用环境、用户的IP地址、Cookie、终端的个体识别信息等，用户使用服务时的历史相关信息以及用户所具有的特征相关信息。"
+    },
+    "a2": {
+      "ttl": "第2条（收集的个人信息项目及收集方法）",
+      "txt": "本服务为受理预约、安排配送及处理支付，在用户进行预约时收集以下个人信息。<br /><br /><strong class=\"font-semibold\">（1）用户直接输入的信息</strong><br />・姓名<br />・电子邮箱<br />・电话号码<br />・国籍<br />・同行者姓名<br />・取件地点及配送地点的设施名称、邮政编码、地址<br />・取件日期、配送日期<br />・备注（用户自愿填写时）<br /><br /><strong class=\"font-semibold\">（2）与支付相关的信息</strong><br />信用卡号、有效期、安全码等支付信息由支付代理服务商Stripe Inc.直接获取和处理。这些信息不会保存在本经营者的服务器上。Stripe Inc.在符合PCI DSS（支付卡行业数据安全标准）的环境中管理支付信息。<br /><br /><strong class=\"font-semibold\">（3）自动收集的信息</strong><br />为提高便利性，本服务在用户使用本服务或浏览页面时，收集用户使用的服务和软件、浏览的页面、使用日期时间、使用方法、使用环境（通过移动终端使用时还包括该终端的通信状态、使用时的各种设置信息等）、IP地址、Cookie、本地存储等历史信息及特征信息。"
+    },
+    "a3": {
+      "ttl": "第3条（收集和使用个人信息的目的）",
+      "txt": "本经营者收集和使用个人信息的目的如下。<br /><br />1. 为提供和运营本服务<br />2. 为受理用户的预约及安排配送<br />3. 为执行支付处理及退款对应<br />4. 为回复用户的咨询（包括进行本人确认）<br />5. 为向用户发送通知和联络（包括配送状态的通知）<br />6. 为防止本服务的不正当使用及在发生不正当使用时进行应对<br />7. 为改善本服务而进行调查和分析<br />8. 与上述使用目的相关联的目的"
+    },
+    "a4": {
+      "ttl": "第4条（使用目的的变更）",
+      "txt": "本经营者仅在变更后的使用目的与变更前具有合理关联性的情况下，方可变更个人信息的使用目的。<br />变更使用目的时，将以本经营者规定的方法，将变更后的目的通知用户或在本网站上公布。"
+    },
+    "a5": {
+      "ttl": "第5条（个人信息的正当获取）",
+      "txt": "本经营者正当获取个人信息，不通过欺骗或其他不正当手段获取。"
+    },
+    "a6": {
+      "ttl": "第6条（个人信息的安全管理）",
+      "txt": "本经营者针对个人信息的丢失、破坏、篡改及泄漏等风险，进行适当的个人信息安全管理。此外，本经营者在委托第三方处理全部或部分个人信息时，将进行必要且适当的监督，以确保受托方妥善进行个人信息的安全管理。"
+    },
+    "a7": {
+      "ttl": "第7条（向第三方提供个人信息及委托）",
+      "txt": "除下列情况外，本经营者不会在未事先获得用户同意的情况下向第三方提供个人信息。<br /><br />1. 基于法律法规的情况<br />2. 为保护人的生命、身体或财产所必需，且难以获得用户同意的情况<br />3. 为提高公共卫生或促进儿童健康成长特别必要，且难以获得用户同意的情况<br />4. 需要配合国家机关、地方公共团体或其受托方执行法律规定的事务，且获得用户同意可能妨碍该事务执行的情况<br /><br />尽管有前项规定，下列情况下信息的提供对象不视为第三方。<br /><br />5. 本经营者在实现使用目的所必需的范围内委托第三方处理全部或部分个人信息的情况<br />6. 因合并或其他事由的业务承继而提供个人信息的情况<br />7. 依据《个人信息保护法》的规定共同使用的情况<br /><br /><strong class=\"font-semibold\">（支付处理的委托）</strong><br />本服务将支付处理委托给Stripe Inc.（所在地：美国）。信用卡信息、Apple Pay、Google Pay等移动支付信息由Stripe Inc.在符合PCI DSS的环境中直接获取和处理，不会保存在本经营者的服务器上。Stripe Inc.对个人信息的处理适用<a class='text-[#0f83fd]' href='https://stripe.com/privacy' target='_blank' rel='nofollow noopener noreferrer'>Stripe Inc.的隐私政策</a>。<br /><br /><strong class=\"font-semibold\">（对平台运营方的委托）</strong><br />本服务使用LugGo（平台运营方）提供的系统运营。预约信息、配送信息等个人信息在服务运营所需的范围内保存在平台运营方的服务器上。这属于《个人信息保护法》中的处理委托，本经营者将对平台运营方进行适当的监督。"
+    },
+    "a8": {
+      "ttl": "第8条（向境外第三方提供）",
+      "txt": "本服务为处理支付，将个人信息的处理委托给Stripe Inc.（所在地：美国）。关于美国的个人信息保护制度，请参阅日本个人信息保护委员会公布的信息。<br /><br />Stripe Inc.参与EU-US数据隐私框架等国际个人信息保护框架，并采取适当的保护措施。"
+    },
+    "a9": {
+      "ttl": "第9条（个人信息的保存期限）",
+      "txt": "本经营者仅在实现使用目的所需的期间内保存个人信息。具体保存期限如下。<br /><br />・与预约相关的信息（姓名、联系方式、配送地址等）：服务提供完成后，依法律规定的保存义务期间（最长7年）<br />・与支付相关的记录：依法律规定的保存义务期间<br />・与咨询相关的信息：处理完成后1年<br />・Cookie等历史信息：自获取起最长1年<br /><br />超过上述保存期限的个人信息将被迅速删除或匿名化。"
+    },
+    "a10": {
+      "ttl": "第10条（Cookie及类似技术的使用）",
+      "txt": "本服务为提高用户便利性及改善服务，使用Cookie、本地存储等技术。<br /><br />用户可通过浏览器设置拒绝接受Cookie。但是，禁用Cookie后，本服务的部分功能可能无法使用。<br /><br />Cookie的设置方法请参阅所用浏览器的帮助功能。"
+    },
+    "a11": {
+      "ttl": "第11条（个人信息的公开）",
+      "txt": "当用户本人要求公开其个人信息时，本经营者将不延迟地向用户本人公开。但是，公开可能导致下列任一情况时，可能不公开其全部或部分内容，决定不公开时将不延迟地通知用户。<br /><br />1. 可能损害用户本人或第三方的生命、身体、财产及其他权利利益的情况<br />2. 可能对本经营者业务的正常开展造成显著妨碍的情况<br />3. 其他违反法律法规的情况<br /><br />尽管有前项规定，历史信息及特征信息等个人信息以外的信息原则上不予公开。"
+    },
+    "a12": {
+      "ttl": "第12条（个人信息的更正及删除）",
+      "txt": "当本经营者持有的用户个人信息有误时，用户可以请求更正、追加或删除个人信息（以下称「更正等」）。<br />本经营者收到用户的上述请求并判断有必要响应该请求时，将不延迟地对该个人信息进行更正等。<br />本经营者基于前项规定进行了更正等，或依据《个人信息保护法》及其他法律法规决定不进行更正等时，将不延迟地通知用户。"
+    },
+    "a13": {
+      "ttl": "第13条（个人信息的停止使用等）",
+      "txt": "用户可依据《个人信息保护法》的规定，以其本人的个人信息「被超出事先公布的使用目的范围处理」或「系通过欺骗或其他不正当手段获取」为由，要求停止使用或删除该信息（以下称「停止使用等」）。本经营者收到用户的上述请求，查明该请求有理由时，将在确认系本人请求后，不延迟地停止使用该个人信息等，并将此通知用户。但是，依据《个人信息保护法》及其他法律法规，本经营者不负有停止使用等义务的情况除外。"
+    },
+    "a14": {
+      "ttl": "第14条（持续改进）",
+      "txt": "本经营者将适时审查个人信息处理的运用状况，努力持续改进，并根据需要变更隐私政策。除法律法规及本政策另有规定的事项外，本政策的内容可在不通知用户的情况下变更。<br />变更后的隐私政策自登载于本网站时起生效。"
+    },
+    "a15": {
+      "ttl": "第15条（咨询窗口）",
+      "txt": "有关公开等的申请、意见、疑问、投诉及其他个人信息处理的咨询，请联系以下窗口。<br />电子邮箱：<a class=\"text-[#0f83fd]\" href=\"mailto:{email}\">{email}</a>"
+    }
+  },
+  "validation": {
+    "pickupPostalRequired": "取件地点的邮政编码为必填项",
+    "postalFormat": "请输入7位半角数字的邮政编码",
+    "notDepartureArea": "该邮政编码不在取件服务范围内",
+    "departureAreaUnset": "未设置取件区域，无法预约",
+    "pickupNameRequired": "取件地点名称为必填项",
+    "pickupAddressRequired": "取件地点地址为必填项",
+    "pickupDateRequired": "取件日期为必填项",
+    "dateFormat": "请以YYYY/MM/DD格式输入日期",
+    "dateInvalid": "请输入存在的日期",
+    "pickupTooSoon": "已过前一天23点（日本时间），无法选择该日期",
+    "maxHalfYear": "最多可预约半年以内的日期",
+    "regularHoliday": "该日为定休日，无法选择",
+    "tempClosure": "该日为临时休业日，无法选择",
+    "deliveryPostalRequired": "配送地点的邮政编码为必填项",
+    "notDeliveryArea": "该邮政编码不在配送服务范围内",
+    "deliveryAreaUnset": "未设置配送区域，无法预约",
+    "deliveryNameRequired": "配送地点名称为必填项",
+    "deliveryAddressRequired": "配送地点地址为必填项",
+    "deliveryDateRequired": "配送日期为必填项",
+    "deliveryAfterPickup": "请选择取件日期当天或之后的配送日期",
+    "qtyNumber": "数量请填写数字",
+    "qtyInteger": "请填写整数",
+    "qtyMin": "数量请填写0以上",
+    "qtyMax": "每种行李的数量最多为20件",
+    "atLeastOne": "请至少选择1件行李",
+    "maxTotal": "所有行李的合计最多为20件",
+    "nameRequired": "姓名为必填项",
+    "emailRequired": "电子邮箱为必填项",
+    "emailInvalid": "请输入有效的电子邮箱",
+    "phoneRequired": "电话号码为必填项",
+    "phoneInvalid": "请输入有效的电话号码",
+    "phonePlusRequired": "请以国家代码和 + 开头的国际格式输入（例：+8613800138000）",
+    "nationalityRequired": "国籍为必填项",
+    "guestNameRequired": "住宿预订人姓名为必填项",
+    "guestNameRoman": "请仅使用拼音（拉丁字母）和空格输入"
+  }
+}

@@ -4,14 +4,14 @@
       :id="titleId"
       class="mb-4 text-center text-lg font-bold text-gray-800"
     >
-      {{ props.title }}
+      {{ displayTitle }}
     </h2>
 
     <div
       class="h-64 overflow-y-auto rounded-md border border-gray-300 bg-white p-4"
       tabindex="0"
       role="region"
-      :aria-label="props.title"
+      :aria-label="displayTitle"
       :aria-busy="isLoading"
     >
       <div
@@ -25,7 +25,7 @@
           aria-hidden="true"
         />
         <p class="sr-only">
-          {{ props.title }}を読み込んでいます
+          {{ $t("law.loadingSr", { title: displayTitle }) }}
         </p>
       </div>
 
@@ -61,6 +61,7 @@
 </template>
 
 <script setup lang="ts">
+import { useI18n } from "vue-i18n";
 import type { TransactionLawItem } from "~/composables/useTransactionLaw";
 
 const props = withDefaults(
@@ -71,8 +72,14 @@ const props = withDefaults(
     title?: string;
   }>(),
   {
-    title: "ご予約に関する重要事項",
+    title: undefined,
   },
+);
+
+const { t } = useI18n();
+
+const displayTitle = computed(
+  () => props.title ?? t("status.confirmationTitle"),
 );
 
 // 同一ページ内に複数配置されるため、aria 用に一意な ID を払い出す

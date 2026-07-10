@@ -41,14 +41,14 @@
             class="rounded-md bg-gray-800 px-4 py-2 text-sm font-semibold text-white hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-800 focus:ring-offset-2"
             @click="handleConfirm"
           >
-            {{ confirmLabel }}
+            {{ confirmLabelDisplay }}
           </button>
           <button
             type="button"
             class="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2"
             @click="handleCancel"
           >
-            {{ cancelLabel }}
+            {{ cancelLabelDisplay }}
           </button>
         </div>
       </div>
@@ -57,6 +57,8 @@
 </template>
 
 <script setup lang="ts">
+import { useI18n } from "vue-i18n";
+
 type Props = {
   modelValue: boolean;
   title: string;
@@ -65,10 +67,15 @@ type Props = {
   cancelLabel?: string;
 };
 
+const { t } = useI18n();
+
 const props = withDefaults(defineProps<Props>(), {
-  confirmLabel: "はい",
-  cancelLabel: "キャンセル",
+  confirmLabel: undefined,
+  cancelLabel: undefined,
 });
+
+const confirmLabelDisplay = computed(() => props.confirmLabel ?? t("common.yes"));
+const cancelLabelDisplay = computed(() => props.cancelLabel ?? t("common.cancel"));
 
 type Emits = {
   "update:modelValue": [value: boolean];

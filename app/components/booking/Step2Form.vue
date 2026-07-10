@@ -3,13 +3,13 @@
     <!-- 荷物の個数を選択 -->
     <fieldset>
       <legend class="mb-6 font-semibold text-gray-800">
-        荷物の個数を選択<span class="ml-[0.2em] text-red-600">*</span>
+        {{ $t("booking.step2.selectCountLabel") }}<span class="ml-[0.2em] text-red-600">*</span>
       </legend>
 
       <CommonAtomsLoadingAnimation
         v-if="luggageItemsLoading"
         size="md"
-        message="荷物情報を読み込み中..."
+        :message="$t('booking.step2.loading')"
       />
       <div
         v-else-if="luggageItemsError"
@@ -37,10 +37,10 @@
             <p
               class="mb-1 whitespace-pre-line text-sm font-semibold text-gray-700"
             >
-              {{ luggageItem.name.replace("（", "\n（") }}
+              {{ luggageItem.displayName }}
             </p>
             <span class="block text-sm text-gray-700">
-              ¥{{ luggageItem.price.toLocaleString() }} / 個
+              ¥{{ luggageItem.price.toLocaleString() }} {{ $t("common.perItem") }}
             </span>
           </div>
           <div class="inline-flex items-center">
@@ -48,7 +48,7 @@
               type="button"
               class="h-10 w-10 select-none rounded-full bg-gray-800 text-lg font-semibold text-white transition-colors hover:bg-gray-900 disabled:cursor-not-allowed disabled:bg-gray-300"
               :disabled="luggageItem.count <= 0"
-              :aria-label="`${luggageItem.name}の個数を一つ減らす`"
+              :aria-label="$t('booking.step2.decrementAria', { name: luggageItem.displayName })"
               @click="decrement(luggageItem.key)"
             >
               −
@@ -62,7 +62,7 @@
               type="button"
               class="h-10 w-10 select-none rounded-full bg-gray-800 text-lg font-semibold text-white transition-colors hover:bg-gray-900 disabled:cursor-not-allowed disabled:bg-gray-300"
               :disabled="luggageItem.count >= MAX_COUNT"
-              :aria-label="`${luggageItem.name}の個数を一つ増やす`"
+              :aria-label="$t('booking.step2.incrementAria', { name: luggageItem.displayName })"
               @click="increment(luggageItem.key)"
             >
               ＋
@@ -89,7 +89,7 @@
     <!-- 金額 -->
     <div>
       <h2 class="mb-4 font-semibold text-gray-800">
-        金額<small>（税込）</small>
+        {{ $t("booking.step2.amountTitle") }}<small>{{ $t("common.taxIncluded") }}</small>
       </h2>
       <div class="rounded-md border-2 border-gray-300 p-4 text-center">
         <span class="text-2xl font-bold text-gray-800">¥{{ totalAmount.toLocaleString() }}</span>
@@ -99,7 +99,7 @@
     <!-- 注意事項 -->
     <div class="rounded-md border border-pink-200 bg-pink-50 p-6">
       <h3 class="mb-4 font-semibold text-red-600">
-        注意事項
+        {{ $t("booking.step2.noticeTitle") }}
       </h3>
 
       <div class="space-y-6 text-sm text-gray-700">
@@ -107,10 +107,10 @@
           <h4
             class="mb-2 border-l-4 border-red-500 pl-2 font-semibold text-red-600"
           >
-            配送荷物のお手続きについて
+            {{ $t("booking.step2.handlingTitle") }}
           </h4>
           <p class="ml-3">
-            配送当日の午前9時までに、ホテルや旅館のフロント、もしくは駅や空港のカウンターにお荷物をお預けください。
+            {{ $t("booking.step2.handlingText") }}
           </p>
         </div>
 
@@ -118,10 +118,10 @@
           <h4
             class="mb-2 border-l-4 border-red-500 pl-2 font-semibold text-red-600"
           >
-            お届け時間について
+            {{ $t("booking.step2.deliveryTimeTitle") }}
           </h4>
           <p class="ml-3">
-            配送当日の20時までに、お荷物をお届けいたします。
+            {{ $t("booking.step2.deliveryTimeText") }}
           </p>
         </div>
 
@@ -129,7 +129,7 @@
           <h4
             class="mb-2 border-l-4 border-red-500 pl-2 font-semibold text-red-600"
           >
-            お取り扱いできないお荷物
+            {{ $t("booking.step2.prohibitedTitle") }}
           </h4>
           <ul class="mb-2 ml-8 list-disc space-y-2">
             <li
@@ -150,14 +150,14 @@
 
         <div>
           <p class="mb-2">
-            上記以外で不明な点がございましたらお気軽にお問い合わせください
+            {{ $t("booking.step2.contactNote") }}
           </p>
           <div
             v-if="props.supportEmail"
             class="font-semibold"
           >
             <p>
-              メールアドレス：<a
+              {{ $t("booking.step2.emailLabel") }}<a
                 class="underline"
                 :href="`mailto:${props.supportEmail}`"
               >{{ props.supportEmail }}</a>
@@ -170,6 +170,7 @@
 </template>
 
 <script setup lang="ts">
+import { useI18n } from "vue-i18n";
 import { computeTotalAmount } from "~/composables/useBookingForm";
 import type { Step2FormData, LuggageItemData } from "../../types/booking";
 
@@ -196,6 +197,16 @@ const emit = defineEmits<Emits>();
 
 type LuggageItem = LuggageItemData & {
   count: number;
+  displayName: string;
+};
+
+const { t, te } = useI18n();
+
+// 荷物タイプ名を現在のロケールで表示
+const localizedLuggageName = (item: LuggageItemData): string => {
+  const key = `luggageTypes.${item.key}`;
+  const name = te(key) ? t(key) : item.name;
+  return name.replace("（", "\n（").replace(" (", "\n(");
 };
 
 // 取得したデータとformDataを組み合わせてluggageItemsを生成
@@ -207,6 +218,7 @@ const luggageItems = computed<LuggageItem[]>(() => {
   return props.luggageItemsData.map(item => ({
     ...item,
     count: props.formData[item.key] ?? 0,
+    displayName: localizedLuggageName(item),
   }));
 });
 
@@ -241,45 +253,15 @@ type ProhibitedItem = {
   items?: string;
 };
 
-const prohibitedItems = ref<ProhibitedItem[]>([
-  {
-    id: 1,
-    type: "危険物",
-    items:
-      "ガスボンベ・スプレー缶、可燃性液体（ガソリン・灯油）、火薬・花火、バッテリー（大容量リチウム電池など）、",
-  },
-  {
-    id: 2,
-    type: "高価品・貴重品",
-    items: "現金、クレジットカード、宝石・貴金属、高級時計、美術品",
-  },
-  {
-    id: 3,
-    type: "個人情報・重要書類",
-    items: "パスポート、契約書、チケット類",
-  },
-  {
-    id: 4,
-    type: "食品・生もの",
-    items: "生鮮食品、冷蔵・冷凍が必要なもの、匂いが強いもの",
-  },
-  {
-    id: 5,
-    type: "壊れやすいもの",
-    items: "ガラス製品、精密機器",
-  },
-  {
-    id: 6,
-    type: "法律的に問題があるもの",
-    items: "違法薬物、武器（ナイフ・銃など）、偽ブランド品",
-  },
-  {
-    id: 7,
-    type: "漏れる可能性のある液体類",
-  },
-  {
-    id: 8,
-    type: "1個あたり、30kgを超えるお荷物",
-  },
-]);
+// お取り扱いできないお荷物
+const prohibitedItems = computed<ProhibitedItem[]>(() =>
+  [1, 2, 3, 4, 5, 6, 7, 8].map((id) => {
+    const detail = t(`prohibited.i${id}.items`);
+    return {
+      id,
+      type: t(`prohibited.i${id}.type`),
+      ...(detail ? { items: detail } : {}),
+    };
+  }),
+);
 </script>

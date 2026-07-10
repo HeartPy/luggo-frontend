@@ -8,6 +8,10 @@ export type Step1FormData = {
   delivery_location_address: string;
   delivery_date: string;
   notes: string;
+  pickup_location_name_ja: string;
+  pickup_location_address_ja: string;
+  delivery_location_name_ja: string;
+  delivery_location_address_ja: string;
 };
 
 export type LuggageItemData = {
@@ -40,6 +44,7 @@ export type BookingFormData = Step1FormData
   & Step2FormData
   & Step3FormData & {
     total_amount: number;
+    customer_language: string;
   };
 
 export type ApiErrRes = {

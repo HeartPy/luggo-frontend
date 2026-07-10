@@ -3,7 +3,7 @@
     <div class="bg-white px-4 py-20">
       <div class="mx-auto max-w-4xl">
         <main
-          aria-label="特定商取引法に基づく表記"
+          :aria-label="$t('pages.transactionLaw.title')"
           :aria-busy="isLoading"
         >
           <div
@@ -18,7 +18,7 @@
               aria-hidden="true"
             />
             <p class="sr-only">
-              特定商取引法に基づく表記を読み込んでいます
+              {{ $t("law.loadingSr", { title: $t("pages.transactionLaw.title") }) }}
             </p>
           </div>
 
@@ -39,12 +39,12 @@
               id="transaction-law-title"
               class="relative mb-8 text-2xl font-bold tracking-wide after:absolute after:-bottom-2 after:left-0 after:h-[1px] after:w-full after:bg-gray-600 after:content-['']"
             >
-              特定商取引法に基づく表記
+              {{ $t("pages.transactionLaw.title") }}
             </h1>
             <ul
               class="grid gap-8"
               role="list"
-              aria-label="表記項目一覧"
+              :aria-label="$t('law.listAria')"
             >
               <li
                 v-for="item in transactionLawItems"
@@ -75,20 +75,24 @@
 </template>
 
 <script setup lang="ts">
+import { useI18n } from "vue-i18n";
+import { useTransactionLaw } from "~/composables/useTransactionLaw";
+
 definePageMeta({
   layout: "customer",
   middleware: "subdomain",
 });
 
+const { t } = useI18n();
 const { isLoading, fetchErr, transactionLawItems } = useTransactionLaw();
 
-useHead({
-  title: "特定商取引法に基づく表記",
+useHead(() => ({
+  title: t("pages.transactionLaw.title"),
   meta: [
     {
       name: "description",
-      content: "特定商取引法に基づく表記",
+      content: t("pages.transactionLaw.title"),
     },
   ],
-});
+}));
 </script>

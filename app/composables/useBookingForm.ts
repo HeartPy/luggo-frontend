@@ -1,3 +1,4 @@
+import { useAppLocale } from "~/composables/useLocale";
 import type {
   Step1FormData,
   Step2FormData,
@@ -15,6 +16,8 @@ export const computeTotalAmount = (
 
 export const useBookingForm = () => {
   const TTL_MS = 30 * 60 * 1000; // 30分に設定
+
+  const { currentLocale } = useAppLocale();
 
   const loadWithExpiry = <T>(key: string, fallback: T): T => {
     if (!import.meta.client) return fallback;
@@ -45,19 +48,25 @@ export const useBookingForm = () => {
     }
   };
 
-  const step1Data = useState<Step1FormData>("step1Data", () => ({
-    ...loadWithExpiry<Step1FormData>("booking.step1", {
-      pickup_location_name: "",
-      pickup_postal_code: "",
-      pickup_location_address: "",
-      pickup_date: "",
-      delivery_location_name: "",
-      delivery_postal_code: "",
-      delivery_location_address: "",
-      delivery_date: "",
-      notes: "",
-    }),
-  }));
+  const emptyStep1Data = (): Step1FormData => ({
+    pickup_location_name: "",
+    pickup_postal_code: "",
+    pickup_location_address: "",
+    pickup_date: "",
+    delivery_location_name: "",
+    delivery_postal_code: "",
+    delivery_location_address: "",
+    delivery_date: "",
+    notes: "",
+    pickup_location_name_ja: "",
+    pickup_location_address_ja: "",
+    delivery_location_name_ja: "",
+    delivery_location_address_ja: "",
+  });
+
+  const step1Data = useState<Step1FormData>("step1Data", () =>
+    loadWithExpiry<Step1FormData>("booking.step1", emptyStep1Data()),
+  );
 
   // Step2FormDataは動的に初期化されるため、初期値は空のオブジェクト
   const step2Data = useState<Step2FormData>("step2Data", () => {
@@ -119,6 +128,7 @@ export const useBookingForm = () => {
         ...step2Data.value,
         ...step3Data.value,
         total_amount: confirmedTotalAmount.value ?? totalAmount.value,
+        customer_language: currentLocale.value,
       }) as BookingFormData,
   );
 
@@ -131,17 +141,7 @@ export const useBookingForm = () => {
       localStorage.removeItem("booking.luggageItems");
       localStorage.removeItem("booking.confirmedTotal");
       // 状態も初期値にリセット
-      step1Data.value = {
-        pickup_location_name: "",
-        pickup_postal_code: "",
-        pickup_location_address: "",
-        pickup_date: "",
-        delivery_location_name: "",
-        delivery_postal_code: "",
-        delivery_location_address: "",
-        delivery_date: "",
-        notes: "",
-      };
+      step1Data.value = emptyStep1Data();
       step2Data.value = {};
       luggageItemsData.value = [];
       step3Data.value = {
@@ -186,17 +186,7 @@ export const useBookingForm = () => {
       && (step1Data.value.pickup_location_name
         || step1Data.value.delivery_location_name)
     ) {
-      step1Data.value = {
-        pickup_location_name: "",
-        pickup_postal_code: "",
-        pickup_location_address: "",
-        pickup_date: "",
-        delivery_location_name: "",
-        delivery_postal_code: "",
-        delivery_location_address: "",
-        delivery_date: "",
-        notes: "",
-      };
+      step1Data.value = emptyStep1Data();
     }
 
     // Step2のチェック
