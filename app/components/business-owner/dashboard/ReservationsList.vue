@@ -167,7 +167,8 @@
 
       <button
         type="button"
-        class="rounded-md bg-gray-800 px-6 py-2 text-sm font-semibold text-white transition-colors hover:bg-gray-900"
+        :disabled="isLoading"
+        class="rounded-md bg-gray-800 px-6 py-2 text-sm font-semibold text-white transition-colors hover:bg-gray-900 disabled:cursor-not-allowed disabled:opacity-50"
         @click="handleSearch"
       >
         検索
