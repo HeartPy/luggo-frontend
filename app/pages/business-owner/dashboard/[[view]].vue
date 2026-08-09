@@ -4,6 +4,7 @@
       v-if="currentView === 'reservations'"
     />
     <BusinessOwnerDashboardDriversList v-else-if="currentView === 'drivers'" />
+    <BusinessOwnerDashboardDailyAssignmentPanel v-else-if="currentView === 'assignment'" />
     <BusinessOwnerDashboardRevenueManagement
       v-else-if="currentView === 'revenue'"
     />

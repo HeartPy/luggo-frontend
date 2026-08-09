@@ -1,6 +1,7 @@
 export type DashboardView
   = | "reservations"
     | "drivers"
+    | "assignment"
     | "revenue"
     | "settings"
     | "settings-pricing"
@@ -12,6 +13,7 @@ export type DashboardView
 const viewTtls: Record<DashboardView, string> = {
   "reservations": "予約一覧",
   "drivers": "配達者一覧",
+  "assignment": "日次自動割当",
   "revenue": "売上管理",
   "settings": "各種設定",
   "settings-pricing": "料金設定",
@@ -24,6 +26,7 @@ const viewTtls: Record<DashboardView, string> = {
 const VALID_TOP_VIEWS: DashboardView[] = [
   "reservations",
   "drivers",
+  "assignment",
   "revenue",
   "business-info",
   "payment-info",

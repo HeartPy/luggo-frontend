@@ -44,6 +44,7 @@
             {{ confirmLabelDisplay }}
           </button>
           <button
+            v-if="!hideCancel"
             type="button"
             class="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2"
             @click="handleCancel"
@@ -65,6 +66,7 @@ type Props = {
   message: string;
   confirmLabel?: string;
   cancelLabel?: string;
+  hideCancel?: boolean;
 };
 
 const { t } = useI18n();
@@ -72,6 +74,7 @@ const { t } = useI18n();
 const props = withDefaults(defineProps<Props>(), {
   confirmLabel: undefined,
   cancelLabel: undefined,
+  hideCancel: false,
 });
 
 const confirmLabelDisplay = computed(() => props.confirmLabel ?? t("common.yes"));

@@ -255,7 +255,25 @@ export const createStep1Schema = (
       ),
     pickup_location_name: string()
       .trim()
-      .required(t("validation.pickupNameRequired")),
+      .required(t("validation.pickupNameRequired"))
+      .test(
+        "has-pickup-coordinates",
+        t("validation.pickupPlaceSelectionRequired"),
+        function () {
+          const form = this.parent as Step1FormData;
+          // 次のいずれかならOK:
+          // 1) 検索候補を選択済み（座標あり）
+          // 2) 郵便番号7桁+住所の手入力（座標はサーバー側で概算補完する）
+          const hasSelectedPlace
+            = !!form.pickup_place_id
+              && form.pickup_latitude !== null
+              && form.pickup_longitude !== null;
+          const hasManualAddress
+            = /^[0-9]{7}$/u.test(form.pickup_postal_code ?? "")
+              && !!form.pickup_location_address?.trim();
+          return hasSelectedPlace || hasManualAddress;
+        },
+      ),
     pickup_location_address: string()
       .trim()
       .required(t("validation.pickupAddressRequired")),
@@ -322,7 +340,25 @@ export const createStep1Schema = (
       ),
     delivery_location_name: string()
       .trim()
-      .required(t("validation.deliveryNameRequired")),
+      .required(t("validation.deliveryNameRequired"))
+      .test(
+        "has-delivery-coordinates",
+        t("validation.deliveryPlaceSelectionRequired"),
+        function () {
+          const form = this.parent as Step1FormData;
+          // 次のいずれかならOK:
+          // 1) 検索候補を選択済み（座標あり）
+          // 2) 郵便番号7桁+住所の手入力（座標はサーバー側で概算補完する）
+          const hasSelectedPlace
+            = !!form.delivery_place_id
+              && form.delivery_latitude !== null
+              && form.delivery_longitude !== null;
+          const hasManualAddress
+            = /^[0-9]{7}$/u.test(form.delivery_postal_code ?? "")
+              && !!form.delivery_location_address?.trim();
+          return hasSelectedPlace || hasManualAddress;
+        },
+      ),
     delivery_location_address: string()
       .trim()
       .required(t("validation.deliveryAddressRequired")),

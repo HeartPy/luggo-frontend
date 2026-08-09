@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "nuxt build",
-    "dev": "nuxt dev",
+    "dev": "nuxt dev --dotenv .env.development",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
@@ -13,7 +13,6 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@nuxt/image": "^1.10.0",
     "@nuxtjs/tailwindcss": "^6.14.0",
     "@stripe/stripe-js": "^7.8.0",
     "@vee-validate/yup": "^4.15.1",

@@ -16,7 +16,7 @@
         </span>
       </div>
       <div class="w-full overflow-y-auto">
-        <nav>
+        <nav aria-label="ダッシュボードメニュー">
           <ul class="flex flex-col items-center">
             <li
               v-for="navItem in navItems"
@@ -30,12 +30,14 @@
                   'bg-gray-200 before:absolute before:left-0 before:top-0 before:h-full before:w-1 before:bg-gray-800':
                     isItemActive(navItem),
                 }"
+                :aria-current="isItemActive(navItem) ? 'page' : undefined"
                 @click="emit('select', navItem.key)"
               >
                 <img
                   v-if="navItem.icon"
                   :src="navItem.icon"
                   alt=""
+                  aria-hidden="true"
                   class="mr-2 h-4 w-4 object-contain"
                 >
                 <span>{{ navItem.label }}</span>
@@ -67,6 +69,7 @@ const emit = defineEmits<{
 const navItems = ref<NavItem[]>([
   { key: "reservations", label: "予約一覧" },
   { key: "drivers", label: "配達者一覧" },
+  { key: "assignment", label: "日次自動割当" },
   { key: "revenue", label: "売上管理" },
   {
     key: "settings",

@@ -1,9 +1,15 @@
 export type Step1FormData = {
   pickup_location_name: string;
+  pickup_place_id: string;
+  pickup_latitude: number | null;
+  pickup_longitude: number | null;
   pickup_postal_code: string;
   pickup_location_address: string;
   pickup_date: string;
   delivery_location_name: string;
+  delivery_place_id: string;
+  delivery_latitude: number | null;
+  delivery_longitude: number | null;
   delivery_postal_code: string;
   delivery_location_address: string;
   delivery_date: string;
@@ -85,11 +91,20 @@ export type OwnerBooking = {
   delivery_status_label: string;
   driver: string | null;
   driver_name: string | null;
+  pickup_driver: string | null;
+  pickup_driver_name: string | null;
+  is_split_assignment: boolean;
   pickup_location_name: string;
+  pickup_postal_code: string;
   pickup_location_address: string;
+  pickup_latitude?: number | null;
+  pickup_longitude?: number | null;
   pickup_date: string | null;
   delivery_location_name: string;
+  delivery_postal_code: string;
   delivery_location_address: string;
+  delivery_latitude?: number | null;
+  delivery_longitude?: number | null;
   delivery_date: string | null;
   luggage_items: Record<string, number> | null;
   total_luggage_count: number;

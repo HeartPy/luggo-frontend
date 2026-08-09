@@ -64,6 +64,9 @@
         </div>
       </div>
 
+      <p class="mt-1 text-xs text-gray-500">
+        {{ $t("booking.step1.selectSuggestionHint") }}
+      </p>
       <div
         v-if="errors.pickup_location_name"
         id="pickup_location_name-error"
@@ -250,6 +253,9 @@
         </div>
       </div>
 
+      <p class="mt-1 text-xs text-gray-500">
+        {{ $t("booking.step1.selectSuggestionHint") }}
+      </p>
       <div
         v-if="errors.delivery_location_name"
         id="delivery_location_name-error"
@@ -465,6 +471,16 @@ const minDeliveryDate = computed(() => {
 const handleInput = (key: keyof Step1FormData, event: Event) => {
   const target = event.target as HTMLInputElement | HTMLTextAreaElement;
   const updatedData = { ...props.formData, [key]: target.value };
+  if (key === "pickup_location_address") {
+    updatedData.pickup_place_id = "";
+    updatedData.pickup_latitude = null;
+    updatedData.pickup_longitude = null;
+  }
+  if (key === "delivery_location_address") {
+    updatedData.delivery_place_id = "";
+    updatedData.delivery_latitude = null;
+    updatedData.delivery_longitude = null;
+  }
   emit("update:form-data", updatedData);
 };
 
@@ -527,6 +543,9 @@ const handlePickupPostalCode = (event: Event) => {
       emit("update:form-data", {
         ...props.formData,
         pickup_postal_code: value,
+        pickup_place_id: "",
+        pickup_latitude: null,
+        pickup_longitude: null,
       });
     },
     onSearch: async (postalCode) => {
@@ -539,6 +558,9 @@ const handlePickupPostalCode = (event: Event) => {
         ...props.formData,
         pickup_postal_code: postalCode,
         pickup_location_address: address,
+        pickup_place_id: "",
+        pickup_latitude: null,
+        pickup_longitude: null,
       });
     },
   });
@@ -550,6 +572,9 @@ const handleDeliveryPostalCode = (event: Event) => {
       emit("update:form-data", {
         ...props.formData,
         delivery_postal_code: value,
+        delivery_place_id: "",
+        delivery_latitude: null,
+        delivery_longitude: null,
       });
     },
     onSearch: async (postalCode) => {
@@ -562,6 +587,9 @@ const handleDeliveryPostalCode = (event: Event) => {
         ...props.formData,
         delivery_postal_code: postalCode,
         delivery_location_address: address,
+        delivery_place_id: "",
+        delivery_latitude: null,
+        delivery_longitude: null,
       });
     },
   });
@@ -617,6 +645,12 @@ const handleSearchInput = async (event: Event, type: "pickup" | "delivery") => {
     = type === "pickup"
       ? "pickup_location_address_ja"
       : "delivery_location_address_ja";
+  const placeIdField
+    = type === "pickup" ? "pickup_place_id" : "delivery_place_id";
+  const latitudeField
+    = type === "pickup" ? "pickup_latitude" : "delivery_latitude";
+  const longitudeField
+    = type === "pickup" ? "pickup_longitude" : "delivery_longitude";
 
   // 手入力された場合は、サジェスト由来の日本語表記が実態と乖離するためクリアする
   emit("update:form-data", {
@@ -624,6 +658,9 @@ const handleSearchInput = async (event: Event, type: "pickup" | "delivery") => {
     [fieldName]: target.value,
     [nameJaField]: "",
     [addressJaField]: "",
+    [placeIdField]: "",
+    [latitudeField]: null,
+    [longitudeField]: null,
   });
 
   // デバウンス処理
@@ -740,6 +777,12 @@ const selectSuggestion = (
     = type === "pickup"
       ? "pickup_location_address_ja"
       : "delivery_location_address_ja";
+  const placeIdField
+    = type === "pickup" ? "pickup_place_id" : "delivery_place_id";
+  const latitudeField
+    = type === "pickup" ? "pickup_latitude" : "delivery_latitude";
+  const longitudeField
+    = type === "pickup" ? "pickup_longitude" : "delivery_longitude";
 
   const extractedPostalCode
     = extractPostalCode(suggestion.address)
@@ -761,6 +804,9 @@ const selectSuggestion = (
     [addressFieldName]: stripPostalCode(suggestion.address),
     [nameJaField]: nameJa,
     [addressJaField]: addressJa,
+    [placeIdField]: suggestion.place_id,
+    [latitudeField]: suggestion.geometry.lat,
+    [longitudeField]: suggestion.geometry.lng,
     // 住所に郵便番号が含まれる場合のみ上書き
     // :value バインドのため @input は発火せず住所検索は走らない
     ...(extractedPostalCode !== null
