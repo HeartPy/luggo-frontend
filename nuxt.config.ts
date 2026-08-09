@@ -4,7 +4,6 @@ export default defineNuxtConfig({
   devtools: { enabled: process.env.NODE_ENV === "development" },
   modules: [
     "@nuxt/eslint",
-    "@nuxt/image",
     "@nuxtjs/tailwindcss",
     "nuxt-jsonld",
   ],
@@ -20,6 +19,8 @@ export default defineNuxtConfig({
         process.env.NUXT_PUBLIC_API_BASE_URL || "http://localhost:8000",
       stripePublishableKey:
         process.env.NUXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "",
+      googleMapsApiKey:
+        process.env.NUXT_PUBLIC_GOOGLE_MAPS_API_KEY || "",
     },
   },
   app: {
@@ -54,17 +55,5 @@ export default defineNuxtConfig({
   tailwindcss: {
     cssPath: ["~/assets/css/tailwind.css", { injectPosition: "first" }],
     viewer: true,
-  },
-  image: {
-    quality: 80,
-    format: ["webp", "avif", "jpeg"],
-    screens: {
-      xs: 320,
-      sm: 640,
-      md: 768,
-      lg: 1024,
-      xl: 1280,
-      xxl: 1536,
-    },
   },
 });

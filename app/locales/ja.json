@@ -84,6 +84,7 @@
       "namePlaceholder": "ホテル・空港等の名称",
       "postalPlaceholder": "例) 1234567",
       "postalHint": "半角数字で入力してください（ハイフンなし）",
+      "selectSuggestionHint": "正確な配送ルートの算出に使用するため、検索候補から選択してください。",
       "addressPlaceholder": "住所を詳しくご入力ください",
       "notesPlaceholder": "追加のご要望やご質問がございましたらこちらにご記入ください"
     },
@@ -440,6 +441,7 @@
     "notDepartureArea": "この郵便番号は集荷地域の対象外です",
     "departureAreaUnset": "集荷地域が設定されていないため予約できません",
     "pickupNameRequired": "集荷場所の名称は必須です",
+    "pickupPlaceSelectionRequired": "検索候補から集荷場所を選択してください",
     "pickupAddressRequired": "集荷場所の住所は必須です",
     "pickupDateRequired": "集荷日は必須です",
     "dateFormat": "日付はYYYY/MM/DD形式で入力してください",
@@ -449,6 +451,7 @@
     "regularHoliday": "この日は定休日のため選択できません",
     "tempClosure": "この日は臨時休業日のため選択できません",
     "deliveryPostalRequired": "配送場所の郵便番号は必須です",
+    "deliveryPlaceSelectionRequired": "検索候補から配達場所を選択してください",
     "notDeliveryArea": "この郵便番号は配達地域の対象外です",
     "deliveryAreaUnset": "配達地域が設定されていないため予約できません",
     "deliveryNameRequired": "配送場所の名称は必須です",

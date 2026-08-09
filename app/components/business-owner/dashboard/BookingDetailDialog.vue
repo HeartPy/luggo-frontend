@@ -117,35 +117,124 @@
               </div>
 
               <div>
-                <label
-                  :for="`driver-${booking.id}`"
-                  class="mb-1 block text-xs font-medium text-gray-500"
-                >
-                  配達者
-                </label>
-                <div class="relative">
-                  <select
-                    :id="`driver-${booking.id}`"
-                    v-model="form.driver"
+                <label class="mb-3 flex items-center gap-2 text-sm text-gray-700">
+                  <input
+                    v-model="form.split_drivers"
+                    type="checkbox"
                     :disabled="isCancelled"
-                    :class="selectClass"
+                    class="h-4 w-4 rounded border-gray-300"
+                    @change="handleSplitChange"
                   >
-                    <option value="">
-                      未割り当て
-                    </option>
-                    <option
-                      v-for="driver in drivers"
-                      :key="driver.id"
-                      :value="driver.id"
+                  集荷担当と配達担当を分ける
+                </label>
+
+                <div v-if="!form.split_drivers">
+                  <label
+                    :for="`driver-${booking.id}`"
+                    class="mb-1 block text-xs font-medium text-gray-500"
+                  >
+                    配達者（集荷・配達）
+                  </label>
+                  <div class="relative">
+                    <select
+                      :id="`driver-${booking.id}`"
+                      v-model="form.driver"
+                      :disabled="isCancelled"
+                      :class="selectClass"
                     >
-                      {{ driver.name }}
-                    </option>
-                  </select>
-                  <img
-                    class="pointer-events-none absolute right-3 top-1/2 h-3 w-3 -translate-y-1/2"
-                    src="/img/down-arrow.svg"
-                    alt=""
-                  >
+                      <option value="">
+                        未割り当て
+                      </option>
+                      <option
+                        v-for="driver in drivers"
+                        :key="driver.id"
+                        :value="driver.id"
+                      >
+                        {{ driver.name }}
+                      </option>
+                    </select>
+                    <img
+                      class="pointer-events-none absolute right-3 top-1/2 h-3 w-3 -translate-y-1/2"
+                      src="/img/down-arrow.svg"
+                      alt=""
+                    >
+                  </div>
+                </div>
+
+                <div
+                  v-else
+                  class="grid gap-3 sm:grid-cols-2"
+                >
+                  <div>
+                    <label
+                      :for="`pickup-driver-${booking.id}`"
+                      class="mb-1 block text-xs font-medium text-gray-500"
+                    >
+                      集荷担当
+                    </label>
+                    <div class="relative">
+                      <select
+                        :id="`pickup-driver-${booking.id}`"
+                        v-model="form.pickup_driver"
+                        :disabled="isCancelled"
+                        :class="selectClass"
+                      >
+                        <option value="">
+                          選択してください
+                        </option>
+                        <option
+                          v-for="driver in drivers"
+                          :key="driver.id"
+                          :value="driver.id"
+                        >
+                          {{ driver.name }}
+                        </option>
+                      </select>
+                      <img
+                        class="pointer-events-none absolute right-3 top-1/2 h-3 w-3 -translate-y-1/2"
+                        src="/img/down-arrow.svg"
+                        alt=""
+                      >
+                    </div>
+                    <p
+                      v-if="fieldErrs.pickup_driver"
+                      :class="fieldErrClass"
+                    >
+                      {{ fieldErrs.pickup_driver }}
+                    </p>
+                  </div>
+                  <div>
+                    <label
+                      :for="`delivery-driver-${booking.id}`"
+                      class="mb-1 block text-xs font-medium text-gray-500"
+                    >
+                      配達担当
+                    </label>
+                    <div class="relative">
+                      <select
+                        :id="`delivery-driver-${booking.id}`"
+                        v-model="form.driver"
+                        :disabled="isCancelled"
+                        :class="selectClass"
+                      >
+                        <option value="">
+                          選択してください
+                        </option>
+                        <option
+                          v-for="driver in drivers"
+                          :key="driver.id"
+                          :value="driver.id"
+                        >
+                          {{ driver.name }}
+                        </option>
+                      </select>
+                      <img
+                        class="pointer-events-none absolute right-3 top-1/2 h-3 w-3 -translate-y-1/2"
+                        src="/img/down-arrow.svg"
+                        alt=""
+                      >
+                    </div>
+                  </div>
                 </div>
                 <p
                   v-if="fieldErrs.driver"
@@ -178,6 +267,10 @@
                   {{ fieldErrs.pickup_location_name }}
                 </p>
               </div>
+              <BusinessOwnerDashboardAtomsBookingDetailRow
+                label="集荷場所の郵便番号"
+                :value="booking.pickup_postal_code"
+              />
               <div>
                 <label
                   :for="`pickup-addr-${booking.id}`"
@@ -255,6 +348,10 @@
                   {{ fieldErrs.delivery_location_name }}
                 </p>
               </div>
+              <BusinessOwnerDashboardAtomsBookingDetailRow
+                label="配送場所の郵便番号"
+                :value="booking.delivery_postal_code"
+              />
               <div>
                 <label
                   :for="`delivery-addr-${booking.id}`"
@@ -579,6 +676,8 @@ function normalizeNationality(code: string | null | undefined): string {
 type FormState = {
   delivery_status: OwnerDeliveryStatus;
   driver: string;
+  pickup_driver: string;
+  split_drivers: boolean;
   pickup_location_name: string;
   pickup_location_address: string;
   pickup_date: string;
@@ -598,6 +697,8 @@ function buildForm(booking: OwnerBooking): FormState {
     delivery_status:
       booking.delivery_status === "cancelled" ? "before_pickup" : booking.delivery_status,
     driver: booking.driver ?? "",
+    pickup_driver: booking.pickup_driver ?? booking.driver ?? "",
+    split_drivers: booking.is_split_assignment ?? false,
     pickup_location_name: booking.pickup_location_name ?? "",
     pickup_location_address: booking.pickup_location_address ?? "",
     pickup_date: booking.pickup_date ?? "",
@@ -629,6 +730,16 @@ const fieldErrs = ref<Record<string, string>>({});
 
 const isCancelled = computed(() => props.booking?.delivery_status === "cancelled");
 const isDirty = computed(() => JSON.stringify(form) !== originalJson.value);
+
+function handleSplitChange() {
+  fieldErrs.value = {};
+  if (form.split_drivers) {
+    form.pickup_driver = form.pickup_driver || form.driver;
+  }
+  else {
+    form.pickup_driver = form.driver;
+  }
+}
 
 const luggageBreakdown = computed(() => {
   const labels: Record<string, string> = {
@@ -713,9 +824,23 @@ function applyErr(err: unknown) {
 
 async function handleSave() {
   if (!props.booking || !isDirty.value) return;
+  if (form.split_drivers) {
+    fieldErrs.value = {};
+    if (!form.pickup_driver) {
+      fieldErrs.value.pickup_driver = "集荷担当を選択してください。";
+    }
+    if (!form.driver) {
+      fieldErrs.value.driver = "配達担当を選択してください。";
+    }
+    if (form.pickup_driver && form.pickup_driver === form.driver) {
+      fieldErrs.value.pickup_driver = "配達担当とは別の配達者を選択してください。";
+    }
+    if (Object.keys(fieldErrs.value).length > 0) return;
+  }
   isSaving.value = true;
   saveErr.value = null;
   fieldErrs.value = {};
+  const { split_drivers: splitDrivers, ...payload } = form;
   try {
     await ensureCsrf(apiBase);
     await $fetch(`${apiBase}/api/business/bookings/${props.booking.id}`, {
@@ -726,8 +851,9 @@ async function handleSave() {
         ...(getCsrf() ? { "X-CSRFToken": getCsrf()! } : {}),
       },
       body: {
-        ...form,
+        ...payload,
         driver: form.driver || null,
+        pickup_driver: splitDrivers ? form.pickup_driver || null : null,
         customer_nationality: normalizeNationality(form.customer_nationality),
       },
     });

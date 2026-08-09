@@ -386,28 +386,51 @@
                     @change="toggleSelect(booking.id)"
                   >
                 </td>
-                <td class="px-3 py-3 align-middle">
+                <td class="whitespace-nowrap px-3 py-3 align-middle">
                   <span
-                    class="inline-block rounded-full px-3 py-1 text-center text-xs font-semibold"
+                    class="inline-block whitespace-nowrap rounded-full px-3 py-1 text-center text-xs font-semibold"
                     :class="statusPillClass(booking.delivery_status)"
                   >
                     {{ statusLabel(booking.delivery_status) }}
                   </span>
                 </td>
                 <td class="whitespace-nowrap px-3 py-3 align-middle">
-                  <span v-if="effectiveDriverName(booking)">
-                    {{ effectiveDriverName(booking) }}
-                  </span>
-                  <span
-                    v-else-if="showDriverUnassigned(booking)"
-                    class="text-red-600"
+                  <div
+                    v-if="isSplitDriverDisplay(booking)"
+                    class="space-y-0.5 text-xs"
                   >
-                    未割り当て
-                  </span>
-                  <span
-                    v-else
-                    class="text-gray-400"
-                  >—</span>
+                    <div>
+                      <span class="text-gray-500">集荷:</span>
+                      <span
+                        :class="{ 'text-red-600': !pickupDriverName(booking) }"
+                      >
+                        {{ pickupDriverName(booking) || "未割り当て" }}
+                      </span>
+                    </div>
+                    <div>
+                      <span class="text-gray-500">配達:</span>
+                      <span
+                        :class="{ 'text-red-600': !deliveryDriverName(booking) }"
+                      >
+                        {{ deliveryDriverName(booking) || "未割り当て" }}
+                      </span>
+                    </div>
+                  </div>
+                  <template v-else>
+                    <span v-if="deliveryDriverName(booking)">
+                      {{ deliveryDriverName(booking) }}
+                    </span>
+                    <span
+                      v-else-if="showDriverUnassigned(booking)"
+                      class="text-red-600"
+                    >
+                      未割り当て
+                    </span>
+                    <span
+                      v-else
+                      class="text-gray-400"
+                    >—</span>
+                  </template>
                 </td>
                 <td class="px-3 py-3 align-middle">
                   {{ booking.pickup_location_name || "—" }}
@@ -676,11 +699,24 @@ const driverNameById = computed<Record<string, string>>(() => {
   return map;
 });
 
-// 表示用の配達者名（未割り当ては空文字）
-function effectiveDriverName(booking: Booking): string {
+function deliveryDriverName(booking: Booking): string {
   const id = booking.driver ?? "";
   if (!id) return "";
   return driverNameById.value[id] ?? booking.driver_name ?? "";
+}
+
+function pickupDriverName(booking: Booking): string {
+  const id = booking.pickup_driver ?? booking.driver ?? "";
+  if (!id) return "";
+  return driverNameById.value[id]
+    ?? booking.pickup_driver_name
+    ?? booking.driver_name
+    ?? "";
+}
+
+function isSplitDriverDisplay(booking: Booking): boolean {
+  return !!booking.pickup_driver
+    && booking.pickup_driver !== booking.driver;
 }
 
 // 配達状況のピル（背景色）

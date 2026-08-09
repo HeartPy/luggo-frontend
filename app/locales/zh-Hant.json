@@ -84,6 +84,7 @@
       "namePlaceholder": "飯店、機場等的名稱",
       "postalPlaceholder": "例）1234567",
       "postalHint": "請輸入7位半形數字（無連字號）",
+      "selectSuggestionHint": "請選擇搜尋建議，以便計算準確的配送路線。",
       "addressPlaceholder": "請輸入詳細地址",
       "notesPlaceholder": "如有其他需求或疑問，請在此填寫"
     },
@@ -440,6 +441,7 @@
     "notDepartureArea": "此郵遞區號不在取件服務範圍內",
     "departureAreaUnset": "未設定取件區域，無法預約",
     "pickupNameRequired": "取件地點名稱為必填項目",
+    "pickupPlaceSelectionRequired": "請從搜尋建議中選擇取件地點",
     "pickupAddressRequired": "取件地點地址為必填項目",
     "pickupDateRequired": "取件日期為必填項目",
     "dateFormat": "請以YYYY/MM/DD格式輸入日期",
@@ -449,6 +451,7 @@
     "regularHoliday": "該日為定休日，無法選擇",
     "tempClosure": "該日為臨時休業日，無法選擇",
     "deliveryPostalRequired": "配送地點的郵遞區號為必填項目",
+    "deliveryPlaceSelectionRequired": "請從搜尋建議中選擇配送地點",
     "notDeliveryArea": "此郵遞區號不在配送服務範圍內",
     "deliveryAreaUnset": "未設定配送區域，無法預約",
     "deliveryNameRequired": "配送地點名稱為必填項目",

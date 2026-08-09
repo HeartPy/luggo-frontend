@@ -50,10 +50,16 @@ export const useBookingForm = () => {
 
   const emptyStep1Data = (): Step1FormData => ({
     pickup_location_name: "",
+    pickup_place_id: "",
+    pickup_latitude: null,
+    pickup_longitude: null,
     pickup_postal_code: "",
     pickup_location_address: "",
     pickup_date: "",
     delivery_location_name: "",
+    delivery_place_id: "",
+    delivery_latitude: null,
+    delivery_longitude: null,
     delivery_postal_code: "",
     delivery_location_address: "",
     delivery_date: "",

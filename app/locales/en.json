@@ -84,6 +84,7 @@
       "namePlaceholder": "Name of hotel, airport, etc.",
       "postalPlaceholder": "e.g. 1234567",
       "postalHint": "Enter 7 digits without a hyphen",
+      "selectSuggestionHint": "Select a search suggestion so we can calculate an accurate delivery route.",
       "addressPlaceholder": "Please enter the full address",
       "notesPlaceholder": "Enter any additional requests or questions here"
     },
@@ -440,6 +441,7 @@
     "notDepartureArea": "This postal code is outside the pickup service area",
     "departureAreaUnset": "Bookings are unavailable because no pickup area has been configured",
     "pickupNameRequired": "Pickup location name is required",
+    "pickupPlaceSelectionRequired": "Select the pickup location from the search suggestions",
     "pickupAddressRequired": "Pickup address is required",
     "pickupDateRequired": "Pickup date is required",
     "dateFormat": "Enter the date in YYYY/MM/DD format",
@@ -449,6 +451,7 @@
     "regularHoliday": "This date cannot be selected because it is a regular closing day",
     "tempClosure": "This date cannot be selected because it is a temporary closure day",
     "deliveryPostalRequired": "Delivery postal code is required",
+    "deliveryPlaceSelectionRequired": "Select the delivery location from the search suggestions",
     "notDeliveryArea": "This postal code is outside the delivery service area",
     "deliveryAreaUnset": "Bookings are unavailable because no delivery area has been configured",
     "deliveryNameRequired": "Delivery location name is required",
