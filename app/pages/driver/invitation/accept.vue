@@ -29,7 +29,7 @@
             登録済みのメールアドレスとパスワードでログインできます。
           </p>
           <NuxtLink
-            to="/account/login"
+            to="/driver/login"
             class="inline-block rounded-md bg-gray-800 px-8 py-3 font-semibold text-white hover:bg-gray-900"
           >
             ログイン画面へ

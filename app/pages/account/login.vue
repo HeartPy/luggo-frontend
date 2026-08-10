@@ -3,8 +3,11 @@
     <CommonAtomsLoadingAnimation v-if="isCheckingAuth" />
     <div
       v-else
-      class="w-[calc(100%-8vw)] max-w-md bg-white"
+      class="w-[calc(100%-8vw)] max-w-md rounded-xl bg-white px-4 py-8 md:p-8"
     >
+      <p class="text-center text-sm text-gray-500">
+        事業者専用
+      </p>
       <h2 class="mb-8 text-center text-2xl font-bold text-gray-800">
         ログイン
       </h2>
@@ -227,6 +230,12 @@
         >
           パスワードを忘れた方はこちら
         </NuxtLink>
+        <NuxtLink
+          to="/driver/login"
+          class="block text-sm text-gray-600 transition-colors duration-200 hover:text-gray-800"
+        >
+          配達者の方はこちら
+        </NuxtLink>
       </div>
     </div>
   </div>
@@ -362,19 +371,24 @@ const handleVerifyCode = async () => {
     await ensureCsrf(apiBase);
 
     // 認証コード検証APIを呼び出し
+    let dashboardUrl = "/business-owner/dashboard";
     try {
-      await $fetch(`${apiBase}/api/users/auth/verify-login-code`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(getCsrf() ? { "X-CSRFToken": getCsrf()! } : {}),
+      const data = await $fetch<{ dashboard_url?: string }>(
+        `${apiBase}/api/users/auth/verify-login-code`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            ...(getCsrf() ? { "X-CSRFToken": getCsrf()! } : {}),
+          },
+          body: {
+            email: email.value?.trim().toLowerCase() || "",
+            code: verificationCode.value.trim(),
+          },
+          credentials: "include",
         },
-        body: {
-          email: email.value?.trim().toLowerCase() || "",
-          code: verificationCode.value.trim(),
-        },
-        credentials: "include",
-      });
+      );
+      dashboardUrl = data?.dashboard_url || dashboardUrl;
     }
     catch (fetchErr: unknown) {
       const errData = (fetchErr as { data?: { error?: string } })?.data;
@@ -383,7 +397,7 @@ const handleVerifyCode = async () => {
       return;
     }
 
-    await navigateTo("/business-owner/dashboard");
+    await navigateTo(dashboardUrl);
   }
   catch (error: unknown) {
     if (import.meta.dev) {
