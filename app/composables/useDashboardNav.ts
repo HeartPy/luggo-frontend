@@ -1,5 +1,5 @@
 export type DashboardView
-  = | "reservations"
+  = | "bookings"
     | "drivers"
     | "assignment"
     | "revenue"
@@ -11,7 +11,7 @@ export type DashboardView
     | "payment-info";
 
 const viewTtls: Record<DashboardView, string> = {
-  "reservations": "予約一覧",
+  "bookings": "予約一覧",
   "drivers": "配達者一覧",
   "assignment": "日次自動割当",
   "revenue": "売上管理",
@@ -24,7 +24,7 @@ const viewTtls: Record<DashboardView, string> = {
 };
 
 const VALID_TOP_VIEWS: DashboardView[] = [
-  "reservations",
+  "bookings",
   "drivers",
   "assignment",
   "revenue",
@@ -47,28 +47,28 @@ function isTopView(value: string): value is DashboardView {
 
 // URL パス → 対応するビュー名
 export function pathToView(path: string): DashboardView {
-  if (!path.startsWith(DASHBOARD_PREFIX)) return "reservations";
+  if (!path.startsWith(DASHBOARD_PREFIX)) return "bookings";
   // /business-owner/dashboard 以下の相対パスを取り出す
   const rest = path.slice(DASHBOARD_PREFIX.length).replace(/^\/+|\/+$/g, "");
-  if (rest === "") return "reservations";
+  if (rest === "") return "bookings";
 
   const segments = rest.split("/").filter(seg => seg !== "");
   if (segments.length === 1) {
     const seg = segments[0]!;
     if (seg === "settings") return "settings";
     if (isTopView(seg)) return seg;
-    return "reservations";
+    return "bookings";
   }
   if (segments.length === 2 && segments[0] === "settings") {
     const mapped = SETTINGS_CHILDREN[segments[1]!];
     if (mapped) return mapped;
   }
-  return "reservations";
+  return "bookings";
 }
 
 // ビュー名 → 対応する URL パス
 function viewToPath(view: DashboardView): string {
-  if (view === "reservations") return DASHBOARD_PREFIX;
+  if (view === "bookings") return DASHBOARD_PREFIX;
   if (view === "settings-pricing")
     return `${DASHBOARD_PREFIX}/settings/pricing`;
   if (view === "settings-business")
@@ -84,7 +84,7 @@ function resolveInitialView(): DashboardView {
     return pathToView(route.path);
   }
   catch {
-    return "reservations";
+    return "bookings";
   }
 }
 

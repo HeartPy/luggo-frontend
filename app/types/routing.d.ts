@@ -86,7 +86,7 @@ export type RoutingEligibleDriver = {
 export type RoutingEstimate = {
   service_date: string;
   eligible_driver_count: number;
-  reservation_count: number;
+  booking_count: number;
   task_count: number;
   driver_count: number;
   stop_capacity: number;

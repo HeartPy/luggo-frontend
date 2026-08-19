@@ -276,7 +276,7 @@
             対象予約
           </p>
           <p class="font-semibold text-gray-900">
-            {{ estimate.reservation_count }}件
+            {{ estimate.booking_count }}件
           </p>
         </div>
         <div class="rounded-xl bg-gray-50 p-4">

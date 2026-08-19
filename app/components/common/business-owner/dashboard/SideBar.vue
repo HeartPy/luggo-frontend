@@ -67,7 +67,7 @@ const emit = defineEmits<{
 }>();
 
 const navItems = ref<NavItem[]>([
-  { key: "reservations", label: "予約一覧" },
+  { key: "bookings", label: "予約一覧" },
   { key: "drivers", label: "配達者一覧" },
   { key: "assignment", label: "日次自動割当" },
   { key: "revenue", label: "売上管理" },

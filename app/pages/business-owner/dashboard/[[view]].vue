@@ -1,7 +1,7 @@
 <template>
   <div class="pb-16">
-    <BusinessOwnerDashboardReservationsList
-      v-if="currentView === 'reservations'"
+    <BusinessOwnerDashboardBookingsList
+      v-if="currentView === 'bookings'"
     />
     <BusinessOwnerDashboardDriversList v-else-if="currentView === 'drivers'" />
     <BusinessOwnerDashboardDailyAssignmentPanel v-else-if="currentView === 'assignment'" />
