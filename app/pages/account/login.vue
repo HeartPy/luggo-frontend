@@ -3,7 +3,7 @@
     <CommonAtomsLoadingAnimation v-if="isCheckingAuth" />
     <div
       v-else
-      class="w-[calc(100%-8vw)] max-w-md rounded-xl bg-white px-4 py-8 md:p-8"
+      class="w-[calc(100%-8vw)] max-w-lg rounded-xl bg-white px-4 py-8 md:p-8"
     >
       <p class="text-center text-sm text-gray-500">
         事業者専用

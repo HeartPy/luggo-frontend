@@ -119,4 +119,10 @@ export type OwnerBooking = {
   created_at: string | null;
   can_cancel: boolean;
   is_refundable_on_cancel: boolean;
+  // 配達者が入力した配達実績（表示のみ）
+  picked_up_at: string | null;
+  delivered_at: string | null;
+  facility_fee: number | null;
+  transport_cost: number | null;
+  delivery_signature: string;
 };

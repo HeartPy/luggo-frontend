@@ -273,55 +273,11 @@
         </div>
 
         <!-- ページネーション -->
-        <nav
-          v-if="totalPages > 1"
-          class="flex items-center justify-center gap-2 py-6"
-          aria-label="ページネーション"
-        >
-          <button
-            type="button"
-            class="flex h-9 w-9 items-center justify-center rounded-md border border-gray-300 text-gray-600 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
-            :disabled="page <= 1"
-            aria-label="前のページ"
-            @click="goToPage(page - 1)"
-          >
-            ‹
-          </button>
-          <template
-            v-for="(displayedPage, idx) in displayedPages"
-            :key="`${displayedPage}-${idx}`"
-          >
-            <span
-              v-if="displayedPage === '...'"
-              class="px-1 text-gray-400"
-              aria-hidden="true"
-            > … </span>
-            <button
-              v-else
-              type="button"
-              class="flex h-9 w-9 items-center justify-center rounded-md border text-sm font-medium transition-colors"
-              :class="
-                displayedPage === page
-                  ? 'border-gray-800 bg-gray-800 text-white'
-                  : 'border-gray-300 text-gray-700 hover:bg-gray-50'
-              "
-              :aria-label="`${displayedPage}ページ目`"
-              :aria-current="displayedPage === page ? 'page' : undefined"
-              @click="goToPage(displayedPage as number)"
-            >
-              {{ displayedPage }}
-            </button>
-          </template>
-          <button
-            type="button"
-            class="flex h-9 w-9 items-center justify-center rounded-md border border-gray-300 text-gray-600 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
-            :disabled="page >= totalPages"
-            aria-label="次のページ"
-            @click="goToPage(page + 1)"
-          >
-            ›
-          </button>
-        </nav>
+        <CommonAtomsPaginationNav
+          :page="page"
+          :total-pages="totalPages"
+          @change="goToPage"
+        />
       </template>
     </div>
   </div>
@@ -421,23 +377,6 @@ function isLicenseExpired(licenseExpiry?: string | null): boolean {
   const expiry = new Date(licenseExpiry);
   return expiry.getTime() < today.getTime();
 }
-
-// ページネーション表示
-const displayedPages = computed<(number | "...")[]>(() => {
-  const total = totalPages.value;
-  const current = page.value;
-  if (total <= 7) {
-    return Array.from({ length: total }, (_, i) => i + 1);
-  }
-  const pages: (number | "...")[] = [1];
-  const start = Math.max(2, current - 1);
-  const end = Math.min(total - 1, current + 1);
-  if (start > 2) pages.push("...");
-  for (let i = start; i <= end; i++) pages.push(i);
-  if (end < total - 1) pages.push("...");
-  pages.push(total);
-  return pages;
-});
 
 // 401（ログイン切れ）ハンドリング
 function is401(err: unknown): boolean {
