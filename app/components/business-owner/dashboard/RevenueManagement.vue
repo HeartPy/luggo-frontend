@@ -274,6 +274,7 @@ function formatYen(amount: number): string {
   }).format(amount);
 }
 
+// "YYYY-MM-DD" → "YYYY/MM/DD"
 function formatDate(value: string): string {
   const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
   return match ? `${match[1]}/${match[2]}/${match[3]}` : value;

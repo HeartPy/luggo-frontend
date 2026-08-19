@@ -587,6 +587,46 @@
                 </span>
               </div>
             </div>
+
+            <!-- 配達実績（配達者が入力・編集不可） -->
+            <div class="rounded-lg border border-gray-300 bg-gray-100 p-4">
+              <dt class="mb-2 text-xs font-semibold tracking-wide text-gray-600">
+                配達実績
+              </dt>
+              <dd class="space-y-2 text-sm text-gray-800">
+                <div class="flex justify-between">
+                  <span>集荷時間</span>
+                  <span>{{ booking.picked_up_at ? formatDateTime(booking.picked_up_at) : "未記録" }}</span>
+                </div>
+                <div class="flex justify-between">
+                  <span>配達時間</span>
+                  <span>{{ booking.delivered_at ? formatDateTime(booking.delivered_at) : "未記録" }}</span>
+                </div>
+                <div class="flex justify-between">
+                  <span>施設側の手数料</span>
+                  <span>{{ booking.facility_fee !== null ? `¥${booking.facility_fee.toLocaleString()}` : "未入力" }}</span>
+                </div>
+                <div class="flex justify-between">
+                  <span>高速代などの交通費</span>
+                  <span>{{ booking.transport_cost !== null ? `¥${booking.transport_cost.toLocaleString()}` : "未入力" }}</span>
+                </div>
+                <div>
+                  <span>手書きサイン</span>
+                  <img
+                    v-if="booking.delivery_signature"
+                    :src="booking.delivery_signature"
+                    alt="配達完了時の手書きサイン"
+                    class="mt-1 h-40 w-full rounded-md border border-gray-300 bg-white object-contain"
+                  >
+                  <p
+                    v-else
+                    class="mt-1 text-gray-500"
+                  >
+                    未記録
+                  </p>
+                </div>
+              </dd>
+            </div>
           </div>
         </div>
       </div>
@@ -755,6 +795,7 @@ const luggageBreakdown = computed(() => {
   }));
 });
 
+// ISO日時 → "YYYY/MM/DD HH:MM"
 function formatDateTime(iso: string | null): string {
   if (!iso) return "—";
   const date = new Date(iso);
