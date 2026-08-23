@@ -188,28 +188,8 @@ const handleFormSubmit = async () => {
   }
 };
 
-useHead({
+useAppSeo({
   title: "パスワード再設定",
-  meta: [
-    {
-      name: "description",
-      content: "パスワード再設定ページ。",
-    },
-    { property: "og:title", content: "パスワード再設定 | LugGo(ラグゴー)" },
-    {
-      property: "og:description",
-      content: "パスワード再設定ページ。",
-    },
-    {
-      key: "twitter:title",
-      name: "twitter:title",
-      content: "パスワード再設定 | LugGo(ラグゴー)",
-    },
-    {
-      key: "twitter:description",
-      name: "twitter:description",
-      content: "パスワード再設定ページ。",
-    },
-  ],
+  description: "パスワード再設定用のメール送信ページ。",
 });
 </script>

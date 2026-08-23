@@ -1675,28 +1675,8 @@ onMounted(async () => {
   isPageLoading.value = false;
 });
 
-useHead({
+useAppSeo({
   title: "アカウント登録申請",
-  meta: [
-    {
-      name: "description",
-      content: "アカウント登録申請ページ。",
-    },
-    { property: "og:title", content: "アカウント登録申請 | LugGo(ラグゴー)" },
-    {
-      property: "og:description",
-      content: "アカウント登録申請ページ。",
-    },
-    {
-      key: "twitter:title",
-      name: "twitter:title",
-      content: "アカウント登録申請 | LugGo(ラグゴー)",
-    },
-    {
-      key: "twitter:description",
-      name: "twitter:description",
-      content: "アカウント登録申請ページ。",
-    },
-  ],
+  description: "アカウント登録申請ページ。",
 });
 </script>

@@ -7,6 +7,11 @@ definePageMeta({
   middleware: ["business-owner", "stripe-prerequisite"],
 });
 
+useAppSeo({
+  title: "アカウント登録申請",
+  description: "アカウント登録申請ページ。",
+});
+
 const { startSession } = useSession();
 
 onMounted(async () => {

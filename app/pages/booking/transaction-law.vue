@@ -85,14 +85,14 @@ definePageMeta({
 
 const { t } = useI18n();
 const { isLoading, fetchErr, transactionLawItems } = useTransactionLaw();
+const { brandName } = useSeoBrand();
 
-useHead(() => ({
-  title: t("pages.transactionLaw.title"),
-  meta: [
-    {
-      name: "description",
-      content: t("pages.transactionLaw.title"),
-    },
+useAppSeo({
+  title: () => t("pages.transactionLaw.title"),
+  description: () => t("pages.transactionLaw.description", { company: brandName.value }),
+  breadcrumbs: () => [
+    { name: brandName.value, item: "/booking/1" },
+    { name: t("pages.transactionLaw.title") },
   ],
-}));
+});
 </script>

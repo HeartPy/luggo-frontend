@@ -507,28 +507,8 @@ const handleCodeInput = (event: Event) => {
   verificationCode.value = target.value.replace(/[^0-9]/g, "");
 };
 
-useHead({
+useAppSeo({
   title: "管理者ログイン",
-  meta: [
-    {
-      name: "description",
-      content: "管理者用ログイン画面ページ。",
-    },
-    { property: "og:title", content: "管理者ログイン | LugGo(ラグゴー)" },
-    {
-      property: "og:description",
-      content: "管理者用ログイン画面ページ。",
-    },
-    {
-      key: "twitter:title",
-      name: "twitter:title",
-      content: "管理者ログイン | LugGo(ラグゴー)",
-    },
-    {
-      key: "twitter:description",
-      name: "twitter:description",
-      content: "管理者用ログイン画面ページ。",
-    },
-  ],
+  description: "管理者用ログインページ。",
 });
 </script>

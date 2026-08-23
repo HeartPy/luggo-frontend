@@ -176,31 +176,10 @@ onBeforeUnmount(() => {
   }
 });
 
-useHead(() => ({
-  title: t("pages.complete.title"),
-  meta: [
-    {
-      name: "description",
-      content: t("pages.complete.description"),
-    },
-    {
-      property: "og:title",
-      content: `${t("pages.complete.title")} | ${t("common.brand")}`,
-    },
-    {
-      property: "og:description",
-      content: t("pages.complete.description"),
-    },
-    {
-      key: "twitter:title",
-      name: "twitter:title",
-      content: `${t("pages.complete.title")} | ${t("common.brand")}`,
-    },
-    {
-      key: "twitter:description",
-      name: "twitter:description",
-      content: t("pages.complete.description"),
-    },
-  ],
-}));
+const { brandName } = useSeoBrand();
+
+useAppSeo({
+  title: () => t("pages.complete.title"),
+  description: () => t("pages.complete.description", { company: brandName.value }),
+});
 </script>

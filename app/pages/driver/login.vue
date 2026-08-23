@@ -247,28 +247,8 @@ const handleLogin = handleSubmit(async (formValues: LoginFormData) => {
   }
 });
 
-useHead({
+useAppSeo({
   title: "配達者ログイン",
-  meta: [
-    {
-      name: "description",
-      content: "配達者用ログイン画面ページ。",
-    },
-    { property: "og:title", content: "配達者ログイン | LugGo(ラグゴー)" },
-    {
-      property: "og:description",
-      content: "配達者用ログイン画面ページ。",
-    },
-    {
-      key: "twitter:title",
-      name: "twitter:title",
-      content: "配達者ログイン | LugGo(ラグゴー)",
-    },
-    {
-      key: "twitter:description",
-      name: "twitter:description",
-      content: "配達者用ログイン画面ページ。",
-    },
-  ],
+  description: "配達者用ログインページ。",
 });
 </script>

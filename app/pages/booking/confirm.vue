@@ -54,7 +54,7 @@
             </dl>
           </section>
 
-          <!-- 配送情報 -->
+          <!-- 配達情報 -->
           <section class="py-6">
             <h2 class="mb-4 text-xl font-semibold text-gray-800">
               {{ $t("confirmPage.deliverySection") }}
@@ -1124,31 +1124,10 @@ watch(
   },
 );
 
-useHead(() => ({
-  title: t("pages.confirm.title"),
-  meta: [
-    {
-      name: "description",
-      content: t("pages.confirm.description"),
-    },
-    {
-      property: "og:title",
-      content: `${t("pages.confirm.title")} | ${t("common.brand")}`,
-    },
-    {
-      property: "og:description",
-      content: t("pages.confirm.description"),
-    },
-    {
-      key: "twitter:title",
-      name: "twitter:title",
-      content: `${t("pages.confirm.title")} | ${t("common.brand")}`,
-    },
-    {
-      key: "twitter:description",
-      name: "twitter:description",
-      content: t("pages.confirm.description"),
-    },
-  ],
-}));
+const { brandName } = useSeoBrand();
+
+useAppSeo({
+  title: () => t("pages.confirm.title"),
+  description: () => t("pages.confirm.description", { company: brandName.value }),
+});
 </script>

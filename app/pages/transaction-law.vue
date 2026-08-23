@@ -64,7 +64,7 @@ const transactionLawItems = ref<TransactionLawItem[]>([
   {
     id: 5,
     ttl: "サービスの提供時期について",
-    txt: "手荷物の集荷と配送は、旅行客(購入者)が定めた日時に、各ユーザー(販売事業者)が行います。",
+    txt: "手荷物の集荷と配達は、旅行客(購入者)が定めた日時に、各ユーザー(販売事業者)が行います。",
   },
   {
     id: 6,
@@ -78,59 +78,12 @@ const transactionLawItems = ref<TransactionLawItem[]>([
   },
 ]);
 
-useHead({
+useAppSeo({
   title: "特定商取引法に基づく表記",
-  meta: [
-    {
-      name: "description",
-      content: "特定商取引法に基づく表記",
-    },
-    {
-      key: "og:url",
-      property: "og:url",
-      content: "#",
-    },
-    {
-      key: "og:title",
-      property: "og:title",
-      content: "特定商取引法に基づく表記 | LugGo(ラグゴー)",
-    },
-    {
-      key: "og:description",
-      property: "og:description",
-      content: "特定商取引法に基づく表記のページです。",
-    },
-    {
-      key: "twitter:title",
-      name: "twitter:title",
-      content: "特定商取引法に基づく表記 | LugGo(ラグゴー)",
-    },
-    {
-      key: "twitter:description",
-      name: "twitter:description",
-      content: "特定商取引法に基づく表記のページです。",
-    },
+  description: "特定商取引法に基づく表記のページ。",
+  breadcrumbs: [
+    { name: "トップ", item: "/" },
+    { name: "特定商取引法に基づく表記" },
   ],
 });
-
-// useJsonld(() => [
-//   {
-//     "@context": "https://schema.org",
-//     "@type": "BreadcrumbList",
-//     itemListElement: [
-//       {
-//         "@type": "ListItem",
-//         position: 1,
-//         item: "",
-//         name: "トップ",
-//       },
-//       {
-//         "@type": "ListItem",
-//         position: 2,
-//         item: "",
-//         name: "特定商取引法に基づく表記",
-//       },
-//     ],
-//   },
-// ]);
 </script>

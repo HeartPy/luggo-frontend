@@ -30,25 +30,27 @@
   "pages": {
     "form": {
       "title": "行李配送预约表单",
-      "description": "面向游客的行李配送服务「LugGo」预约表单。输入取件和配送的地点与日期，即可轻松完成预约。"
+      "description": "{company}面向游客的行李配送预约表单。输入取件和配送的地点与日期，即可轻松完成预约。"
     },
     "confirm": {
       "title": "预约确认",
-      "description": "行李配送服务的预约确认页面。"
+      "description": "{company}行李配送服务的预约确认页面。"
     },
     "complete": {
       "title": "预约完成",
-      "description": "行李配送服务的预约完成页面。"
+      "description": "{company}行李配送服务的预约完成页面。"
     },
     "status": {
       "title": "查询预约内容",
-      "description": "行李配送服务的预约查询与取消页面。"
+      "description": "{company}行李配送服务的预约查询与取消页面。"
     },
     "transactionLaw": {
-      "title": "基于特定商业交易法的标示"
+      "title": "基于特定商业交易法的标示",
+      "description": "{company}基于特定商业交易法的标示页面。"
     },
     "privacy": {
-      "title": "隐私政策"
+      "title": "隐私政策",
+      "description": "{company}的隐私政策页面。"
     }
   },
   "luggageTypes": {

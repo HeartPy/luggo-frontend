@@ -768,31 +768,11 @@ onMounted(async () => {
   }
 });
 
-useHead(() => ({
-  title: t("pages.form.title"),
-  meta: [
-    {
-      name: "description",
-      content: t("pages.form.description"),
-    },
-    {
-      property: "og:title",
-      content: `${t("pages.form.title")} | ${t("common.brand")}`,
-    },
-    {
-      property: "og:description",
-      content: t("pages.form.description"),
-    },
-    {
-      key: "twitter:title",
-      name: "twitter:title",
-      content: `${t("pages.form.title")} | ${t("common.brand")}`,
-    },
-    {
-      key: "twitter:description",
-      name: "twitter:description",
-      content: t("pages.form.description"),
-    },
-  ],
-}));
+const { brandName } = useSeoBrand();
+
+useAppSeo({
+  title: () => t("pages.form.title"),
+  description: () => t("pages.form.description", { company: brandName.value }),
+  withService: true,
+});
 </script>

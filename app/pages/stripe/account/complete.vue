@@ -14,7 +14,7 @@
           class="mx-auto block w-fit rounded-md border-2 border-gray-300 bg-transparent px-8 py-3 font-semibold text-gray-700 hover:opacity-80"
           to="/business-owner/dashboard"
         >
-          管理画面へ移動
+          ダッシュボードへ移動
         </NuxtLink>
       </div>
     </div>
@@ -39,31 +39,8 @@ onMounted(async () => {
   }
 });
 
-useHead({
+useAppSeo({
   title: "アカウント登録申請完了",
-  meta: [
-    {
-      name: "description",
-      content: "アカウント登録申請完了ページ。",
-    },
-    {
-      property: "og:title",
-      content: "アカウント登録申請完了 | LugGo(ラグゴー)",
-    },
-    {
-      property: "og:description",
-      content: "アカウント登録申請完了ページ。",
-    },
-    {
-      key: "twitter:title",
-      name: "twitter:title",
-      content: "アカウント登録申請完了 | LugGo(ラグゴー)",
-    },
-    {
-      key: "twitter:description",
-      name: "twitter:description",
-      content: "アカウント登録申請完了ページ。",
-    },
-  ],
+  description: "アカウント登録申請完了ページ。",
 });
 </script>

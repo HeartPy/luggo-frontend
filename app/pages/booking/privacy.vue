@@ -96,6 +96,7 @@ type PrivacyPolicyItem = {
 };
 
 const { t, locale } = useI18n();
+const { brandName } = useSeoBrand();
 
 const isLoading = ref(true);
 const fetchErr = ref("");
@@ -166,13 +167,12 @@ onMounted(async () => {
   }
 });
 
-useHead(() => ({
-  title: t("pages.privacy.title"),
-  meta: [
-    {
-      name: "description",
-      content: t("pages.privacy.title"),
-    },
+useAppSeo({
+  title: () => t("pages.privacy.title"),
+  description: () => t("pages.privacy.description", { company: brandName.value }),
+  breadcrumbs: () => [
+    { name: brandName.value, item: "/booking/1" },
+    { name: t("pages.privacy.title") },
   ],
-}));
+});
 </script>

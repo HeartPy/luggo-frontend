@@ -34,6 +34,8 @@ export default withNuxt(
     rules: {
       "no-console": "error",
       "@typescript-eslint/no-explicit-any": "error",
+      "link-checker/valid-route": "off",
+      "link-checker/valid-sitemap-link": "off",
     },
   },
   {

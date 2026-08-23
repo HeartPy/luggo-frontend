@@ -22,7 +22,9 @@ definePageMeta({
 });
 
 const route = useRoute();
-const { currentView, syncFromRoute } = useDashboardNav();
+const { currentView, currentTtl, syncFromRoute } = useDashboardNav();
+
+const DASHBOARD_BRAND = "事業者ダッシュボード";
 
 syncFromRoute();
 
@@ -30,4 +32,9 @@ watch(
   () => route.path,
   () => syncFromRoute(),
 );
+
+useAppSeo({
+  title: () => `${currentTtl.value} - ${DASHBOARD_BRAND}`,
+  description: () => `事業者向け${currentTtl.value}ページ。`,
+});
 </script>

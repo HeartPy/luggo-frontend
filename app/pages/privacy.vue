@@ -247,59 +247,12 @@ const privacyPolicyItems = ref<PrivacyPolicyItem[]>([
   },
 ]);
 
-useHead({
+useAppSeo({
   title: "プライバシーポリシー",
-  meta: [
-    {
-      name: "description",
-      content: "プライバシーポリシー",
-    },
-    {
-      key: "og:url",
-      property: "og:url",
-      content: "#",
-    },
-    {
-      key: "og:title",
-      property: "og:title",
-      content: "プライバシーポリシー | LugGo(ラグゴー)",
-    },
-    {
-      key: "og:description",
-      property: "og:description",
-      content: "プライバシーポリシーページです。",
-    },
-    {
-      key: "twitter:title",
-      name: "twitter:title",
-      content: "プライバシーポリシー | LugGo(ラグゴー)",
-    },
-    {
-      key: "twitter:description",
-      name: "twitter:description",
-      content: "プライバシーポリシーページです。",
-    },
+  description: "プライバシーポリシーページ。",
+  breadcrumbs: [
+    { name: "トップ", item: "/" },
+    { name: "プライバシーポリシー" },
   ],
 });
-
-// useJsonld(() => [
-//   {
-//     "@context": "https://schema.org",
-//     "@type": "BreadcrumbList",
-//     itemListElement: [
-//       {
-//         "@type": "ListItem",
-//         position: 1,
-//         item: "",
-//         name: "トップ",
-//       },
-//       {
-//         "@type": "ListItem",
-//         position: 2,
-//         item: "",
-//         name: "プライバシーポリシー",
-//       },
-//     ],
-//   },
-// ]);
 </script>

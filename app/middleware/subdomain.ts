@@ -63,6 +63,7 @@ export default defineNuxtRouteMiddleware(async (_to) => {
     const data = await $fetch<{
       id: string;
       company_name: string;
+      company_name_en: string;
       subdomain: string;
       is_active: boolean;
       service_areas: string[];

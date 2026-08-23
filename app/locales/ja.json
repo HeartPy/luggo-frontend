@@ -30,25 +30,27 @@
   "pages": {
     "form": {
       "title": "荷物配送予約フォーム",
-      "description": "旅行者向け荷物配送サービス「LugGo」の予約フォーム。集荷・配達の場所と日時を入力して、簡単に予約できます。"
+      "description": "{company}の旅行者向け手荷物配送予約フォーム。集荷・配達の場所と日時を入力して、簡単に予約できます。"
     },
     "confirm": {
       "title": "予約確認",
-      "description": "荷物配送サービスの予約確認ページ。"
+      "description": "{company}の手荷物配送サービスの予約確認ページ。"
     },
     "complete": {
       "title": "予約完了",
-      "description": "荷物配送サービスの予約完了ページ。"
+      "description": "{company}の手荷物配送サービスの予約完了ページ。"
     },
     "status": {
       "title": "予約内容の確認",
-      "description": "荷物配送サービスの予約内容確認・キャンセルページ。"
+      "description": "{company}の手荷物配送サービスの予約内容確認・キャンセルページ。"
     },
     "transactionLaw": {
-      "title": "特定商取引法に基づく表記"
+      "title": "特定商取引法に基づく表記",
+      "description": "{company}の特定商取引法に基づく表記ページ。"
     },
     "privacy": {
-      "title": "プライバシーポリシー"
+      "title": "プライバシーポリシー",
+      "description": "{company}のプライバシーポリシーページ。"
     }
   },
   "luggageTypes": {
