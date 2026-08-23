@@ -805,8 +805,12 @@ const selectSuggestion = (
     [nameJaField]: nameJa,
     [addressJaField]: addressJa,
     [placeIdField]: suggestion.place_id,
-    [latitudeField]: suggestion.geometry.lat,
-    [longitudeField]: suggestion.geometry.lng,
+    [latitudeField]: suggestion.geometry.lat != null
+      ? Math.round(suggestion.geometry.lat * 1e6) / 1e6
+      : null,
+    [longitudeField]: suggestion.geometry.lng != null
+      ? Math.round(suggestion.geometry.lng * 1e6) / 1e6
+      : null,
     // 住所に郵便番号が含まれる場合のみ上書き
     // :value バインドのため @input は発火せず住所検索は走らない
     ...(extractedPostalCode !== null
