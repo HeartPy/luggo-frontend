@@ -30,25 +30,27 @@
   "pages": {
     "form": {
       "title": "Luggage Delivery Booking Form",
-      "description": "Booking form for LugGo, a luggage delivery service for travelers. Enter pickup and delivery locations and dates to book easily."
+      "description": "Booking form for {company}'s luggage delivery service for travelers. Enter pickup and delivery locations and dates to book easily."
     },
     "confirm": {
       "title": "Booking Confirmation",
-      "description": "Booking confirmation page for the luggage delivery service."
+      "description": "Booking confirmation page for {company}'s luggage delivery service."
     },
     "complete": {
       "title": "Booking Complete",
-      "description": "Booking completion page for the luggage delivery service."
+      "description": "Booking completion page for {company}'s luggage delivery service."
     },
     "status": {
       "title": "Check Your Booking",
-      "description": "Check or cancel your luggage delivery booking."
+      "description": "Check or cancel your luggage delivery booking with {company}."
     },
     "transactionLaw": {
-      "title": "Legal Notice (Specified Commercial Transactions Act)"
+      "title": "Legal Notice (Specified Commercial Transactions Act)",
+      "description": "Legal notice page for {company} under the Specified Commercial Transactions Act."
     },
     "privacy": {
-      "title": "Privacy Policy"
+      "title": "Privacy Policy",
+      "description": "Privacy policy page for {company}."
     }
   },
   "luggageTypes": {

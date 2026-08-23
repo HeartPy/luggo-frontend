@@ -116,14 +116,8 @@ function openNativeDatePicker(el: HTMLInputElement | undefined) {
   }
 }
 
-useHead({
+useAppSeo({
   title: "配達者ダッシュボード",
-  meta: [
-    {
-      name: "description",
-      content: "配達者用ダッシュボードページ。",
-    },
-    { name: "robots", content: "noindex, nofollow" },
-  ],
+  description: "配達者用ダッシュボードページ。",
 });
 </script>

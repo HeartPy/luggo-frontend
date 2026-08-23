@@ -275,7 +275,7 @@
             </dl>
           </section>
 
-          <!-- 配送情報 -->
+          <!-- 配達情報 -->
           <section class="p-6 md:p-8">
             <h3 class="mb-4 flex items-center gap-2 text-base font-bold text-gray-900">
               <span class="h-4 w-1 rounded-full bg-gray-900" />
@@ -587,7 +587,7 @@ const { isLoading: lawLoading, fetchErr: lawErr, transactionLawItems } = useTran
 
 const confirmationLawTitle = computed(() => t("status.confirmationTitle"));
 
-// 予約確認画面では一部の項目（事業者情報・配送料金・決済方法）は表示しない
+// 予約確認画面では一部の項目（事業者情報・配達料金・決済方法）は表示しない
 const HIDDEN_LAW_KEYS = new Set([
   "business",
   "representative",
@@ -986,31 +986,10 @@ onUnmounted(() => {
   removeActivityListeners();
 });
 
-useHead(() => ({
-  title: t("pages.status.title"),
-  meta: [
-    {
-      name: "description",
-      content: t("pages.status.description"),
-    },
-    {
-      property: "og:title",
-      content: `${t("pages.status.title")} | ${t("common.brand")}`,
-    },
-    {
-      property: "og:description",
-      content: t("pages.status.description"),
-    },
-    {
-      key: "twitter:title",
-      name: "twitter:title",
-      content: `${t("pages.status.title")} | ${t("common.brand")}`,
-    },
-    {
-      key: "twitter:description",
-      name: "twitter:description",
-      content: t("pages.status.description"),
-    },
-  ],
-}));
+const { brandName } = useSeoBrand();
+
+useAppSeo({
+  title: () => t("pages.status.title"),
+  description: () => t("pages.status.description", { company: brandName.value }),
+});
 </script>

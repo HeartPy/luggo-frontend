@@ -329,5 +329,8 @@ async function acceptInvitation() {
 
 onMounted(verifyInvitation);
 
-useHead({ title: "配達者登録の確認 | LugGo" });
+useAppSeo({
+  title: "配達者登録の確認",
+  description: "配達者登録の確認ページ。",
+});
 </script>

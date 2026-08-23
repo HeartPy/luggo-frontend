@@ -38,6 +38,11 @@ watch(
   () => syncFromRoute(),
 );
 
+useAppSeo({
+  title: "各種設定 - 事業者ダッシュボード",
+  description: "事業者向け各種設定ページ。",
+});
+
 const settingsItems = [
   {
     key: "pricing",

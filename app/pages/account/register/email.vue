@@ -324,28 +324,8 @@ const handleSendEmail = async () => {
   }
 };
 
-useHead({
+useAppSeo({
   title: "アカウント登録",
-  meta: [
-    {
-      name: "description",
-      content: "アカウント登録ページ。",
-    },
-    { property: "og:title", content: "アカウント登録 | LugGo(ラグゴー)" },
-    {
-      property: "og:description",
-      content: "アカウント登録ページ。",
-    },
-    {
-      key: "twitter:title",
-      name: "twitter:title",
-      content: "アカウント登録 | LugGo(ラグゴー)",
-    },
-    {
-      key: "twitter:description",
-      name: "twitter:description",
-      content: "アカウント登録ページ。",
-    },
-  ],
+  description: "アカウント登録ページ。",
 });
 </script>

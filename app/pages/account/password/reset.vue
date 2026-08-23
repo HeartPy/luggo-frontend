@@ -377,28 +377,8 @@ onBeforeUnmount(() => {
   passwordConfirm.value = "";
 });
 
-useHead({
-  title: "パスワード再設定",
-  meta: [
-    {
-      name: "description",
-      content: "パスワード再設定ページ。",
-    },
-    { property: "og:title", content: "パスワード再設定 | LugGo(ラグゴー)" },
-    {
-      property: "og:description",
-      content: "パスワード再設定ページ。",
-    },
-    {
-      key: "twitter:title",
-      name: "twitter:title",
-      content: "パスワード再設定 | LugGo(ラグゴー)",
-    },
-    {
-      key: "twitter:description",
-      name: "twitter:description",
-      content: "パスワード再設定ページ。",
-    },
-  ],
+useAppSeo({
+  title: "新しいパスワードの設定",
+  description: "新しいパスワードの設定ページ。",
 });
 </script>

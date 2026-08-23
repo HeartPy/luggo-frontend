@@ -48,31 +48,8 @@ onMounted(async () => {
   }
 });
 
-useHead({
+useAppSeo({
   title: "パスワード再設定完了",
-  meta: [
-    {
-      name: "description",
-      content: "パスワード再設定完了ページ。",
-    },
-    {
-      property: "og:title",
-      content: "パスワード再設定完了 | LugGo(ラグゴー)",
-    },
-    {
-      property: "og:description",
-      content: "パスワード再設定完了ページ。",
-    },
-    {
-      key: "twitter:title",
-      name: "twitter:title",
-      content: "パスワード再設定完了 | LugGo(ラグゴー)",
-    },
-    {
-      key: "twitter:description",
-      name: "twitter:description",
-      content: "パスワード再設定完了ページ。",
-    },
-  ],
+  description: "パスワード再設定完了ページ。",
 });
 </script>

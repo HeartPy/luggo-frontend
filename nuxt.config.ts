@@ -5,15 +5,13 @@ export default defineNuxtConfig({
   modules: [
     "@nuxt/eslint",
     "@nuxtjs/tailwindcss",
-    "nuxt-jsonld",
+    "@nuxtjs/seo",
   ],
   typescript: {
     strict: true,
     typeCheck: true,
   },
-  // ランタイム設定
   runtimeConfig: {
-    // publicで始まるキーは、クライアントサイドでも利用可能
     public: {
       apiBaseUrl:
         process.env.NUXT_PUBLIC_API_BASE_URL || "http://localhost:8000",
@@ -22,6 +20,38 @@ export default defineNuxtConfig({
       googleMapsApiKey:
         process.env.NUXT_PUBLIC_GOOGLE_MAPS_API_KEY || "",
     },
+  },
+  site: {
+    url: process.env.NUXT_PUBLIC_SITE_URL || "https://luggo.com",
+    name: "LugGo(ラグゴー)",
+    description:
+      "固定費完全無料。旅行客向けの手荷物配送予約フォームの作成、予約管理、配送管理、配達者管理、売上管理を一括で行えます。",
+    defaultLocale: "ja",
+  },
+  schemaOrg: {
+    identity: "Organization",
+  },
+  // 静的 OGP 画像を使うため、動的 OG 画像生成は使わない
+  ogImage: {
+    enabled: false,
+  },
+  // 空のサイトマップと optional catch-all により誤検知が多いため、今回は無効化
+  linkChecker: {
+    enabled: false,
+  },
+  // 現時点: 全ルート noindex, nofollow
+  robots: {
+    disallow: ["/"],
+  },
+  routeRules: {
+    "/**": { robots: "noindex, nofollow" },
+  },
+  sitemap: {
+    // 現状は noindex のため全 URL を除外する。
+    // 公開時: exclude を外し、include に以下を入れる。
+    // 該当 routeRules を index, follow に変更する。
+    // ["/", "/privacy", "/transaction-law", "/account/register/email", "/account/login"]
+    exclude: ["/**"],
   },
   app: {
     head: {
@@ -42,12 +72,6 @@ export default defineNuxtConfig({
             + "&family=Noto+Sans+SC:wght@100..900"
             + "&family=Noto+Sans+TC:wght@100..900"
             + "&display=swap",
-        },
-      ],
-      meta: [
-        {
-          name: "robots",
-          content: "noindex, nofollow",
         },
       ],
     },
