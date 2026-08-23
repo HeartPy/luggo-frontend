@@ -25,8 +25,6 @@ export const useBusinessProfile = () => {
     pricing_rules: Record<string, Record<string, number>>;
     total_orders_completed: number;
     total_revenue: string;
-    is_approved: boolean;
-    approval_date: string | null;
     is_active: boolean;
     deactivated_at: string | null;
     created_at: string | null;

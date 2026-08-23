@@ -332,7 +332,7 @@
                   :for="`delivery-name-${booking.id}`"
                   class="mb-1 block text-xs font-medium text-gray-500"
                 >
-                  配送場所
+                  配達場所
                 </label>
                 <input
                   :id="`delivery-name-${booking.id}`"
@@ -349,7 +349,7 @@
                 </p>
               </div>
               <BusinessOwnerDashboardAtomsBookingDetailRow
-                label="配送場所の郵便番号"
+                label="配達場所の郵便番号"
                 :value="booking.delivery_postal_code"
               />
               <div>
@@ -357,7 +357,7 @@
                   :for="`delivery-addr-${booking.id}`"
                   class="mb-1 block text-xs font-medium text-gray-500"
                 >
-                  配送場所の住所
+                  配達場所の住所
                 </label>
                 <textarea
                   :id="`delivery-addr-${booking.id}`"
@@ -378,7 +378,7 @@
                   :for="`delivery-date-${booking.id}`"
                   class="mb-1 block text-xs font-medium text-gray-500"
                 >
-                  配送日
+                  配達日
                 </label>
                 <div
                   class="relative"

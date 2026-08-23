@@ -337,7 +337,7 @@ const pendingDeleteId = ref<string | null>(null);
 const deleteDialogMessage = computed(() => {
   const driver = drivers.value.find(d => d.id === pendingDeleteId.value);
   const name = driver ? `「${driver.name}」` : "この配達者";
-  return `${name}を削除します。この配達者が担当する集荷・配達は割り当て解除されます。よろしいですか？`;
+  return `${name}を削除します。この配達者は利用停止となり、担当する集荷・配達は割り当て解除されます。よろしいですか？`;
 });
 
 function openDetail(driver: OwnerDriverRow) {

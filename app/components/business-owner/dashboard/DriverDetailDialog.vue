@@ -936,7 +936,7 @@ function toggleUnassignSelect(id: string) {
   selectedUnassignIds.value = next;
 }
 
-// 出発住所の入力ハンドラー。住所変更に伴い古い位置情報をクリアする
+// 出発地点の入力ハンドラー。住所変更に伴い古い位置情報をクリアする
 function handleDepartureAddressInput(event: Event) {
   const value = (event.target as HTMLInputElement).value;
   form.departure_address = value;

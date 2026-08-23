@@ -187,7 +187,7 @@
       </div>
     </div>
 
-    <!-- 配送場所の名称 -->
+    <!-- 配達場所の名称 -->
     <div>
       <label
         for="deliveryLocationName"
@@ -266,7 +266,7 @@
       </div>
     </div>
 
-    <!-- 配送場所の郵便番号 -->
+    <!-- 配達場所の郵便番号 -->
     <div>
       <label
         for="deliveryPostalCode"
@@ -302,7 +302,7 @@
       </div>
     </div>
 
-    <!-- 配送場所の住所 -->
+    <!-- 配達場所の住所 -->
     <div>
       <label
         for="deliveryLocationAddress"
@@ -333,7 +333,7 @@
       </div>
     </div>
 
-    <!-- 配送日 -->
+    <!-- 配達日 -->
     <div>
       <label
         for="deliveryDate"
@@ -462,7 +462,7 @@ const openNativeDatePicker = (el: HTMLInputElement | undefined) => {
 const minPickupDate = computed(() => getMinPickupDate());
 const maxBookingDate = computed(() => getMaxBookingDate());
 
-// 配送日の最小値（集荷日以降）
+// 配達日の最小値（集荷日以降）
 const minDeliveryDate = computed(() => {
   return props.formData.pickup_date || minPickupDate.value;
 });
@@ -684,7 +684,7 @@ const fetchSuggestions = async (query: string, type: "pickup" | "delivery") => {
     const config = useRuntimeConfig();
     const apiBaseUrl = config.public.apiBaseUrl;
 
-    // 集荷は出発地域、配送は配達可能地域でサーバー側を絞り込む
+    // 集荷は出発地域、配達は配達可能地域でサーバー側を絞り込む
     const prefCodes
       = type === "pickup"
         ? props.departurePrefectures

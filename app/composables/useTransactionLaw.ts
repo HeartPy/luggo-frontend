@@ -50,7 +50,7 @@ export const useTransactionLaw = () => {
 
   const sep = () => t("common.listSeparator");
 
-  // 都道府県・荷物サイズ別の配送料金を HTML リストに変換
+  // 都道府県・荷物サイズ別の配達料金を HTML リストに変換
   const buildPricingHtml = (rules: Record<string, Record<string, number>>): string => {
     if (!rules || Object.keys(rules).length === 0) return t("law.pricingEmpty");
 
@@ -111,7 +111,7 @@ export const useTransactionLaw = () => {
       .join(sep());
   };
 
-  // 営業日・定休日・臨時休業日から集荷・配送日の説明 HTML を組み立て
+  // 営業日・定休日・臨時休業日から集荷・配達日の説明 HTML を組み立て
   const buildScheduleHtml = (
     operatingDays: string,
     nthWeekdayHolidays: string[],
