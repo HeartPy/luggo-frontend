@@ -269,6 +269,7 @@
             type="button"
             class="flex items-center justify-center rounded-md bg-gray-800 px-8 py-3 font-semibold text-white hover:bg-gray-900 disabled:cursor-not-allowed disabled:bg-gray-300"
             :disabled="isSubmitting"
+            data-testid="confirm-pay"
             @click="handleConfirm"
           >
             <CommonAtomsLoadingAnimation
@@ -361,6 +362,9 @@ const bookingPath = (step: number | string) => ({
   query: route.query,
 });
 const publicKey = config.public.stripePublishableKey;
+
+// E2E テスト用: フラグ有効時は Stripe.js を読み込まず、決済成功として扱う
+const isStripeMockEnabled = String(config.public.e2eMockStripe ?? "") === "1";
 
 const loading = ref(true);
 const isSubmitting = ref(false);
@@ -769,14 +773,21 @@ const handleConfirm = async () => {
       return;
     }
 
-    if (!stripe.value || !elements.value) {
+    if (!isStripeMockEnabled && (!stripe.value || !elements.value)) {
       errMsg.value = t("confirmPage.errors.stripeLoadFailed");
       isSubmitting.value = false;
       return;
     }
 
     // 決済処理を実行
-    const rslt = await confirmPayment();
+    // E2E モック時は confirmPayment を呼ばず、clientSecret（pi_..._secret_...）
+    // から PaymentIntent ID を復元して予約 POST に進む
+    const rslt = isStripeMockEnabled
+      ? {
+          success: true,
+          paymentIntentId: paymentClientSecret.value.split("_secret")[0],
+        }
+      : await confirmPayment();
 
     if (!rslt.success || !rslt.paymentIntentId) {
       errMsg.value = t("confirmPage.errors.paymentFailedCheck");
@@ -1021,6 +1032,13 @@ onMounted(async () => {
 
     // Payment Element を初期化
     if (paymentClientSecret.value) {
+      // E2E モック時は Stripe.js を初期化しない（支払いボタンのみで進める）
+      if (isStripeMockEnabled) {
+        loading.value = false;
+        paymentLoading.value = false;
+        return;
+      }
+
       // loading を false にしてから、paymentLoading を false にする
       // これにより、#payment-element が DOM に存在するようになる
       loading.value = false;

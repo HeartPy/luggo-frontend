@@ -19,6 +19,16 @@ export default defineNuxtConfig({
         process.env.NUXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "",
       googleMapsApiKey:
         process.env.NUXT_PUBLIC_GOOGLE_MAPS_API_KEY || "",
+      // E2E テスト用: "1" のとき Stripe.js を読み込まず決済をモックする
+      e2eMockStripe: process.env.NUXT_PUBLIC_E2E_MOCK_STRIPE || "",
+    },
+  },
+  vite: {
+    optimizeDeps: {
+      // 予約フロー途中のページで初めて読み込まれる依存を事前最適化する。
+      // dev 初回アクセス時の「依存最適化 → ページ強制リロード」が
+      // E2E のフロー途中に挟まって落ちるのを防ぐ。
+      include: ["@stripe/stripe-js", "i18n-iso-countries"],
     },
   },
   site: {
