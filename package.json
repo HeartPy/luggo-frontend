@@ -12,7 +12,10 @@
     "type-check": "vue-tsc --noEmit",
     "lint": "eslint .",
     "test:unit": "vitest run",
-    "test:unit:watch": "vitest"
+    "test:unit:watch": "vitest",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:debug": "playwright test --debug"
   },
   "dependencies": {
     "@nuxtjs/seo": "^5.3.14",
@@ -31,6 +34,7 @@
     "@eslint/eslintrc": "^3.3.5",
     "@nuxt/eslint": "^1.4.1",
     "@nuxt/test-utils": "^4.1.0",
+    "@playwright/test": "^1.62.1",
     "@stylistic/eslint-plugin": "^5.10.0",
     "@types/node": "^24.9.0",
     "@vue/test-utils": "^2.4.11",

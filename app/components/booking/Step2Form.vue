@@ -63,6 +63,7 @@
               class="h-10 w-10 select-none rounded-full bg-gray-800 text-lg font-semibold text-white transition-colors hover:bg-gray-900 disabled:cursor-not-allowed disabled:bg-gray-300"
               :disabled="luggageItem.count >= MAX_COUNT"
               :aria-label="$t('booking.step2.incrementAria', { name: luggageItem.displayName })"
+              :data-testid="`step2-increment-${luggageItem.key}`"
               @click="increment(luggageItem.key)"
             >
               ＋

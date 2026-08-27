@@ -57,6 +57,7 @@
             type="submit"
             class="flex items-center justify-center rounded-md bg-gray-800 px-8 py-3 font-semibold text-white hover:bg-gray-900 disabled:cursor-not-allowed disabled:bg-gray-300"
             :disabled="isSubmitting || luggageItemsLoading"
+            data-testid="booking-step-submit"
           >
             <CommonAtomsLoadingAnimation
               v-if="isSubmitting"
