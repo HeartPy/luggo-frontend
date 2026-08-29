@@ -86,11 +86,15 @@ E2E は次の 3 本のみとする。
 
 1. CP1 の FE 単体（`useBookingValid` など）✅
 2. Playwright 基盤 + CP1 の E2E ✅
-3. 足りない BE 結合ケースの追加（CP2〜CP8）
+3. 足りない BE 結合ケースの追加（CP2〜CP8）✅
 4. CP4 / CP6 の E2E
 
 ## 現状
 
-- Backend: 各アプリに Django テストあり（`bookings` / `drivers` / `routing` など）
+- Backend: CP1〜CP8 のクリティカルパスを BE 結合でカバー済み
+  （予約作成/PaymentIntent、照会/キャンセル/返金、事業者登録/ログインコード、
+  事業者予約管理 API、Stripe オンボーディング、配達者ログイン/配達完了、
+  自動割当 apply → 配達者公開、配達完了時の送金）
 - Frontend: Vitest 導入済み。`tests/unit/` に utils / composables テストあり
-- E2E: Playwright 導入済み。`e2e/` に CP1 ユーザー（旅行者）予約のハッピーパス 1 本あり
+- E2E: Playwright 導入済み。`e2e/` に CP1 ユーザー（旅行者）予約のハッピーパス 1 本あり。
+  CP4 / CP6 の E2E は未実装（次ステップ）
