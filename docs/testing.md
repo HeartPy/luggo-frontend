@@ -33,8 +33,8 @@ Google Maps は使わない（郵便番号 7 桁 + 住所手入力で Step1 を�
 前提: バックエンドが docker compose で起動済み・migrate 済みであること。
 
 ```bash
-# 1. バックエンドを Stripe モック有効で起動（backend リポジトリ）
-E2E_STRIPE_MOCK=1 docker compose up -d backend
+# 1. バックエンドを Stripe・ログインコードのモック有効で起動（backend リポジトリ）
+E2E_STRIPE_MOCK=1 E2E_LOGIN_CODE_MOCK=1 docker compose up -d backend
 
 # 2. E2E を実行（このリポジトリ。dev サーバー起動・シード投入は Playwright が自動で行う）
 pnpm test:e2e
@@ -45,13 +45,21 @@ pnpm test:e2e
 - `E2E_STRIPE_MOCK=1`（BE）: `DEBUG` のときだけ有効。`create_payment_intent` と
   予約作成時の `PaymentIntent.retrieve` が Stripe SDK を呼ばず、成功済み扱いの
   モック PaymentIntent（`pi_e2e_...`）を返す（backend の `bookings/stripe_mock.py`）
+- `E2E_LOGIN_CODE_MOCK=1`（BE）: `DEBUG` のときだけ有効。事業者ログインの
+  メール認証コードが固定値 `000000` になる（owner-booking E2E で使用）
 - `NUXT_PUBLIC_E2E_MOCK_STRIPE=1`（FE）: Stripe.js / Payment Element を読み込まず、
   「支払う」で confirmPayment をスキップして予約 POST に進む
   （`playwright.config.ts` の webServer が自動設定する）
-- シード: backend の `python manage.py seed_e2e_booking` が E2E 用事業者
-  （subdomain `etoe`・東京エリア・年中無休）を冪等に作成する。
+- シード: backend の `python manage.py seed_e2e_booking` が E2E 用データを冪等に作成する。
+  内容は、事業者（subdomain `etoe`・東京エリア・年中無休・パスワード付き）、
+  配達者（`e2e-driver@example.com`・パスワード付き）、
+  owner-booking 用予約（当日・集荷前）と driver-delivery 用予約（当日・集荷前・配達者に割当）。
   Playwright の `globalSetup` が毎回 docker compose 経由で実行する
-- 本番では `E2E_STRIPE_MOCK` は `DEBUG=False` のため常に無効
+- 再シード: owner-booking / driver-delivery のスペックは予約のステータスを変更するため、
+  `beforeEach` で自分の予約だけを `--only owner-booking` / `--only driver-delivery` 付きで再シードする
+  （`e2e/seed.ts`）。UI モード（`pnpm test:e2e:ui`）の再実行では
+  `globalSetup` が走らないことがあるが、これにより何度でも再実行できる
+- 本番では `E2E_STRIPE_MOCK` / `E2E_LOGIN_CODE_MOCK` は `DEBUG=False` のため常に無効
 
 ## クリティカルパス（8 本）
 
@@ -69,7 +77,7 @@ pnpm test:e2e
 ## モック方針
 
 - Stripe / Google Maps / メール送信は全層でモックする
-- E2E のメールコード認証は、実装時にテスト用バックドアまたは固定コード方式を決める
+- E2E のメールコード認証は固定コード方式（`E2E_LOGIN_CODE_MOCK=1` で `000000` 固定）
 - 認可（自社・担当のみ見える）は全パス共通で BE 結合に置く
 
 ## E2E の範囲
@@ -87,7 +95,7 @@ E2E は次の 3 本のみとする。
 1. CP1 の FE 単体（`useBookingValid` など）✅
 2. Playwright 基盤 + CP1 の E2E ✅
 3. 足りない BE 結合ケースの追加（CP2〜CP8）✅
-4. CP4 / CP6 の E2E
+4. CP4 / CP6 の E2E ✅
 
 ## 現状
 
@@ -96,5 +104,7 @@ E2E は次の 3 本のみとする。
   事業者予約管理 API、Stripe オンボーディング、配達者ログイン/配達完了、
   自動割当 apply → 配達者公開、配達完了時の送金）
 - Frontend: Vitest 導入済み。`tests/unit/` に utils / composables テストあり
-- E2E: Playwright 導入済み。`e2e/` に CP1 ユーザー（旅行者）予約のハッピーパス 1 本あり。
-  CP4 / CP6 の E2E は未実装（次ステップ）
+- E2E: Playwright 導入済み。`e2e/` に 3 本あり
+  - CP1 ユーザー（旅行者）予約（`booking-happy-path.spec.ts`）
+  - CP4 事業者の予約管理 / `owner-booking`（`owner-booking-management.spec.ts`）
+  - CP6 配達者フロー / `driver-delivery`（`driver-delivery.spec.ts`）

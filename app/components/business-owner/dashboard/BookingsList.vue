@@ -136,6 +136,7 @@
           v-model="nameInput"
           type="text"
           placeholder="顧客名・場所で検索"
+          data-testid="bookings-search-input"
           class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
           @keydown.enter="handleSearch"
         >
@@ -168,6 +169,7 @@
       <button
         type="button"
         :disabled="isLoading"
+        data-testid="bookings-search-submit"
         class="rounded-md bg-gray-800 px-6 py-2 text-sm font-semibold text-white transition-colors hover:bg-gray-900 disabled:cursor-not-allowed disabled:opacity-50"
         @click="handleSearch"
       >
@@ -194,6 +196,7 @@
         <div class="relative">
           <select
             v-model="bulkStatusValue"
+            data-testid="bulk-status-select"
             class="cursor-pointer appearance-none rounded-md border border-gray-300 bg-white py-2 pl-3 pr-9 text-sm font-medium text-gray-700 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
           >
             <option
@@ -268,6 +271,7 @@
       </button>
       <button
         type="button"
+        data-testid="bookings-save"
         class="rounded-md bg-blue-600 px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
         :disabled="!isDirty || isSaving"
         @click="handleSave"
@@ -370,6 +374,7 @@
               <tr
                 v-for="booking in bookings"
                 :key="booking.id"
+                data-testid="booking-row"
                 class="cursor-pointer border-b border-gray-100 transition hover:brightness-95"
                 :class="rowClass(booking)"
                 @click="openDetail(booking)"
@@ -380,6 +385,7 @@
                 >
                   <input
                     type="checkbox"
+                    data-testid="booking-select"
                     class="h-4 w-4 rounded border-gray-300 accent-blue-600 disabled:cursor-not-allowed disabled:opacity-40"
                     :checked="selectedIds.has(booking.id)"
                     :disabled="booking.delivery_status === 'cancelled'"
@@ -388,6 +394,7 @@
                 </td>
                 <td class="whitespace-nowrap px-3 py-3 align-middle">
                   <span
+                    data-testid="booking-status-pill"
                     class="inline-block whitespace-nowrap rounded-full px-3 py-1 text-center text-xs font-semibold"
                     :class="statusPillClass(booking.delivery_status)"
                   >

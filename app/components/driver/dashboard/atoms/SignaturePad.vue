@@ -3,6 +3,7 @@
     <div class="relative">
       <canvas
         ref="canvasElement"
+        data-testid="signature-canvas"
         class="h-48 w-full touch-none rounded-md border border-gray-300 bg-white"
         @pointerdown="startStroke"
         @pointermove="moveStroke"

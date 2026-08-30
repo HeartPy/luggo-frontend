@@ -1,5 +1,6 @@
 <template>
   <article
+    data-testid="driver-booking-card"
     class="cursor-pointer overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-md"
     role="button"
     tabindex="0"
@@ -10,6 +11,7 @@
     <div class="space-y-4 p-4">
       <div class="flex flex-wrap items-center gap-2">
         <span
+          data-testid="driver-booking-status"
           class="inline-block whitespace-nowrap rounded-full px-3 py-1 text-center text-xs font-semibold"
           :class="statusPillClass"
         >
