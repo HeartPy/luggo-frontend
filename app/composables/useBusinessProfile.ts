@@ -23,8 +23,6 @@ export const useBusinessProfile = () => {
     operating_hours_end: string | null;
     operating_days: string;
     pricing_rules: Record<string, Record<string, number>>;
-    total_orders_completed: number;
-    total_revenue: string;
     is_active: boolean;
     deactivated_at: string | null;
     created_at: string | null;
