@@ -25,6 +25,7 @@
               <button
                 v-if="primaryAction"
                 type="button"
+                data-testid="booking-primary-action"
                 class="rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
                 :disabled="isPrimaryDisabled"
                 @click="() => void runPrimaryAction()"
@@ -98,6 +99,7 @@
                   配達状況
                 </p>
                 <span
+                  data-testid="booking-detail-status"
                   class="inline-block whitespace-nowrap rounded-full px-3 py-1 text-center text-xs font-semibold"
                   :class="statusPillClass"
                 >
