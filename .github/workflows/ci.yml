@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [develop, main]
+  push:
+    branches: [develop, main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: 依存パッケージをインストール
+        run: pnpm install --frozen-lockfile
+
+      - name: 環境ファイルを用意
+        # lint / build には必須ではないが、dotenv を読む処理があっても動くようにしておく
+        run: cp .env.development.example .env.development
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: 型チェック
+        run: pnpm type-check
+
+      - name: 単体テスト
+        run: pnpm test:unit
+
+      - name: ビルド
+        run: pnpm build
