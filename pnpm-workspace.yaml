@@ -1,6 +1,8 @@
 nodeLinker: hoisted
 allowBuilds:
   "@parcel/watcher": true
+  # sentry-cli バイナリはソースマップアップロード用で、現状は未使用のためダウンロードしない
+  '@sentry/cli': false
   esbuild: true
   sharp: true
   unrs-resolver: true
