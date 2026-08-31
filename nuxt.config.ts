@@ -6,6 +6,7 @@ export default defineNuxtConfig({
     "@nuxt/eslint",
     "@nuxtjs/tailwindcss",
     "@nuxtjs/seo",
+    "@sentry/nuxt/module",
   ],
   typescript: {
     strict: true,
@@ -21,6 +22,10 @@ export default defineNuxtConfig({
         process.env.NUXT_PUBLIC_GOOGLE_MAPS_API_KEY || "",
       // E2E テスト用: "1" のとき Stripe.js を読み込まず決済をモックする
       e2eMockStripe: process.env.NUXT_PUBLIC_E2E_MOCK_STRIPE || "",
+      // Sentry（エラー監視）。未設定なら無効
+      sentry: {
+        dsn: process.env.NUXT_PUBLIC_SENTRY_DSN || "",
+      },
     },
   },
   vite: {
