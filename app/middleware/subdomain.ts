@@ -1,52 +1,7 @@
-export default defineNuxtRouteMiddleware(async (_to) => {
-  // クライアントサイドとサーバーサイドの両方でサブドメインを取得
-  let subdomain: string | null = null;
+import { resolveSubdomain } from "~/composables/useSubdomain";
 
-  if (import.meta.server) {
-    // サーバーサイド: eventから取得
-    const event = useRequestEvent();
-    if (event) {
-      const host = event.node.req.headers.host || "";
-      const parts = host.split(".");
-      // 開発環境では localhost:3000 のような形式なので、サブドメインを検出しない
-      if (
-        parts.length >= 3
-        && !host.includes("localhost")
-        && !host.includes("127.0.0.1")
-      ) {
-        subdomain = parts[0] || null;
-      }
-      // 開発環境でのテスト用: クエリパラメータからサブドメインを取得
-      if (!subdomain && event.node.req.url) {
-        const url = new URL(event.node.req.url, `http://${host}`);
-        const testSubdomain = url.searchParams.get("subdomain");
-        if (testSubdomain) {
-          subdomain = testSubdomain.toLowerCase();
-        }
-      }
-    }
-  }
-  else {
-    // クライアントサイド: window.locationから取得
-    const host = window.location.hostname;
-    const parts = host.split(".");
-    // 開発環境では localhost:3000 のような形式なので、サブドメインを検出しない
-    if (
-      parts.length >= 3
-      && !host.includes("localhost")
-      && !host.includes("127.0.0.1")
-    ) {
-      subdomain = parts[0] || null;
-    }
-    // 開発環境でのテスト用: クエリパラメータからサブドメインを取得
-    if (!subdomain) {
-      const urlParams = new URLSearchParams(window.location.search);
-      const testSubdomain = urlParams.get("subdomain");
-      if (testSubdomain) {
-        subdomain = testSubdomain.toLowerCase();
-      }
-    }
-  }
+export default defineNuxtRouteMiddleware(async (_to) => {
+  const subdomain = resolveSubdomain();
 
   if (!subdomain) {
     throw createError({

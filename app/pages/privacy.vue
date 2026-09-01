@@ -37,6 +37,8 @@
 </template>
 
 <script setup lang="ts">
+import { LUGO_EMAIL } from "~/composables/useAppSeo";
+
 type PrivacyPolicyItem = {
   id: number;
   ttl: string;
@@ -243,7 +245,7 @@ const privacyPolicyItems = ref<PrivacyPolicyItem[]>([
     txt:
       "開示等のお申出、ご意見、ご質問、苦情、その他個人情報の取り扱いに関するお問い合わせは、下記の窓口までお願いいたします。"
       + "<br />"
-      + "Eメールアドレス：luggo.register@gmail.com",
+      + `Eメールアドレス：${LUGO_EMAIL}`,
   },
 ]);
 

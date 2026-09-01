@@ -212,6 +212,7 @@
 <script setup lang="ts">
 import { useBusinessProfile } from "~/composables/useBusinessProfile";
 import { useCsrf } from "~/composables/useCsrf";
+import { buildTenantPublicUrl } from "~/composables/useSubdomain";
 
 const { businessProfile, isLoading, error, fetchBusinessProfile }
   = useBusinessProfile();
@@ -222,20 +223,8 @@ const isCopied = ref(false);
 
 const bookingUrl = computed(() => {
   const subdomain = businessProfile.value?.subdomain;
-  if (!subdomain || !import.meta.client) return null;
-
-  const host = window.location.hostname;
-  const protocol = window.location.protocol;
-  const port = window.location.port;
-
-  if (host.includes("localhost") || host.includes("127.0.0.1")) {
-    const portStr = port ? `:${port}` : "";
-    return `${protocol}//${host}${portStr}/booking?subdomain=${subdomain}`;
-  }
-
-  const parts = host.split(".");
-  const baseDomain = parts.length >= 3 ? parts.slice(1).join(".") : host;
-  return `${protocol}//${subdomain}.${baseDomain}/booking`;
+  if (!subdomain) return null;
+  return buildTenantPublicUrl(subdomain, "/booking");
 });
 
 const checkStripeVerification = async () => {

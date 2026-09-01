@@ -37,7 +37,7 @@ export default defineNuxtConfig({
     },
   },
   site: {
-    url: process.env.NUXT_PUBLIC_SITE_URL || "https://luggo.com",
+    url: process.env.NUXT_PUBLIC_SITE_URL || "https://luggo.delivery",
     name: "LugGo(ラグゴー)",
     description:
       "固定費完全無料。旅行客向けの手荷物配送予約フォームの作成、予約管理、配送管理、配達者管理、売上管理を一括で行えます。",

@@ -5,7 +5,7 @@ export const LUGO_DEFAULT_TITLE
   = "LugGo(ラグゴー) | 予約から配送まで一括管理";
 export const LUGO_DEFAULT_DESCRIPTION
   = "固定費完全無料。旅行客向けの手荷物配送予約フォームの作成、予約管理、配送管理、配達者管理、売上管理を一括で行えます。";
-export const LUGO_EMAIL = "luggo.register@gmail.com";
+export const LUGO_EMAIL = "support@luggo.delivery";
 export const LUGO_OGP_IMAGE = "/img/ogp-luggo.png";
 export const BUSINESS_OGP_IMAGE = "/img/ogp-business.png";
 
