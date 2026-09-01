@@ -34,6 +34,8 @@
 </template>
 
 <script setup lang="ts">
+import { LUGO_EMAIL } from "~/composables/useAppSeo";
+
 type TransactionLawItem = {
   id: number;
   ttl: string;
@@ -54,7 +56,7 @@ const transactionLawItems = ref<TransactionLawItem[]>([
   {
     id: 3,
     ttl: "お問い合わせ先",
-    txt: "luggo.register@gmail.com",
+    txt: LUGO_EMAIL,
   },
   {
     id: 4,

@@ -147,6 +147,7 @@
 <script setup lang="ts">
 import { useBusinessProfile } from "~/composables/useBusinessProfile";
 import { useOnboardingProgress } from "~/composables/useOnboardingProgress";
+import { buildTenantPublicUrl } from "~/composables/useSubdomain";
 
 const { businessProfile } = useBusinessProfile();
 const {
@@ -182,24 +183,10 @@ watch(
   { immediate: true },
 );
 
-// サブドメイン + 任意パスから、事業者の公開サイトの完全 URL を組み立てる
 const buildSubdomainUrl = (path: string): string | null => {
-  if (!import.meta.client) return null;
   const subdomain = businessProfile.value?.subdomain;
   if (!subdomain) return null;
-
-  const host = window.location.hostname;
-  const protocol = window.location.protocol;
-  const port = window.location.port;
-
-  if (host.includes("localhost") || host.includes("127.0.0.1")) {
-    const portStr = port ? `:${port}` : "";
-    return `${protocol}//${host}${portStr}${path}?subdomain=${subdomain}`;
-  }
-
-  const parts = host.split(".");
-  const baseDomain = parts.length >= 3 ? parts.slice(1).join(".") : host;
-  return `${protocol}//${subdomain}.${baseDomain}${path}`;
+  return buildTenantPublicUrl(subdomain, path);
 };
 
 const transactionLawUrl = computed(() =>

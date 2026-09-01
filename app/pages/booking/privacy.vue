@@ -83,6 +83,7 @@
 
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
+import { resolveSubdomain } from "~/composables/useSubdomain";
 
 definePageMeta({
   layout: "customer",
@@ -117,22 +118,6 @@ const privacyPolicyItems = computed<PrivacyPolicyItem[]>(() => {
     };
   });
 });
-
-// ホスト名またはクエリから事業者のサブドメインを取得
-const resolveSubdomain = (): string | null => {
-  if (import.meta.server) return null;
-  const host = window.location.hostname;
-  const parts = host.split(".");
-  if (
-    parts.length >= 3
-    && !host.includes("localhost")
-    && !host.includes("127.0.0.1")
-  ) {
-    return parts[0] || null;
-  }
-  const params = new URLSearchParams(window.location.search);
-  return params.get("subdomain");
-};
 
 // サブドメインに紐づくプライバシーポリシーデータを API から取得
 onMounted(async () => {

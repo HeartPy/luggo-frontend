@@ -1,5 +1,6 @@
 import { useI18n } from "vue-i18n";
 import { useAppLocale } from "~/composables/useLocale";
+import { resolveSubdomain } from "~/composables/useSubdomain";
 
 export type TransactionLawItem = {
   id: number;
@@ -24,18 +25,6 @@ const LUGGAGE_TYPE_KEYS: Record<string, string> = {
   cabin: "luggageTypes.cabinShort",
   checked: "luggageTypes.checkedShort",
   oversize: "luggageTypes.oversizeShort",
-};
-
-// ホスト名またはクエリから事業者のサブドメインを取得
-const resolveSubdomain = (): string | null => {
-  if (import.meta.server) return null;
-  const host = window.location.hostname;
-  const parts = host.split(".");
-  if (parts.length >= 3 && !host.includes("localhost") && !host.includes("127.0.0.1")) {
-    return parts[0] || null;
-  }
-  const params = new URLSearchParams(window.location.search);
-  return params.get("subdomain");
 };
 
 // 事業者の特定商取引法に基づく表記データを取得し、表示項目一覧に整形

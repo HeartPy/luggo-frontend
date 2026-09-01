@@ -95,6 +95,7 @@
 <script setup lang="ts">
 import type { Step4FormData } from "~/types/stripe-account-register";
 import { useBusinessProfile } from "~/composables/useBusinessProfile";
+import { buildTenantPublicUrl, TENANT_BASE_DOMAIN } from "~/composables/useSubdomain";
 
 type Props = {
   formData: Step4FormData;
@@ -141,7 +142,8 @@ const isProductUrlReadonly = computed(() => {
 });
 
 const generateBookingFormUrl = (subdomain: string): string => {
-  return `https://${subdomain}.luggo.com`;
+  return buildTenantPublicUrl(subdomain, "")
+    ?? `https://${subdomain}.${TENANT_BASE_DOMAIN}`;
 };
 
 // デフォルトの商品・サービス説明テキスト

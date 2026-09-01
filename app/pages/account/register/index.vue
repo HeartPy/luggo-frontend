@@ -348,7 +348,7 @@
                     aria-describedby="subdomain-error"
                     @input="handleSubdomainInput"
                   >
-                  <span class="text-sm text-gray-600">.luggo.com</span>
+                  <span class="text-sm text-gray-600">.{{ tenantBaseDomain }}</span>
                 </div>
                 <p
                   v-if="errors.subdomain"
@@ -359,7 +359,7 @@
                   {{ errors.subdomain }}
                 </p>
                 <p class="mt-1 text-xs text-gray-500">
-                  3文字以上12文字以内、半角小文字の英字のみ使用できます<br>（例：reserve.luggo.com）
+                  3文字以上12文字以内、半角小文字の英字のみ使用できます<br>（例：reserve.{{ tenantBaseDomain }}）
                 </p>
               </div>
 
@@ -505,6 +505,7 @@ import { toTypedSchema } from "@vee-validate/yup";
 import { useCsrf } from "~/composables/useCsrf";
 import { useNumericInput } from "~/composables/useNumericInput";
 import { useRegistrationForm } from "~/composables/useRegistrationForm";
+import { TENANT_BASE_DOMAIN } from "~/composables/useSubdomain";
 import type { RegisterFormData } from "~/types/account-register";
 
 const registerSchema = object({
@@ -688,8 +689,10 @@ const errMsg = ref("");
 const showPassword = ref(false);
 const showSubdomainInfoModal = ref(false);
 
+const tenantBaseDomain = TENANT_BASE_DOMAIN;
+
 const subdomainInfoText
-  = "オーナー様の予約フォームにアクセスするためのアドレスです。<br />好きな文字の列を入力してください。<br /><br />例：reserve.luggo.com";
+  = `オーナー様の予約フォームにアクセスするためのアドレスです。<br />好きな文字の列を入力してください。<br /><br />例：reserve.${tenantBaseDomain}`;
 
 // モーダルのフォーカス管理
 const focusFirstBtn = () => {
