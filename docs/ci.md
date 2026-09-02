@@ -77,6 +77,8 @@ Cloudflare ダッシュボード（**Workers & Pages** → プロジェクト �
 Preview 用の環境変数は Production と分けて設定する。
 `NUXT_PUBLIC_SENTRY_DSN` は Preview では変数を登録しなければ Sentry は無効になる（空文字は Cloudflare で保存できない）。
 
+`NUXT_PUBLIC_GTM_ID` も同様に、Preview では変数を登録しなければ GTM は無効になる。Production では `GTM-N7QXD3XT` を設定する。
+
 ### ブランチコントロール
 
 Cloudflare ダッシュボード（**Settings → Builds → Branch control**）の推奨設定。

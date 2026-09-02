@@ -7,6 +7,7 @@ export default defineNuxtConfig({
     "@nuxtjs/tailwindcss",
     "@nuxtjs/seo",
     "@sentry/nuxt/module",
+    "@saslavik/nuxt-gtm",
   ],
   typescript: {
     strict: true,
@@ -25,6 +26,13 @@ export default defineNuxtConfig({
       // Sentry（エラー監視）。未設定なら無効
       sentry: {
         dsn: process.env.NUXT_PUBLIC_SENTRY_DSN || "",
+      },
+      // Google Tag Manager
+      gtm: {
+        id: process.env.NUXT_PUBLIC_GTM_ID || "",
+        enableRouterSync: true,
+        enabled: !!process.env.NUXT_PUBLIC_GTM_ID,
+        debug: process.env.NODE_ENV === "development",
       },
     },
   },
