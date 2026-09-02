@@ -50,6 +50,11 @@ pnpm test:e2e
 - `NUXT_PUBLIC_E2E_MOCK_STRIPE=1`（FE）: Stripe.js / Payment Element を読み込まず、
   「支払う」で confirmPayment をスキップして予約 POST に進む
   （`playwright.config.ts` の webServer が自動設定する）
+- Turnstile（ボット対策）: E2E では Cloudflare 公式の「常に成功する」テスト用キーを使う。
+  FE は `NUXT_PUBLIC_TURNSTILE_SITE_KEY=1x00000000000000000000AA`
+  （`playwright.config.ts` の webServer が自動設定する）、
+  BE は `.env.development` の `TURNSTILE_SECRET_KEY=1x0000000000000000000000000000000AA`
+  （テスト用 Secret はネットワークを介さず常に成功扱いになる。backend の `project/turnstile.py`）
 - シード: backend の `python manage.py seed_e2e_booking` が E2E 用データを冪等に作成する。
   内容は、事業者（subdomain `etoe`・東京エリア・年中無休・パスワード付き）、
   配達者（`e2e-driver@example.com`・パスワード付き）、

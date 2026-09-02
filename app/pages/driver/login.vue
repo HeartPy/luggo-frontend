@@ -109,9 +109,17 @@
           </div>
         </div>
 
+        <!-- ボット対策（Cloudflare Turnstile） -->
+        <div class="mb-6 flex justify-center">
+          <NuxtTurnstile
+            ref="turnstileRef"
+            v-model="turnstileToken"
+          />
+        </div>
+
         <button
           type="submit"
-          :disabled="isSubmitting"
+          :disabled="isSubmitting || !turnstileToken"
           data-testid="driver-login-submit"
           class="mx-auto w-full max-w-[500px] rounded-lg bg-gray-800 px-8 py-3 font-semibold text-white hover:bg-gray-900 disabled:cursor-not-allowed disabled:bg-gray-300"
         >
@@ -175,6 +183,7 @@ const showPassword = ref(false);
 const isCheckingAuth = ref(true);
 
 const { ensureCsrf, getCsrf } = useCsrf();
+const { turnstileToken, turnstileRef, resetTurnstile } = useTurnstile();
 
 onMounted(async () => {
   try {
@@ -220,6 +229,7 @@ const handleLogin = handleSubmit(async (formValues: LoginFormData) => {
           body: {
             email: formValues.email?.trim().toLowerCase() || "",
             password: formValues.password || "",
+            turnstile_token: turnstileToken.value,
           },
           credentials: "include",
         },
@@ -245,6 +255,8 @@ const handleLogin = handleSubmit(async (formValues: LoginFormData) => {
   }
   finally {
     isSubmitting.value = false;
+    // Turnstile トークンは1回で失効するため、送信の成否に関わらずリセットする
+    resetTurnstile();
   }
 });
 

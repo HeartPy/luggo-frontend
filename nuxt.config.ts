@@ -1,4 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+
+const gtmId = process.env.NUXT_PUBLIC_GTM_ID || "";
+
 export default defineNuxtConfig({
   compatibilityDate: "2025-05-15",
   devtools: { enabled: process.env.NODE_ENV === "development" },
@@ -6,12 +9,16 @@ export default defineNuxtConfig({
     "@nuxt/eslint",
     "@nuxtjs/tailwindcss",
     "@nuxtjs/seo",
+    "@nuxtjs/turnstile",
     "@sentry/nuxt/module",
-    "@saslavik/nuxt-gtm",
+    ...(gtmId ? ["@saslavik/nuxt-gtm"] : []),
   ],
   typescript: {
     strict: true,
     typeCheck: true,
+  },
+  turnstile: {
+    siteKey: process.env.NUXT_PUBLIC_TURNSTILE_SITE_KEY || "",
   },
   runtimeConfig: {
     public: {
@@ -27,13 +34,17 @@ export default defineNuxtConfig({
       sentry: {
         dsn: process.env.NUXT_PUBLIC_SENTRY_DSN || "",
       },
-      // Google Tag Manager
-      gtm: {
-        id: process.env.NUXT_PUBLIC_GTM_ID || "",
-        enableRouterSync: true,
-        enabled: !!process.env.NUXT_PUBLIC_GTM_ID,
-        debug: process.env.NODE_ENV === "development",
-      },
+      // Google Tag Manager（ID があるときだけ runtimeConfig も渡す）
+      ...(gtmId
+        ? {
+            gtm: {
+              id: gtmId,
+              enableRouterSync: true,
+              enabled: true,
+              debug: process.env.NODE_ENV === "development",
+            },
+          }
+        : {}),
     },
   },
   vite: {

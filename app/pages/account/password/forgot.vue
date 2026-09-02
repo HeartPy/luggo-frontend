@@ -54,9 +54,17 @@
               </div>
             </div>
 
+            <!-- ボット対策（Cloudflare Turnstile） -->
+            <div class="mb-6 flex justify-center">
+              <NuxtTurnstile
+                ref="turnstileRef"
+                v-model="turnstileToken"
+              />
+            </div>
+
             <button
               type="submit"
-              :disabled="isSubmitting"
+              :disabled="isSubmitting || !turnstileToken"
               class="mx-auto block w-full max-w-[500px] rounded-lg bg-gray-800 px-8 py-3 font-semibold text-white hover:bg-gray-900 disabled:cursor-not-allowed disabled:bg-gray-300"
             >
               <CommonAtomsLoadingAnimation
@@ -130,6 +138,7 @@ const errMsg = ref("");
 const emailSent = ref(false);
 
 const { ensureCsrf, getCsrf } = useCsrf();
+const { turnstileToken, turnstileRef, resetTurnstile } = useTurnstile();
 
 const handleFormSubmit = async () => {
   emailErr.value = "";
@@ -161,6 +170,7 @@ const handleFormSubmit = async () => {
         },
         body: {
           email: email.value.trim().toLowerCase(),
+          turnstile_token: turnstileToken.value,
         },
         credentials: "include",
       });
@@ -185,6 +195,8 @@ const handleFormSubmit = async () => {
   }
   finally {
     isSubmitting.value = false;
+    // Turnstile トークンは1回で失効するため、送信の成否に関わらずリセットする
+    resetTurnstile();
   }
 };
 
