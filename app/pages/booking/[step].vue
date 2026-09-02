@@ -52,11 +52,26 @@
           @update:form-data="Object.assign(step3Data, $event)"
         />
 
+        <!-- ボット対策（Cloudflare Turnstile）: 決済開始（Step3 送信）で使用 -->
+        <div
+          v-if="currentStep === 3"
+          class="flex justify-center pt-8"
+        >
+          <NuxtTurnstile
+            ref="turnstileRef"
+            v-model="turnstileToken"
+          />
+        </div>
+
         <div class="mx-auto flex w-full max-w-[500px] flex-col gap-4 pt-12">
           <button
             type="submit"
             class="flex items-center justify-center rounded-md bg-gray-800 px-8 py-3 font-semibold text-white hover:bg-gray-900 disabled:cursor-not-allowed disabled:bg-gray-300"
-            :disabled="isSubmitting || luggageItemsLoading"
+            :disabled="
+              isSubmitting
+                || luggageItemsLoading
+                || (currentStep === 3 && !turnstileToken)
+            "
             data-testid="booking-step-submit"
           >
             <CommonAtomsLoadingAnimation
@@ -161,6 +176,7 @@ const priceUpdateChangedItems = ref<PriceUpdateChangedItem[]>([]);
 const paymentClientSecret = ref<string | null>(null);
 
 const { ensureCsrf, getCsrf } = useCsrf();
+const { turnstileToken, turnstileRef, resetTurnstile } = useTurnstile();
 const { startSession, checkSessionValidity } = useSession();
 
 const luggageItemsLoading = ref(false);
@@ -342,6 +358,47 @@ watch(
   { deep: true, immediate: true },
 );
 
+// サーバーのエラーコードを表示言語のメッセージに変換
+const translateApiErrCode = (
+  code: string,
+  params: Record<string, string | number> = {},
+): string | null => {
+  const dateLabel
+    = params.date_field === "delivery"
+      ? t("booking.step1.deliveryDateLabel")
+      : t("booking.step1.pickupDateLabel");
+
+  switch (code) {
+    case "turnstile_failed":
+      return t("booking.errors.turnstileFailed");
+    case "payment_info_failed":
+      return t("booking.errors.paymentInfoFailed");
+    case "payment_not_configured":
+      return t("booking.errors.paymentNotConfigured");
+    case "pickup_area_not_configured":
+      return t("booking.errors.pickupAreaNotConfigured");
+    case "pickup_postal_out_of_area":
+      return t("booking.errors.pickupPostalOutOfArea");
+    case "delivery_area_not_configured":
+      return t("booking.errors.deliveryAreaNotConfigured");
+    case "delivery_postal_out_of_area":
+      return t("booking.errors.deliveryPostalOutOfArea");
+    case "regular_holiday":
+      return t("booking.errors.regularHoliday", { label: dateLabel });
+    case "temporary_closure":
+      return t("booking.errors.temporaryClosure", { label: dateLabel });
+    case "daily_capacity_exceeded":
+      return t("booking.errors.capacityRemaining", {
+        label: dateLabel,
+        remaining: Number(params.remaining ?? 0),
+      });
+    case "price_not_configured":
+      return t("booking.errors.priceNotConfigured");
+    default:
+      return null;
+  }
+};
+
 // Payment Intentを作成する関数
 const createPaymentIntent = async (): Promise<string | null> => {
   try {
@@ -363,6 +420,7 @@ const createPaymentIntent = async (): Promise<string | null> => {
         body: {
           ...completeFormData.value,
           business_owner_id: businessProfileState.value?.id ?? "",
+          turnstile_token: turnstileToken.value,
         },
       });
     }
@@ -443,8 +501,18 @@ const createPaymentIntent = async (): Promise<string | null> => {
         priceUpdateNewAmount.value = serverTotal;
         showPriceUpdateDialog.value = true;
       }
+      else if (
+        apiErr?.data?.err_code
+        && translateApiErrCode(apiErr.data.err_code, apiErr.data.err_params)
+      ) {
+        // エラーコード付きのエラーは表示言語に合わせたメッセージに変換
+        errMsg.value = translateApiErrCode(
+          apiErr.data.err_code,
+          apiErr.data.err_params,
+        )!;
+      }
       else if (apiErr?.data?.errMsg) {
-        // その他のサーバー側 400 メッセージ（地域対象外・休業日 等）をそのまま表示
+        // エラーコードが無い・未知のコードの場合はサーバーのメッセージをそのまま表示
         errMsg.value = apiErr.data.errMsg;
       }
       else {
@@ -452,6 +520,10 @@ const createPaymentIntent = async (): Promise<string | null> => {
       }
 
       return null;
+    }
+    finally {
+      // Turnstile トークンは1回で失効するため、送信の成否に関わらずリセットする
+      resetTurnstile();
     }
 
     if (!data?.client_secret) {

@@ -127,6 +127,14 @@
               </div>
             </div>
 
+            <!-- ボット対策（Cloudflare Turnstile） -->
+            <div class="mb-6 flex justify-center">
+              <NuxtTurnstile
+                ref="turnstileRef"
+                v-model="turnstileToken"
+              />
+            </div>
+
             <button
               type="submit"
               :disabled="!canSubmit"
@@ -188,8 +196,14 @@ const agreedToTerms = ref(false);
 const agreedToPrivacy = ref(false);
 const showTermsDialog = ref(false);
 
+const { turnstileToken, turnstileRef, resetTurnstile } = useTurnstile();
+
 const canSubmit = computed(
-  () => agreedToTerms.value && agreedToPrivacy.value && !isSubmitting.value,
+  () =>
+    agreedToTerms.value
+    && agreedToPrivacy.value
+    && !isSubmitting.value
+    && !!turnstileToken.value,
 );
 
 const { ensureCsrf, getCsrf } = useCsrf();
@@ -272,6 +286,7 @@ const handleSendEmail = async () => {
         },
         body: {
           email: email.value.trim().toLowerCase(),
+          turnstile_token: turnstileToken.value,
         },
         credentials: "include",
       });
@@ -321,6 +336,8 @@ const handleSendEmail = async () => {
   }
   finally {
     isSubmitting.value = false;
+    // Turnstile トークンは1回で失効するため、送信の成否に関わらずリセットする
+    resetTurnstile();
   }
 };
 

@@ -61,6 +61,9 @@ export type ApiErrRes = {
     payment_status?: string;
     retry_recommended?: boolean;
     payment_intent_id?: string;
+    // フロントで多言語メッセージに変換するためのエラーコードと付随パラメータ
+    err_code?: string;
+    err_params?: Record<string, string | number>;
     errMsg?: string;
     details?: string;
     server_total_amount?: number;

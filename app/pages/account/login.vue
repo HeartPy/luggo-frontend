@@ -113,7 +113,7 @@
 
         <button
           type="submit"
-          :disabled="isSubmitting"
+          :disabled="isSubmitting || !turnstileToken"
           data-testid="owner-login-submit"
           class="mx-auto w-full max-w-[500px] rounded-lg bg-gray-800 px-8 py-3 font-semibold text-white hover:bg-gray-900 disabled:cursor-not-allowed disabled:bg-gray-300"
         >
@@ -175,7 +175,7 @@
             <div class="mt-4 text-center">
               <button
                 type="button"
-                :disabled="isSubmitting || isResending"
+                :disabled="isSubmitting || isResending || !turnstileToken"
                 class="text-sm text-gray-600 underline transition-colors duration-200 hover:text-gray-800 disabled:cursor-not-allowed disabled:no-underline disabled:opacity-50"
                 @click="handleResendCode"
               >
@@ -215,6 +215,14 @@
           </button>
         </div>
       </form>
+
+      <!-- ボット対策（Cloudflare Turnstile）: 認証コード送信・再送信で使用 -->
+      <div class="mb-6 flex justify-center">
+        <NuxtTurnstile
+          ref="turnstileRef"
+          v-model="turnstileToken"
+        />
+      </div>
 
       <div
         v-if="!codeSent"
@@ -282,6 +290,7 @@ const showPassword = ref(false);
 const isCheckingAuth = ref(true);
 
 const { ensureCsrf, getCsrf } = useCsrf();
+const { turnstileToken, turnstileRef, resetTurnstile } = useTurnstile();
 
 onMounted(async () => {
   try {
@@ -325,6 +334,7 @@ const handleLogin = handleSubmit(async (formValues: LoginFormData) => {
         body: {
           email: formValues.email?.trim().toLowerCase() || "",
           password: formValues.password || "",
+          turnstile_token: turnstileToken.value,
         },
         credentials: "include",
       });
@@ -353,6 +363,8 @@ const handleLogin = handleSubmit(async (formValues: LoginFormData) => {
   }
   finally {
     isSubmitting.value = false;
+    // Turnstile トークンは1回で失効するため、送信の成否に関わらずリセットする
+    resetTurnstile();
   }
 });
 
@@ -443,6 +455,7 @@ const handleResendCode = async () => {
         body: {
           email: email.value.trim().toLowerCase(),
           password: savedPassword.value,
+          turnstile_token: turnstileToken.value,
         },
         credentials: "include",
       });
@@ -486,6 +499,8 @@ const handleResendCode = async () => {
   }
   finally {
     isResending.value = false;
+    // Turnstile トークンは1回で失効するため、送信の成否に関わらずリセットする
+    resetTurnstile();
   }
 };
 
