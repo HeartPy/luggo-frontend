@@ -6,14 +6,12 @@
 
 | ブランチ | 用途 |
 | --- | --- |
-| `develop` | 開発用。機能ブランチのマージ先。CI のみ実行し、本番にはデプロイしない |
+| `develop` | 開発用。機能ブランチのマージ先。CI を実行し、**Preview**（定常ステージング）へデプロイする。本番（Production）にはデプロイしない |
 | `main` | 本番用。`develop` からリリース時にマージし、本番環境へデプロイする |
 
 ```
-feature/* → develop（CI）→ main（CI + 本番デプロイ）
+feature/* → develop（CI + Preview）→ main（CI + 本番デプロイ）
 ```
-
-別途 GitHub Actions にデプロイ用ワークフローを追加する必要はない（基本構成）。
 
 ## CI（GitHub Actions）
 
@@ -30,7 +28,7 @@ feature/* → develop（CI）→ main（CI + 本番デプロイ）
 
 | ステップ | 内容 |
 | --- | --- |
-| 依存インストール | `pnpm install --frozen-lockfile`（Node 22 / pnpm 11） |
+| 依存インストール | `pnpm install --frozen-lockfile`（Node 24 / pnpm 11） |
 | Lint | `pnpm lint` |
 | 型チェック | `pnpm type-check` |
 | 単体テスト | `pnpm test:unit`（Vitest） |
@@ -54,14 +52,15 @@ CI が通らない PR をマージ不可にするには、GitHub リポジトリ
 
 ## CD（Cloudflare Pages）
 
-GitHub リポジトリと Cloudflare Pages を接続している場合、**本番ブランチ `main` への push** で自動デプロイされる。
-`develop` への push では本番デプロイは行わない。
+GitHub リポジトリと Cloudflare Pages を接続している場合、push に応じて自動デプロイされる。
+別途 GitHub Actions にデプロイ用ワークフローは不要である。
 
-| 項目 | 内容 |
+| ブランチ | デプロイ先 |
 | --- | --- |
-| トリガー | `main` への push のみ（本番） |
-| 実行場所 | Cloudflare Pages（ダッシュボードのビルド設定に従う） |
-| ビルドコマンド（例） | `pnpm install --frozen-lockfile && pnpm build` |
+| `main` | **Production**（本番） |
+| `develop` | **Preview**（定常ステージング） |
+
+具体的なビルド・環境変数・ブランチ制限は、以下の Pages 設定とブランチコントロールで管理する。
 
 ### Pages で設定するもの
 
@@ -70,11 +69,29 @@ Cloudflare ダッシュボード（**Workers & Pages** → プロジェクト �
 | 設定 | 値 |
 | --- | --- |
 | 本番ブランチ（Production branch） | **`main`** |
-| Node バージョン | `22` |
+| ビルドコマンド | `pnpm install --frozen-lockfile && pnpm build` |
+| ビルド出力ディレクトリ | `dist` |
 | 環境変数（Production） | `NUXT_PUBLIC_SITE_URL`, `NUXT_PUBLIC_API_BASE_URL` など（`.env.production.example` 参照） |
 | カスタムドメイン | `luggo.delivery`, `www.luggo.delivery` |
 
-PR 向けの Preview デプロイを使う場合は、Preview 用の環境変数を別途設定する（本番とは分ける）。
+Preview 用の環境変数は Production と分けて設定する。
+`NUXT_PUBLIC_SENTRY_DSN` は Preview では変数を登録しなければ Sentry は無効になる（空文字は Cloudflare で保存できない）。
+
+### ブランチコントロール
+
+Cloudflare ダッシュボード（**Settings → Builds → Branch control**）の推奨設定。
+本番ブランチ（`main`）は上記の Pages 設定で指定する。ここでは Preview の対象ブランチのみ制限する。
+
+| 設定 | 値 |
+| --- | --- |
+| Preview branch | **カスタム（Custom branches）** |
+| Include（含めるブランチ） | **`develop`** |
+| Exclude（除外するブランチ） | （空でよい） |
+
+`develop` への push で定常プレビューがデプロイされる。
+`feature/*` などへの直接 push では Preview ビルドは走らない（ビルド時間の節約）。
+
+PR プレビュー（`feature/*` → `develop` の Pull Request）は、Git 連携の **ビルド コメント** を有効にしておけば、PR ごとの一時 URL が GitHub にコメントされる。
 
 ### Worker（Pages とは別）
 
