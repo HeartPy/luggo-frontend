@@ -285,6 +285,7 @@
     "cancelDialogCancel": "Back",
     "errors": {
       "lookupFailed": "Failed to retrieve the booking. Please check the booking number and try again.",
+      "turnstileFailed": "Security verification failed. Please reload the page and try again.",
       "cancelFailed": "Failed to cancel the booking. Please wait a moment and try again.",
       "receiptFailed": "Failed to download the receipt. Please wait a moment and try again.",
       "sessionTimeout": "The booking view was closed due to inactivity. Please enter your booking number again."

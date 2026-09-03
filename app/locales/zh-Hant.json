@@ -285,6 +285,7 @@
     "cancelDialogCancel": "返回",
     "errors": {
       "lookupFailed": "取得預約資訊失敗。請核對預約編號後重試。",
+      "turnstileFailed": "安全驗證失敗。請重新載入頁面後再試。",
       "cancelFailed": "取消預約失敗。請稍後再試。",
       "receiptFailed": "收據下載失敗。請稍後再試。",
       "sessionTimeout": "由於長時間未操作，預約內容的顯示已結束。請重新輸入預約編號。"
