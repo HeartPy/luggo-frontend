@@ -51,10 +51,17 @@
             class="w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-3.5 text-center tracking-wider text-gray-900 transition-colors placeholder:text-gray-400 focus:border-transparent focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             data-testid="booking-number-input"
           >
+          <!-- ボット対策（Cloudflare Turnstile） -->
+          <div class="flex justify-center">
+            <NuxtTurnstile
+              ref="turnstileRef"
+              v-model="turnstileToken"
+            />
+          </div>
           <button
             type="submit"
             class="flex w-full items-center justify-center rounded-md bg-gray-800 px-8 py-3.5 font-semibold text-white shadow-sm transition-colors hover:bg-gray-900 disabled:cursor-not-allowed disabled:bg-gray-300"
-            :disabled="isLooking || !bookingNumberInput.trim()"
+            :disabled="isLooking || !bookingNumberInput.trim() || !turnstileToken"
           >
             <CommonAtomsLoadingAnimation
               v-if="isLooking"
@@ -582,6 +589,8 @@ type StatusBooking = {
 const config = useRuntimeConfig();
 const apiBase = config.public.apiBaseUrl;
 const { ensureCsrf, getCsrf } = useCsrf();
+const { turnstileToken, turnstileRef, resetTurnstile } = useTurnstile();
+const autoLookupPending = ref(false);
 
 const { isLoading: lawLoading, fetchErr: lawErr, transactionLawItems } = useTransactionLaw();
 
@@ -803,16 +812,24 @@ const clearStoredBookingNumber = () => {
 // 予約番号から予約情報を取得
 const lookupBooking = async () => {
   const bookingNumber = bookingNumberInput.value.trim();
-  if (!bookingNumber || isLooking.value) return;
+  if (!bookingNumber || isLooking.value || !turnstileToken.value) return;
 
   isLooking.value = true;
   errMsg.value = "";
 
   try {
+    await ensureCsrf(apiBase);
     const data = await $fetch<StatusBooking>(`${apiBase}/api/bookings/lookup`, {
-      method: "GET",
-      params: { booking_number: bookingNumber },
+      method: "POST",
       credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        ...(getCsrf() ? { "X-CSRFToken": getCsrf()! } : {}),
+      },
+      body: {
+        booking_number: bookingNumber,
+        turnstile_token: turnstileToken.value,
+      },
     });
     booking.value = data;
     cancelDone.value = false;
@@ -822,12 +839,19 @@ const lookupBooking = async () => {
   catch (err: unknown) {
     // 失敗時は保持中の番号を破棄し、無効な番号での再照会ループを防ぐ
     clearStoredBookingNumber();
-    const apiErr = err as { data?: { errMsg?: string } };
-    errMsg.value
-      = apiErr?.data?.errMsg ?? t("status.errors.lookupFailed");
+    const apiErr = err as { data?: { errMsg?: string; err_code?: string } };
+    if (apiErr?.data?.err_code === "turnstile_failed") {
+      errMsg.value = t("status.errors.turnstileFailed");
+    }
+    else {
+      errMsg.value
+        = apiErr?.data?.errMsg ?? t("status.errors.lookupFailed");
+    }
   }
   finally {
     isLooking.value = false;
+    // Turnstile トークンは1回で失効するため、送信の成否に関わらずリセットする
+    resetTurnstile();
   }
 };
 
@@ -976,8 +1000,15 @@ onMounted(() => {
   }
   if (storedNumber) {
     bookingNumberInput.value = storedNumber;
+    // Turnstile トークンが付いてから自動再照会する
+    autoLookupPending.value = true;
+  }
+});
+
+watch(turnstileToken, (token) => {
+  if (token && autoLookupPending.value) {
+    autoLookupPending.value = false;
     void lookupBooking();
-    return;
   }
 });
 

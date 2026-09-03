@@ -285,6 +285,7 @@
     "cancelDialogCancel": "返回",
     "errors": {
       "lookupFailed": "获取预约信息失败。请核对预约编号后重试。",
+      "turnstileFailed": "安全验证失败。请重新加载页面后再试。",
       "cancelFailed": "取消预约失败。请稍后重试。",
       "receiptFailed": "收据下载失败。请稍后重试。",
       "sessionTimeout": "由于长时间未操作，预约内容的显示已结束。请重新输入预约编号。"
