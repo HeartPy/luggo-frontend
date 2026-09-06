@@ -40,7 +40,7 @@
       <small
         class="ml-auto mr-0 block w-fit text-xs text-gray-400"
         aria-label="著作権情報"
-      >&copy; 2025 LugGo</small>
+      >&copy; 2026 LugGo</small>
     </div>
   </footer>
 </template>
