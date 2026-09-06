@@ -1,6 +1,6 @@
 <template>
   <div class="flex min-h-screen flex-col bg-white">
-    <CommonTheHeader v-if="!isBusinessPage" />
+    <CommonTheHeader v-if="showPlatformChrome" />
     <main class="flex flex-1 items-center justify-center px-4 py-20">
       <div class="w-full max-w-lg text-center">
         <p class="mb-4 text-7xl font-bold text-gray-800">
@@ -14,7 +14,7 @@
         </p>
         <div class="space-y-3">
           <button
-            v-if="!isBusinessPage"
+            v-if="showPlatformChrome"
             type="button"
             class="mx-auto w-full max-w-[500px] rounded-lg bg-gray-800 px-8 py-3 font-semibold text-white hover:bg-gray-900"
             @click="goHome"
@@ -46,14 +46,24 @@
         </div>
       </div>
     </main>
-    <CommonTheFooter v-if="!isBusinessPage" />
+    <CommonTheFooter v-if="showPlatformChrome" />
   </div>
 </template>
 
 <script setup lang="ts">
+import {
+  getRequestHostname,
+  isTenantHostPathAllowed,
+  isTenantHostname,
+} from "~/composables/useSubdomain";
+
 const error = useError();
 const { isBusinessPage } = useSeoBrand();
 
+const isTenantHost = computed(() => isTenantHostname(getRequestHostname()));
+const showPlatformChrome = computed(
+  () => !isTenantHost.value && !isBusinessPage.value,
+);
 const statusCode = computed(() => error.value?.status ?? error.value?.statusCode ?? 500);
 const isNotFound = computed(() => statusCode.value === 404);
 
@@ -80,11 +90,30 @@ useHead({
 const backPath = ref<string | null>(null);
 const canGoBack = computed(() => Boolean(backPath.value));
 
+// history.state.back からパスだけ取り出す（絶対 URL / クエリ付きでも比較できるようにする）
+function historyBackPath(back: string): string {
+  try {
+    if (back.startsWith("http://") || back.startsWith("https://")) {
+      return new URL(back).pathname;
+    }
+  }
+  catch {
+    return back.split("?")[0] ?? back;
+  }
+  return back.split("?")[0] ?? back;
+}
+
 onMounted(() => {
   const back = window.history.state?.back;
-  if (typeof back === "string" && back) {
-    backPath.value = back;
+  if (typeof back !== "string" || !back) {
+    return;
   }
+  const path = historyBackPath(back);
+  // テナントホストでは予約関連以外へ戻すと再び 404 になるため出さない
+  if (isTenantHost.value && !isTenantHostPathAllowed(path)) {
+    return;
+  }
+  backPath.value = back;
 });
 
 const goHome = () => {

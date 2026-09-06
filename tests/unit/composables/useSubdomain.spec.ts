@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   extractSubdomainFromHostname,
   isTenantHostPathAllowed,
+  isTenantHostname,
 } from "~/composables/useSubdomain";
 
 describe("extractSubdomainFromHostname", () => {
@@ -33,5 +34,14 @@ describe("isTenantHostPathAllowed", () => {
     expect(isTenantHostPathAllowed("/account/login")).toBe(false);
     expect(isTenantHostPathAllowed("/privacy")).toBe(false);
     expect(isTenantHostPathAllowed("/business-owner/dashboard")).toBe(false);
+  });
+});
+
+describe("isTenantHostname", () => {
+  it("事業者サブドメインだけ true", () => {
+    expect(isTenantHostname("acme.luggo.delivery")).toBe(true);
+    expect(isTenantHostname("www.luggo.delivery")).toBe(false);
+    expect(isTenantHostname("luggo.delivery")).toBe(false);
+    expect(isTenantHostname("localhost")).toBe(false);
   });
 });
