@@ -43,10 +43,20 @@ export function extractSubdomainFromHostname(hostname: string): string | null {
 
   const parts = host.split(".");
   if (parts.length >= 3) {
-    return parts[0] || null;
+    const label = parts[0] || null;
+    // 本体サイト（www）は事業者テナントではない
+    if (label === "www") {
+      return null;
+    }
+    return label;
   }
 
   return null;
+}
+
+// 事業者サブドメイン上で許可するパスか（現在は予約関連のパスのみ許可）
+export function isTenantHostPathAllowed(path: string): boolean {
+  return path === "/booking" || path.startsWith("/booking/");
 }
 
 // ホスト名またはクエリパラメータから事業者サブドメインを解決
