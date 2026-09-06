@@ -59,6 +59,11 @@ export function isTenantHostPathAllowed(path: string): boolean {
   return path === "/booking" || path.startsWith("/booking/");
 }
 
+// ホスト名が事業者テナントか（www / apex / localhost は false）
+export function isTenantHostname(hostname: string): boolean {
+  return extractSubdomainFromHostname(hostname) !== null;
+}
+
 // ホスト名またはクエリパラメータから事業者サブドメインを解決
 export function resolveSubdomain(): string | null {
   const fromHost = extractSubdomainFromHostname(getRequestHostname());
