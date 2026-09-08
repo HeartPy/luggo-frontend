@@ -635,7 +635,7 @@
 </template>
 
 <script setup lang="ts">
-import countries from "i18n-iso-countries";
+import countries from "i18n-iso-countries/index.js";
 import ja from "i18n-iso-countries/langs/ja.json";
 import { useCsrf } from "~/composables/useCsrf";
 import type { OwnerBooking, OwnerDeliveryStatus, OwnerDriver } from "~/types/booking";
