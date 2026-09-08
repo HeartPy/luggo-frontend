@@ -1250,13 +1250,40 @@ const step3Schema = object({
     .matches(/^[ァ-ヶー\s]+$/u, "カタカナで入力してください"),
 });
 
+// サービスサイトURLの検証
+// yup の .url() は localhost を無効と判定するため、開発環境で自動入力される
+// http://localhost:... の予約フォームURLが弾かれてしまう。
+// URL として解釈でき、開発環境に限り localhost / 127.0.0.1 も許可する。
+const isValidProductUrl = (value: string | undefined): boolean => {
+  if (!value) return false;
+  let url: URL;
+  try {
+    url = new URL(value);
+  }
+  catch {
+    return false;
+  }
+  if (url.protocol !== "http:" && url.protocol !== "https:") return false;
+  if (
+    import.meta.dev
+      && (url.hostname === "localhost" || url.hostname === "127.0.0.1")
+  ) {
+    return true;
+  }
+  return url.hostname.includes(".");
+};
+
 // Step 4: 事業詳細
 const step4Schema = object({
   product_mcc: string().trim().required("業種は必須です"),
   product_url: string()
     .trim()
     .required("サービスサイトのURLは必須です")
-    .url("有効なURLを入力してください"),
+    .test(
+      "is-valid-product-url",
+      "有効なURLを入力してください",
+      value => isValidProductUrl(value),
+    ),
   product_description: string().trim().required("事業内容は必須です"),
 });
 

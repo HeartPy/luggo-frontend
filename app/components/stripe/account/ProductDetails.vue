@@ -95,7 +95,7 @@
 <script setup lang="ts">
 import type { Step4FormData } from "~/types/stripe-account-register";
 import { useBusinessProfile } from "~/composables/useBusinessProfile";
-import { buildTenantPublicUrl, TENANT_BASE_DOMAIN } from "~/composables/useSubdomain";
+import { TENANT_BASE_DOMAIN } from "~/composables/useSubdomain";
 
 type Props = {
   formData: Step4FormData;
@@ -141,9 +141,20 @@ const isProductUrlReadonly = computed(() => {
   return !!businessProfile.value?.subdomain;
 });
 
-const generateBookingFormUrl = (subdomain: string): string => {
-  return buildTenantPublicUrl(subdomain, "")
-    ?? `https://${subdomain}.${TENANT_BASE_DOMAIN}`;
+// Stripe の business_profile.url 用。localhost は Stripe が拒否するため、
+// 開発環境でも公開ドメイン形式（https://{subdomain}.luggo.delivery）を使う。
+const generateStripeBusinessUrl = (subdomain: string): string => {
+  return `https://${subdomain}.${TENANT_BASE_DOMAIN}`;
+};
+
+const isLocalDevUrl = (value: string): boolean => {
+  try {
+    const url = new URL(value);
+    return url.hostname === "localhost" || url.hostname === "127.0.0.1";
+  }
+  catch {
+    return false;
+  }
 };
 
 // デフォルトの商品・サービス説明テキスト
@@ -163,11 +174,15 @@ onMounted(() => {
     updates.product_description = defaultProductDescription;
   }
 
-  // ビジネスプロフィールにsubdomainが存在し、かつformData.product_urlが空の場合のみ自動入力
-  if (businessProfile.value?.subdomain && !props.formData.product_url) {
-    updates.product_url = generateBookingFormUrl(
-      businessProfile.value.subdomain,
-    );
+  // subdomain がある場合は Stripe 向け公開 URL を自動入力。
+  // 空、または開発用 localhost URL が残っている場合は置き換える。
+  if (businessProfile.value?.subdomain) {
+    const currentUrl = props.formData.product_url;
+    if (!currentUrl || isLocalDevUrl(currentUrl)) {
+      updates.product_url = generateStripeBusinessUrl(
+        businessProfile.value.subdomain,
+      );
+    }
   }
 
   // 更新がある場合のみemit
