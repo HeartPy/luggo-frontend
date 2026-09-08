@@ -52,7 +52,7 @@ export default defineNuxtConfig({
       // 予約フロー途中のページで初めて読み込まれる依存を事前最適化する。
       // dev 初回アクセス時の「依存最適化 → ページ強制リロード」が
       // E2E のフロー途中に挟まって落ちるのを防ぐ。
-      include: ["@stripe/stripe-js", "i18n-iso-countries"],
+      include: ["@stripe/stripe-js", "i18n-iso-countries/index.js"],
     },
   },
   site: {
