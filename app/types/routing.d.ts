@@ -5,7 +5,8 @@ export type AssignmentRunStatus
     | "draft"
     | "failed"
     | "stale"
-    | "applied";
+    | "applied"
+    | "cancelled";
 
 // 配達者ルート上の1訪問先（地図・ルート詳細用）
 export type RouteStop = {

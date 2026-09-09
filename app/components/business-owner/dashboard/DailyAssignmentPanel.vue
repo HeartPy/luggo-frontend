@@ -355,16 +355,32 @@
         aria-live="polite"
         aria-busy="true"
       >
-        <div class="flex items-center gap-3">
-          <CommonAtomsLoadingAnimation size="sm" />
-          <div class="space-y-1">
-            <p class="font-semibold text-blue-900">
-              予約を配達者へ自動割当しています
-            </p>
-            <p class="text-xs text-blue-700">
-              地域、訪問可能数、手動割当、負荷の偏りを考慮しています。
-            </p>
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <CommonAtomsLoadingAnimation size="sm" />
+            <div class="space-y-1">
+              <p class="font-semibold text-blue-900">
+                予約を配達者へ自動割当しています
+              </p>
+              <p class="text-xs text-blue-700">
+                地域、訪問可能数、手動割当、負荷の偏りを考慮しています。
+              </p>
+            </div>
           </div>
+          <button
+            type="button"
+            class="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+            :disabled="isCancellingRun"
+            :aria-busy="isCancellingRun"
+            :aria-label="isCancellingRun ? '自動割当をキャンセル中' : '自動割当をキャンセル'"
+            @click="cancelRun"
+          >
+            <CommonAtomsLoadingAnimation
+              v-if="isCancellingRun"
+              size="xs"
+            />
+            <span v-else>キャンセル</span>
+          </button>
         </div>
       </div>
 
@@ -515,6 +531,16 @@
           {{ run.status === "stale" ? "予約情報が変更されたため再割当が必要です。" : "自動割当に失敗しました。" }}
         </p>
       </div>
+
+      <div
+        v-else-if="run.status === 'cancelled'"
+        class="rounded-xl bg-gray-100 p-5"
+        role="status"
+      >
+        <p class="font-semibold text-gray-700">
+          自動割当をキャンセルしました。再実行できます。
+        </p>
+      </div>
     </div>
 
     <div
@@ -546,10 +572,12 @@ const {
   run,
   isStarting,
   isApplying,
+  isCancelling: isCancellingRun,
   error,
   estimate,
   isEstimating,
   assign,
+  cancelRun,
   fetchDaily,
   fetchEstimate,
   applyRun,
@@ -793,6 +821,8 @@ async function startOptimization() {
 
 // 対象日変更時に日次結果・見積もりを再取得し、候補配達者を全選択する
 async function handleDateChange() {
+  // 実行中の割当は対象日を離れる時点で自動キャンセル
+  if (isRunning.value) await cancelRun();
   // 対象日が変わると候補配達者も変わるため、いったん解除してから全選択し直す
   selectedDriverIds.value = new Set();
   await Promise.all([fetchDaily(serviceDate.value), fetchEstimate(serviceDate.value)]);
@@ -816,6 +846,7 @@ function statusLabel(status: AssignmentRunStatus): string {
     failed: "失敗",
     stale: "再割当が必要",
     applied: "適用済み",
+    cancelled: "キャンセルしました",
   };
   return labels[status];
 }
@@ -830,5 +861,21 @@ onMounted(async () => {
   selectedDriverIds.value = new Set(
     estimate.value?.eligible_drivers.map(driver => driver.id) ?? [],
   );
+});
+
+// 別タブページへの移動（unmount）時、実行中の割当を自動キャンセルする。
+// unmount 後にポーリングを再開させないよう、composable を介さず fire-and-forget で送る
+onBeforeUnmount(() => {
+  const current = run.value;
+  if (!current || (current.status !== "queued" && current.status !== "running")) {
+    return;
+  }
+  void $fetch(`${apiBase}/api/business/routing/runs/${current.id}/cancel`, {
+    method: "POST",
+    credentials: "include",
+    headers: getCsrf() ? { "X-CSRFToken": getCsrf()! } : undefined,
+  }).catch(() => {
+    // 画面を離れた後なのでエラーは通知しない（タイムアウトで自動解消される）
+  });
 });
 </script>
