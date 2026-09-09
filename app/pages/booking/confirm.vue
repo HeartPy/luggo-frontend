@@ -621,7 +621,6 @@ const confirmPayment = async (): Promise<{
     // 支払いを確認
     const confirmParams: {
       return_url: string;
-      receipt_email: string;
       payment_method_data: {
         billing_details: {
           name: string;
@@ -633,7 +632,6 @@ const confirmPayment = async (): Promise<{
         typeof window !== "undefined"
           ? `${window.location.origin}/booking/complete`
           : "/booking/complete",
-      receipt_email: step3Data.value.customer_email,
       payment_method_data: {
         billing_details: {
           name: step3Data.value.customer_name,
