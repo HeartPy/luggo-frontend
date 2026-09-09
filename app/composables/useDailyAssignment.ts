@@ -55,6 +55,7 @@ export function useDailyAssignment() {
   const run = ref<AssignmentRun | null>(null);
   const isStarting = ref(false);
   const isApplying = ref(false);
+  const isCancelling = ref(false);
   const error = ref<string | null>(null);
   const estimate = ref<RoutingEstimate | null>(null);
   const isEstimating = ref(false);
@@ -184,6 +185,48 @@ export function useDailyAssignment() {
     }
   }
 
+  // 実行中（queued / running）の自動割当をキャンセル
+  async function cancelRun(): Promise<boolean> {
+    const current = run.value;
+    if (
+      !current
+      || (current.status !== "queued" && current.status !== "running")
+    ) {
+      return false;
+    }
+
+    isCancelling.value = true;
+    error.value = null;
+    stopPolling();
+
+    try {
+      await ensureCsrf(apiBase);
+
+      const response = await $fetch<RunEnvelope>(
+        `${apiBase}/api/business/routing/runs/${current.id}/cancel`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: getCsrf() ? { "X-CSRFToken": getCsrf()! } : undefined,
+        },
+      );
+
+      if (response.run) run.value = toUiRun(response.run);
+
+      return true;
+    }
+    catch {
+      error.value = "自動割当をキャンセルできませんでした。";
+      // キャンセルに失敗した場合は進捗の追跡を再開
+      void pollRun(current.id);
+
+      return false;
+    }
+    finally {
+      isCancelling.value = false;
+    }
+  }
+
   // 指定日の最新ラン（または未実行）を取得
   async function fetchDaily(serviceDate: string): Promise<void> {
     error.value = null;
@@ -263,10 +306,12 @@ export function useDailyAssignment() {
     run: readonly(run),
     isStarting: readonly(isStarting),
     isApplying: readonly(isApplying),
+    isCancelling: readonly(isCancelling),
     estimate: readonly(estimate),
     isEstimating: readonly(isEstimating),
     error: readonly(error),
     assign,
+    cancelRun,
     fetchDaily,
     fetchEstimate,
     fetchRun,
