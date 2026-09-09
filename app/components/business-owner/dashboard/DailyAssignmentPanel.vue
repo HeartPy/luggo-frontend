@@ -90,7 +90,7 @@
             :min="minServiceDate"
             :aria-invalid="isPastDate"
             :aria-describedby="isPastDate ? 'routing-date-past-warning' : undefined"
-            class="w-full cursor-pointer appearance-none rounded-md border border-gray-300 bg-white px-3 py-2 pr-12 text-sm focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-clear-button]:hidden [&::-webkit-inner-spin-button]:hidden"
+            class="box-border min-h-10 w-full cursor-pointer appearance-none rounded-md border border-gray-300 bg-white px-3 py-2 pr-12 text-sm leading-normal focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-clear-button]:hidden [&::-webkit-inner-spin-button]:hidden"
             @change="handleDateChange"
           >
           <img

@@ -744,7 +744,7 @@ const { ensureCsrf, getCsrf } = useCsrf();
 const inputClass
   = "w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 disabled:cursor-not-allowed disabled:bg-gray-100";
 
-const dateInputClass = `${inputClass} cursor-pointer appearance-none pr-10 [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-clear-button]:hidden [&::-webkit-inner-spin-button]:hidden`;
+const dateInputClass = `${inputClass} box-border min-h-10 cursor-pointer appearance-none pr-10 leading-normal [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-clear-button]:hidden [&::-webkit-inner-spin-button]:hidden`;
 
 const fieldErrClass = "mt-1 text-xs text-red-600";
 

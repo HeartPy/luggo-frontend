@@ -162,7 +162,7 @@
           :value="formData.pickup_date"
           type="date"
           name="pickupDate"
-          class="w-full cursor-pointer appearance-none rounded-md border border-gray-300 px-3 py-2 pr-12 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-clear-button]:hidden [&::-webkit-inner-spin-button]:hidden"
+          class="box-border min-h-10 w-full cursor-pointer appearance-none rounded-md border border-gray-300 px-3 py-2 pr-12 leading-normal focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-clear-button]:hidden [&::-webkit-inner-spin-button]:hidden"
           :class="{ 'border-red-500': errors.pickup_date }"
           required
           aria-required="true"
@@ -351,7 +351,7 @@
           :value="formData.delivery_date"
           type="date"
           name="deliveryDate"
-          class="w-full cursor-pointer appearance-none rounded-md border border-gray-300 px-3 py-2 pr-12 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-clear-button]:hidden [&::-webkit-inner-spin-button]:hidden"
+          class="box-border min-h-10 w-full cursor-pointer appearance-none rounded-md border border-gray-300 px-3 py-2 pr-12 leading-normal focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-clear-button]:hidden [&::-webkit-inner-spin-button]:hidden"
           :class="{ 'border-red-500': errors.delivery_date }"
           required
           aria-required="true"

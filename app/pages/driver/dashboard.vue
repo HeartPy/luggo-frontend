@@ -15,7 +15,7 @@
           v-model="selectedDate"
           type="date"
           aria-label="対象日"
-          class="w-44 cursor-pointer appearance-none rounded-md border border-gray-300 bg-white px-3 py-2 pr-12 text-sm focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-clear-button]:hidden [&::-webkit-inner-spin-button]:hidden"
+          class="box-border min-h-10 w-44 cursor-pointer appearance-none rounded-md border border-gray-300 bg-white px-3 py-2 pr-12 text-sm leading-normal focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-clear-button]:hidden [&::-webkit-inner-spin-button]:hidden"
         >
         <img
           class="pointer-events-none absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2"

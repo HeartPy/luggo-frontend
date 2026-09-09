@@ -665,7 +665,7 @@ const inputClass
 
 const selectClass = `${inputClass} cursor-pointer appearance-none pr-10`;
 
-const dateInputClass = `${inputClass} cursor-pointer appearance-none pr-10 [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-clear-button]:hidden [&::-webkit-inner-spin-button]:hidden`;
+const dateInputClass = `${inputClass} box-border min-h-10 cursor-pointer appearance-none pr-10 leading-normal [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-clear-button]:hidden [&::-webkit-inner-spin-button]:hidden`;
 
 const fieldErrClass = "mt-1 text-xs text-red-600";
 

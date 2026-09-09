@@ -85,7 +85,7 @@
             v-model="monthFromInput"
             type="month"
             :disabled="!!periodInput"
-            class="w-full cursor-pointer appearance-none rounded-md border border-gray-300 px-3 py-2 pr-12 text-sm focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-400 [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-clear-button]:hidden [&::-webkit-inner-spin-button]:hidden"
+            class="box-border min-h-10 w-full cursor-pointer appearance-none rounded-md border border-gray-300 px-3 py-2 pr-12 text-sm leading-normal focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-400 [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-clear-button]:hidden [&::-webkit-inner-spin-button]:hidden"
           >
           <img
             class="pointer-events-none absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2"
@@ -103,7 +103,7 @@
             v-model="monthToInput"
             type="month"
             :disabled="!!periodInput"
-            class="w-full cursor-pointer appearance-none rounded-md border border-gray-300 px-3 py-2 pr-12 text-sm focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-400 [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-clear-button]:hidden [&::-webkit-inner-spin-button]:hidden"
+            class="box-border min-h-10 w-full cursor-pointer appearance-none rounded-md border border-gray-300 px-3 py-2 pr-12 text-sm leading-normal focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-400 [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-clear-button]:hidden [&::-webkit-inner-spin-button]:hidden"
           >
           <img
             class="pointer-events-none absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2"
